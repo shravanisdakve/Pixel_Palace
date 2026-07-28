@@ -1,0 +1,491 @@
+/* ============================================
+   PIXEL PALACE - ORIGINAL CYBERPUNK THEME
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #ff00ff;
+    --secondary-color: #00ffff;
+    --accent-color: #ffff00;
+    --dark-bg: #0f0f1e;
+    --card-bg: #1a1a2e;
+    --border-color: #00ffff;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --text-color: #e0e0e0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--dark-bg);
+    color: #fff;
+    font-family: "Press Start 2P", "Arial", sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+    width: 100%;
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+/* ============================================
+   HAMBURGER MENU & SIDEBAR OVERLAY
+   ============================================ */
+.hamburger-menu {
+    display: none;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 1001;
+    background: var(--card-bg);
+    border: 2px solid var(--secondary-color);
+    border-radius: 6px;
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    transition: var(--transition);
+}
+
+.hamburger-menu span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background-color: var(--secondary-color);
+    border-radius: 2px;
+    transition: var(--transition);
+}
+
+.hamburger-menu:hover {
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+    border-color: var(--primary-color);
+}
+
+.hamburger-menu:hover span {
+    background-color: var(--primary-color);
+}
+
+.hamburger-menu.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger-menu.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-menu.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* ============================================
+   COMPACT SIDEBAR
+   ============================================ */
+.sidebar,
+nav {
+    width: 180px;
+    background: rgba(15, 15, 30, 0.98);
+    border-right: 2px solid var(--secondary-color);
+    padding: 15px 10px;
+    position: relative;
+    flex-shrink: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar .logo,
+nav .logo {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--primary-color);
+    text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+}
+
+.search-container {
+    width: 100%;
+}
+
+.search-input,
+#game-search {
+    width: 100%;
+    padding: 8px 10px;
+    border: 2px solid var(--secondary-color);
+    background: rgba(0, 255, 255, 0.1);
+    color: #fff;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-bottom: 10px;
+    transition: var(--transition);
+    font-family: inherit;
+}
+
+.search-input:focus,
+#game-search:focus {
+    outline: none;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+    background: rgba(0, 255, 255, 0.2);
+}
+
+.search-input::placeholder,
+#game-search::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.filter-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.filter-btn {
+    padding: 6px 10px;
+    border: 2px solid var(--secondary-color);
+    background: transparent;
+    color: var(--secondary-color);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 8px;
+    text-align: center;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--secondary-color);
+    color: #000;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+
+.nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav {
+    border-right: 2px solid var(--secondary-color);
+}
+
+nav a,
+.nav-links a {
+    display: block;
+    padding: 8px 10px;
+    color: var(--secondary-color);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+    transition: var(--transition);
+    cursor: pointer;
+    font-size: 10px;
+    white-space: nowrap;
+    line-height: 1.5;
+}
+
+nav a:hover,
+.nav-links a:hover {
+    background: rgba(0, 255, 255, 0.1);
+    border-left-color: var(--secondary-color);
+    padding-left: 14px;
+}
+
+nav a.active-link,
+.nav-links a.active-link {
+    background: rgba(0, 255, 255, 0.15);
+    border-left-color: var(--secondary-color);
+    font-weight: bold;
+}
+
+main,
+.main-content {
+    flex: 1;
+    padding: 30px 40px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    margin: 0;
+    width: calc(100% - 180px);
+    position: relative;
+}
+
+header {
+    margin-bottom: 30px;
+}
+
+h1 {
+    color: var(--accent-color);
+    font-size: 32px;
+    text-shadow: 0 0 20px rgba(255, 255, 0, 0.5);
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.tagline {
+    color: var(--secondary-color);
+    font-size: 12px;
+    margin-bottom: 5px;
+    line-height: 1.5;
+}
+
+.description {
+    color: #aaa;
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+h2,
+.category-title {
+    color: var(--secondary-color);
+    font-size: 20px;
+    margin: 40px 0 25px 0;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--secondary-color);
+    position: relative;
+}
+
+h3 {
+    color: var(--secondary-color);
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.game-grid,
+.featured-games {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+.game-card {
+    background: var(--card-bg);
+    border: 2px solid rgba(0, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 15px;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.game-card:hover {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 25px rgba(0, 255, 255, 0.3);
+    transform: translateY(-6px);
+}
+
+.image-container {
+    width: 100%;
+    height: 140px;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    background: rgba(0, 255, 255, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.card-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+}
+
+.play-button {
+    display: inline-block;
+    padding: 8px 14px;
+    background: var(--primary-color);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 10px;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.play-button:hover {
+    background: #ff66ff;
+    box-shadow: 0 0 10px rgba(255, 0, 255, 0.6);
+}
+
+.how-to-play-button {
+    padding: 8px 12px;
+    background: transparent;
+    color: var(--secondary-color);
+    border: 1px solid var(--secondary-color);
+    border-radius: 4px;
+    font-size: 9px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: var(--transition);
+}
+
+.how-to-play-button:hover {
+    background: var(--secondary-color);
+    color: #000;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal.active,
+.modal[style*="display: flex"] {
+    display: flex !important;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    border: 2px solid var(--secondary-color);
+    border-radius: 8px;
+    max-width: 500px;
+    width: 100%;
+    padding: 25px;
+    position: relative;
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+}
+
+.close-button,
+.close-modal {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 20px;
+    color: var(--secondary-color);
+    cursor: pointer;
+}
+
+.instructions-body h4 {
+    color: var(--accent-color);
+    margin: 12px 0 6px 0;
+    font-size: 12px;
+}
+
+.instructions-body p,
+.instructions-body li {
+    color: #ccc;
+    font-size: 10px;
+    line-height: 1.6;
+}
+
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary-color);
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 0 0 4px 0;
+    font-weight: bold;
+    z-index: 9999;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+*:focus-visible {
+    outline: 2px solid var(--secondary-color);
+    outline-offset: 2px;
+}
+
+@media (max-width: 1024px) {
+    .hamburger-menu {
+        display: flex;
+    }
+
+    .sidebar,
+    nav {
+        position: fixed;
+        top: 0;
+        left: -200px;
+        height: 100vh;
+        z-index: 1000;
+        transition: left 0.3s ease;
+    }
+
+    .sidebar.open,
+    nav.open {
+        left: 0;
+    }
+
+    main,
+    .main-content {
+        width: 100%;
+        padding: 60px 20px 20px 20px;
+    }
+}
+
+/* Filtering Utilities */
+.game-card.hidden-card,
+.category-section.hidden-section,
+.game-section.hidden-section {
+    display: none !important;
+}
+
