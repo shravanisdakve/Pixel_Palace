@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Palace - Your Personal Arcade</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Skip to Main Content</a>
+    <button class="hamburger-menu" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="logo">Pixel Palace</div>
+            <div class="search-container">
+                <input type="text" id="game-search" class="search-input" placeholder="Search games..."
+                    aria-label="Search games">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="all">All</button>
+                    <button class="filter-btn" data-filter="action">Action</button>
+                    <button class="filter-btn" data-filter="puzzle">Puzzle</button>
+                    <button class="filter-btn" data-filter="classic">Classic</button>
+                </div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active-link">Arcade</a></li>
+                <li><a href="puzzles.html">Puzzles</a></li>
+                <li><a href="tabletop.html">Tabletop</a></li>
+                <li><a href="challenges.html">Challenges</a></li>
+                <li><a href="creative.html">Creative</a></li>
+                <li><a href="tools.html">Tools</a></li>
+                <li><a href="education.html">Education</a></li>
+            </ul>
+        </aside>
+        <div class="sidebar-overlay"></div>
+
+        <main class="main-content" id="main-content">
+
+            <header class="header">
+                <h1>Pixel Palace</h1>
+                <p>Level Up Your Downtime</p>
+                <p class="tagline">Dive into a curated world of pixel-perfect arcade classics. No tokens needed—just
+                    press Start.
+                </p>
+            </header>
+
+            <!-- Recently Played Section -->
+            <div id="recently-played-section" class="category-section" style="display: none;">
+                <h2 class="category-title">Recently Played</h2>
+                <div class="game-section">
+                    <div id="recent-games-grid" class="game-grid">
+                        <!-- Recent games injected by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="arcade" class="category-section">
+                <h2 class="category-title">Arcade</h2>
+                <div class="game-section">
+                    <h3>Featured Games</h3>
+                    <div class="game-grid">
+                        <article class="game-card featured" data-category=\"action classic">
+
+                            <div class="image-container">
+                                <img src="assets/images/brick_smash.svg" alt="3D Cover art for Brick Smash Chronicles game">
+                            </div>
+                            <div class="card-content">
+                                <h3>Brick Smash Chronicles</h3>
+                                <p class="description">Break bricks and clear levels in this classic arcade challenge!
+                                </p>
+                                <div class="card-buttons">
+                                    <a href="Arcade/Brick Smash Chronicles/index.html" class="play-button"
+                                        aria-label="Play Brick Smash Chronicles">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#brick-smash-instructions-modal"
+                                        aria-label="How to play Brick Smash Chronicles">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="brick-smash-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Brick Smash Chronicles</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Clear all bricks from the screen by hitting them with the ball to advance to the
+                                        next level.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Mouse:</strong> Move the paddle horizontally to bounce the ball.
+                                        </li>
+                                        <li><strong>Spacebar (Optional):</strong> Launch the ball at the start of a
+                                            round.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>Don't let the ball fall off the bottom of the screen – you'll lose a life!
+                                        </li>
+                                        <li>Hitting bricks multiple times may be required to destroy them.</li>
+                                        <li>Some bricks might contain power-ups or special effects – catch them!</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <article class="game-card" data-category=\"action classic">
+                            <a href="Arcade/Flappy Flight Frenzy/index.html">
+                                <div class="image-container">
+                                    <img src="assets/images/flappy_flight.svg"
+                                        alt="3D Cover art of Flappy Flight Frenzy arcade game">
+                                </div>
+                                <div class="card-content">
+                                    <h3>Flappy Flight Frenzy</h3>
+                                    <p class="description">Navigate a flapping bird through challenging pipes in this
+                                        addictive classic!</p>
+                                    <span class="play-button">Play</span>
+                                </div>
+                            </a>
+                        </article>
+                    </div>
+                </div>
+                <div class="game-section">
+                    <h3>All Games</h3>
+                    <div class="game-grid">
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/brick_smash.svg" alt="3D Cover art for Rebound Rescue arcade game">
+                            </div>
+                            <div class="card-content">
+                                <h3>Rebound Rescue</h3>
+                                <p class="description">Bounce the ball to break bricks and save the day in this
+                                    action-packed game!</p>
+                                <div class="card-buttons">
+                                    <a href="Arcade/Rebound Rescue/index.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#rebound-rescue-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="rebound-rescue-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Rebound Rescue</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Control the paddle to bounce the ball and destroy all the colored blocks on the
+                                        screen.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Mouse:</strong> Move the paddle left and right at the bottom of the
+                                            screen.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>Keep the ball in play – if it goes past your paddle, you lose a life.</li>
+                                        <li>Break all blocks to complete the level.</li>
+                                        <li>Look for power-ups that might drop from broken blocks!</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/slither_survival.svg" alt="3D Cover art for Bug Collector Quest game">
+                            </div>
+                            <div class="card-content">
+                                <h3>Bug Collector Quest</h3>
+                                <p class="description">Test your reflexes by catching as many pesky bugs as you can!</p>
+                                <div class="card-buttons">
+                                    <a href="Arcade/Bug Collector Quest/index.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#bug-collector-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="bug-collector-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Bug Collector Quest</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Catch as many bugs as possible before time runs out to achieve a high score.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Mouse Click:</strong> Click on the bugs to catch them.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>Different bugs might have different point values or behaviors.</li>
+                                        <li>Watch out for bugs that might deduct points or end the game!</li>
+                                        <li>Timing is key to catching fast-moving bugs.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/typing_sprint.svg" alt="3D Cover art for Scripted Adventures game">
+                            </div>
+                            <div class="card-content">
+                                <h3>Scripted Adventures</h3>
+                                <p class="description">Jump over obstacles in this endless runner adventure. How far can
+                                    you go?</p>
+                                <div class="card-buttons">
+                                    <a href="Arcade/Scripted Adventures/index.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#scripted-adventures-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="scripted-adventures-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Scripted Adventures</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Guide the character through an endless landscape, jumping over cacti and other
+                                        obstacles to survive as long as possible.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Spacebar:</strong> Press to jump.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>Timing your jumps is crucial to clear obstacles.</li>
+                                        <li>The game speeds up over time, increasing the challenge.</li>
+                                        <li>Try to beat your high score!</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/flappy_flight.svg" alt="3D Cover art for Pixel Blaster Showdown game">
+                            </div>
+                            <div class="card-content">
+                                <h3>Pixel Blaster Showdown</h3>
+                                <p class="description">Aim and shoot to burst balloons in this fast-paced pixelated
+                                    shooting gallery!</p>
+                                <div class="card-buttons">
+                                    <a href="Arcade/Pixel Blaster Showdown/index.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#pixel-blaster-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="pixel-blaster-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Pixel Blaster Showdown</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Shoot and pop as many balloons as you can within the time limit to earn the
+                                        highest score.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Mouse:</strong> Move the crosshair to aim.</li>
+                                        <li><strong>Left Click:</strong> Fire your blaster to pop balloons.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>Some balloons may move faster or be worth more points.</li>
+                                        <li>Accuracy is important – don't waste your shots!</li>
+                                        <li>Watch the timer and try to maximize your score.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/slither_survival.svg" alt="3D Cover art for Hare's High-Speed Chase game">
+                            </div>
+                            <div class="card-content">
+                                <h3>Hare's High-Speed Chase</h3>
+                                <p class="description">Roll the dice, strategize, and race to be the first rabbit to
+                                    reach 100 points!</p>
+                                <div class="card-buttons">
+                                    <a href="Arcade/Rabbit Race/index.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#hare-chase-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="hare-chase-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Hare's High-Speed Chase</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Be the first player to reach a score of 100 points. Players take turns rolling a
+                                        die and accumulating points.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>"ROLL DICE" Button:</strong> Roll the die to get points.</li>
+                                        <li><strong>"HOLD" Button:</strong> Bank your current turn's points and pass to
+                                            the next player.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>If you roll a '1', you lose all points accumulated in that turn and your
+                                            turn ends.</li>
+                                        <li>You can roll as many times as you like, but beware of rolling a '1'.</li>
+                                        <li>The first player to reach 100 or more points wins.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/slither_survival.svg" alt="3D Cover art for Slither Survival game">
+                            </div>
+                            <div class="card-content">
+                                <h3>Slither Survival</h3>
+                                <p class="description">Guide your snake to eat food and grow longer without hitting
+                                    walls or yourself!</p>
+                                <div class="card-buttons">
+                                    <a href="Arcade/Slither Survival/index.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#slither-survival-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="slither-survival-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Slither Survival</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Control a snake to eat food, grow longer, and achieve the highest score possible
+                                        without hitting boundaries or its own body.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Arrow Keys (Up, Down, Left, Right):</strong> Change the direction of
+                                            the snake.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>Each piece of food eaten makes the snake grow longer and increases your
+                                            score.</li>
+                                        <li>If the snake hits the wall or its own body, the game ends.</li>
+                                        <li>Some games may have a speed slider to adjust difficulty.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const cards = document.querySelectorAll('.game-card');
+
+            const observer = new IntersectionObserver((entries) => {
+
+                entries.forEach(entry => {
+
+                    if (entry.isIntersecting) {
+
+                        entry.target.style.animationDelay = `${entry.target.dataset.delay}s`;
+
+                        entry.target.classList.add('in-view');
+
+                        observer.unobserve(entry.target);
+
+                    }
+
+                });
+
+            }, { threshold: 0.1 });
+
+
+
+            cards.forEach((card, index) => {
+
+                card.dataset.delay = index * 0.05;
+
+                observer.observe(card);
+
+            });
+
+
+
+            // Modal Logic
+
+            const howToPlayButtons = document.querySelectorAll('.how-to-play-button');
+
+            const modals = document.querySelectorAll('.modal');
+
+
+
+            howToPlayButtons.forEach(button => {
+
+                button.addEventListener('click', () => {
+
+                    const modalTargetId = button.dataset.modalTarget;
+
+                    const modal = document.querySelector(modalTargetId);
+
+                    if (modal) {
+
+                        modal.style.display = 'flex'; // Use flex to center the modal content
+
+                    }
+
+                });
+
+            });
+
+
+
+            modals.forEach(modal => {
+
+                const closeButton = modal.querySelector('.close-button');
+
+                if (closeButton) {
+
+                    closeButton.addEventListener('click', () => {
+
+                        modal.style.display = 'none';
+
+                    });
+
+                }
+
+
+
+                // Close modal when clicking outside of the modal content
+
+                modal.addEventListener('click', (event) => {
+
+                    if (event.target === modal) {
+
+                        modal.style.display = 'none';
+
+                    }
+
+                });
+
+            });
+
+
+
+            // Close modal with Escape key
+
+            document.addEventListener('keydown', (event) => {
+
+                if (event.key === 'Escape') {
+
+                    modals.forEach(modal => {
+
+                        if (modal.style.display === 'flex') {
+
+                            modal.style.display = 'none';
+
+                        }
+
+                    });
+
+                }
+
+            });
+
+        });
+
+    </script>
+    <script src="js/sound_manager.js"></script>
+    <script src="js/score_manager.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
