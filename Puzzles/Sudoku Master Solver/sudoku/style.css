@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap');
+
+:root {
+    --primary-color: #4CAF50; /* Green */
+    --secondary-color: #FFC107; /* Amber */
+    --background-color: #F5F5F5; /* Light Gray */
+    --card-background: #FFFFFF; /* White */
+    --text-color: #333333; /* Dark Gray */
+    --border-color: #E0E0E0; /* Lighter Gray */
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: 30px 30px; }
+}
+
+.game-wrapper {
+    text-align: center;
+    background: var(--card-background);
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    box-sizing: border-box; /* Ensures padding is included in width/height */
+    display: flex; /* For centering content */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 95vw; /* Responsive width */
+    max-width: 660px; /* Max width based on original design + padding */
+    height: auto; /* Height will adjust to content */
+    max-height: calc(100vh - 80px); /* Limit total height to prevent scroll, allow some margin */
+}
+
+h1 { /* Main game title */
+    font-family: 'Press Start 2P', cursive;
+    color: var(--text-color);
+    text-align: center;
+    font-size: 2.5em;
+    margin: 20px 0;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+    z-index: 100;
+}
+
+.sudoku-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr); /* Responsive columns */
+  grid-gap: 2px;
+  margin: 20px auto;
+  width: 100%; /* Fill parent width */
+  height: auto; /* Height determined by aspect ratio */
+  aspect-ratio: 1/1; /* Sudoku grid is square */
+  border: 2px solid var(--border-color); /* Themed border for the whole grid */
+  border-radius: 5px;
+  background-color: var(--background-color); /* Light background for the grid */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.sudoku-grid input {
+  width: 100%; /* Fill cell width */
+  height: 0; /* Height will be determined by padding-bottom */
+  padding-bottom: 100%; /* Make cells square */
+  text-align: center;
+  font-size: clamp(10px, 4vw, 24px); /* Responsive font size */
+  border: 1px solid #eee; /* Lighter cell borders */
+  background-color: var(--card-background);
+  color: var(--text-color);
+  font-family: 'Roboto', sans-serif;
+  box-sizing: border-box; /* Ensure padding is included in width/height */
+}
+
+/* Thicker borders for 3x3 blocks */
+.sudoku-grid input:nth-child(3n) {
+    border-right: 2px solid var(--border-color);
+}
+.sudoku-grid input:nth-child(9n) {
+    border-right: 1px solid #eee; /* Adjust for grid end */
+}
+.sudoku-grid .grid-row:nth-child(3n) {
+    border-bottom: 2px solid var(--border-color);
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--primary-color); /* Themed focus outline */
+}
+
+.buttons button {
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-family: 'Press Start 2P', cursive;
+  background-color: var(--primary-color);
+  color: var(--card-background);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.buttons button:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.buttons button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}

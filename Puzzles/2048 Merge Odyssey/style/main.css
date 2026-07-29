@@ -1,0 +1,559 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap');
+
+:root {
+    --primary-color: #4CAF50; /* Green */
+    --secondary-color: #FFC107; /* Amber */
+    --background-color: #F5F5F5; /* Light Gray */
+    --card-background: #FFFFFF; /* White */
+    --text-color: #333333; /* Dark Gray */
+    --border-color: #E0E0E0; /* Lighter Gray */
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--background-color);
+  color: var(--text-color);
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: 30px 30px; }
+}
+
+.game-wrapper {
+    text-align: center;
+    background: var(--card-background);
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    box-sizing: border-box; /* Ensures padding is included in width/height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center vertically if space allows */
+
+    width: 95vw; /* Responsive width */
+    max-width: 664px; /* Max width based on original design + padding */
+    height: auto; /* Height will adjust to content */
+    max-height: calc(100vh - 80px); /* Limit total height to prevent scroll, allow some margin */
+}
+
+h1 { /* Main game title (from portal template) */
+    font-family: 'Press Start 2P', cursive;
+    color: var(--text-color);
+    text-align: center;
+    font-size: 2.5em;
+    margin: 20px 0;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+    z-index: 100;
+}
+
+.container {
+  width: 100%;
+  max-width: 600px; /* Original width of the game content itself */
+  margin: 0 auto;
+  padding-top: 20px;
+}
+
+.heading:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+h1.title { /* Game's internal title */
+  font-family: 'Press Start 2P', cursive;
+  font-size: 72px;
+  font-weight: bold;
+  margin: 0;
+  display: block;
+  float: left;
+  color: var(--primary-color);
+  text-shadow: none; /* Remove original text shadow */
+}
+
+@-webkit-keyframes move-up {
+  0% { top: 25px; opacity: 1; }
+  100% { top: -50px; opacity: 0; }
+}
+@-moz-keyframes move-up {
+  0% { top: 25px; opacity: 1; }
+  100% { top: -50px; opacity: 0; }
+}
+@keyframes move-up {
+  0% { top: 25px; opacity: 1; }
+  100% { top: -50px; opacity: 0; }
+}
+
+.scores-container {
+  float: right;
+  text-align: right;
+}
+
+.score-container, .best-container {
+  position: relative;
+  display: inline-block;
+  background: var(--background-color); /* Light background for scores */
+  padding: 10px 20px;
+  font-size: 20px;
+  height: 25px; /* Adjusted height */
+  line-height: 25px; /* Adjusted line height */
+  font-weight: bold;
+  border-radius: 5px;
+  color: var(--text-color);
+  margin-top: 8px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+}
+  .score-container:after, .best-container:after {
+    position: absolute;
+    width: 100%;
+    top: 5px; /* Adjusted position */
+    left: 0;
+    text-transform: uppercase;
+    font-size: 12px;
+    line-height: 12px;
+    text-align: center;
+    color: #999; /* Darker text for labels */
+}
+  .score-container .score-addition, .best-container .score-addition {
+    position: absolute;
+    right: 15px; /* Adjusted position */
+    color: var(--secondary-color); /* Themed color for score additions */
+    font-size: 20px;
+    line-height: 20px;
+    font-weight: bold;
+    z-index: 100;
+    -webkit-animation: move-up 600ms ease-in;
+    -moz-animation: move-up 600ms ease-in;
+    animation: move-up 600ms ease-in;
+    -webkit-animation-fill-mode: both;
+    -moz-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.score-container:after {
+  content: "Score";
+}
+
+.best-container:after {
+  content: "Best";
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 10px;
+  line-height: 1.65;
+  color: var(--text-color);
+}
+
+a {
+  color: var(--primary-color);
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+strong.important {
+  text-transform: uppercase;
+  color: var(--secondary-color);
+}
+
+hr {
+  border: none;
+  border-bottom: 1px solid var(--border-color);
+  margin-top: 20px;
+  margin-bottom: 30px;
+}
+
+@-webkit-keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@-moz-keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.game-container {
+  margin-top: 20px;
+  position: relative;
+  padding: 15px;
+  cursor: default;
+  -webkit-touch-callout: none;
+  -ms-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -ms-touch-action: none;
+  touch-action: none;
+  background: #f8f8f8;
+  border-radius: 6px;
+  width: 100%; /* Fill parent container */
+  height: auto; /* Height determined by padding-bottom */
+  padding-bottom: 100%; /* Maintain 1:1 aspect ratio */
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.game-container .game-message {
+    display: none;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.8); /* Lighter message background */
+    color: var(--text-color);
+    z-index: 100;
+    text-align: center;
+    -webkit-animation: fade-in 800ms ease 1200ms;
+    -moz-animation: fade-in 800ms ease 1200ms;
+    animation: fade-in 800ms ease 1200ms;
+    -webkit-animation-fill-mode: both;
+    -moz-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+    .game-container .game-message p {
+      font-size: 60px;
+      font-weight: bold;
+      height: 60px;
+      line-height: 60px;
+      margin-top: 222px;
+      color: var(--text-color);
+}
+    .game-container .game-message .lower {
+      display: block;
+      margin-top: 59px;
+    }
+    .game-container .game-message a {
+      display: inline-block;
+      background: var(--primary-color); /* Themed button */
+      border-radius: 3px;
+      padding: 0 20px;
+      text-decoration: none;
+      color: var(--card-background);
+      height: 40px;
+      line-height: 42px;
+      margin-left: 9px;
+    }
+      .game-container .game-message a.keep-playing-button {
+        display: none;
+    }
+    .game-container .game-message.game-won {
+      background: rgba(0, 123, 255, 0.5); /* Themed won background */
+      color: var(--card-background);
+    }
+      .game-container .game-message.game-won a.keep-playing-button {
+        display: inline-block;
+    }
+    .game-container .game-message.game-won, .game-container .game-message.game-over {
+      display: block;
+    }
+
+.grid-container {
+  position: absolute;
+  z-index: 1;
+}
+
+.grid-row {
+  margin-bottom: 15px;
+}
+  .grid-row:last-child {
+    margin-bottom: 0;
+  }
+  .grid-row:after {
+    content: "";
+    display: block;
+    clear: both;
+}
+
+.grid-cell {
+  width: 131.25px;
+  height: 131.25px;
+  margin-right: 15px;
+  float: left;
+  border-radius: 3px;
+  background: rgba(238, 228, 218, 0.5); /* Lighter grid cell background */
+}
+  .grid-cell:last-child {
+    margin-right: 0;
+}
+
+.tile-container {
+  position: absolute;
+  z-index: 2;
+}
+
+.tile, .tile .tile-inner {
+  width: 132px;
+  height: 132px;
+  line-height: 132px;
+  font-family: 'Press Start 2P', cursive;
+}
+.tile {
+  position: absolute;
+  -webkit-transition: 100ms ease-in-out;
+  -moz-transition: 100ms ease-in-out;
+  transition: 100ms ease-in-out;
+  -webkit-transition-property: -webkit-transform;
+  -moz-transition-property: -moz-transform;
+  transition-property: transform;
+}
+  .tile .tile-inner {
+    border-radius: 3px;
+    background: #eee4da;
+    text-align: center;
+    font-weight: bold;
+    z-index: 10;
+    font-size: 55px;
+    color: var(--text-color);
+}
+  /* Tile Colors - Minimalist Theme Palette */
+  .tile.tile-2 .tile-inner {
+    background: #e6ffe6; /* Very light green */
+    color: var(--text-color);
+  }
+  .tile.tile-4 .tile-inner {
+    background: #ccffcc; /* Lighter green */
+    color: var(--text-color);
+  }
+  .tile.tile-8 .tile-inner {
+    color: var(--card-background); /* White text */
+    background: #99ff99; /* Light green */
+  }
+  .tile.tile-16 .tile-inner {
+    color: var(--card-background);
+    background: #66ff66; /* Green */
+  }
+  .tile.tile-32 .tile-inner {
+    color: var(--card-background);
+    background: #33ff33; /* Bright Green */
+  }
+  .tile.tile-64 .tile-inner {
+    color: var(--card-background);
+    background: #00e600; /* Darker Bright Green */
+  }
+  .tile.tile-128 .tile-inner {
+    color: var(--card-background);
+    background: #00cc00; /* Even Darker Green */
+    font-size: 40px; /* Adjusted font size */
+  }
+  .tile.tile-256 .tile-inner {
+    color: var(--card-background);
+    background: #009900; /* Darkest Green */
+    font-size: 40px; /* Adjusted font size */
+  }
+  .tile.tile-512 .tile-inner {
+    color: var(--card-background);
+    background: #006600; /* Deep Green */
+    font-size: 40px; /* Adjusted font size */
+  }
+  .tile.tile-1024 .tile-inner {
+    color: var(--card-background);
+    background: var(--primary-color); /* Primary Green */
+    font-size: 30px; /* Adjusted font size */
+  }
+  .tile.tile-2048 .tile-inner {
+    color: var(--card-background);
+    background: #003300; /* Very Deep Green */
+    font-size: 30px; /* Adjusted font size */
+  }
+  .tile.tile-super .tile-inner {
+    color: var(--card-background);
+    background: #555555; /* Medium Gray */
+    font-size: 25px; /* Adjusted font size */
+  }
+
+.tile-new .tile-inner {
+  -webkit-animation: appear 200ms ease 100ms;
+  -moz-animation: appear 200ms ease 100ms;
+  animation: appear 200ms ease 100ms;
+  -webkit-animation-fill-mode: backwards;
+  -moz-animation-fill-mode: backwards;
+  animation-fill-mode: backwards;
+}
+
+.tile-merged .tile-inner {
+  z-index: 20;
+  -webkit-animation: pop 200ms ease 100ms;
+  -moz-animation: pop 200ms ease 100ms;
+  animation: pop 200ms ease 100ms;
+  -webkit-animation-fill-mode: backwards;
+  -moz-animation-fill-mode: backwards;
+  animation-fill-mode: backwards;
+}
+
+.above-game:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.game-intro {
+  float: left;
+  line-height: 42px;
+  margin-bottom: 0;
+  color: var(--text-color);
+}
+
+.restart-button {
+  display: inline-block;
+  background: var(--primary-color); /* Themed button */
+  border-radius: 3px;
+  padding: 0 20px;
+  text-decoration: none;
+  color: var(--card-background);
+  height: 40px;
+  line-height: 42px;
+  display: block;
+  text-align: center;
+  float: right;
+  font-family: 'Press Start 2P', cursive;
+  transition: all 0.2s ease;
+}
+
+.restart-button:hover {
+    background: var(--secondary-color);
+}
+
+.game-explanation {
+  margin-top: 10px;
+  color: var(--text-color);
+}
+
+@media screen and (max-width: 520px) {
+  html, body {
+    font-size: 15px;
+  }
+
+  body {
+    margin: 20px 0;
+    padding: 0 20px;
+  }
+
+  h1.title {
+    font-size: 27px;
+    margin-top: 15px;
+  }
+
+  .container {
+    width: 280px;
+    margin: 0 auto;
+  }
+
+  .score-container, .best-container {
+    margin-top: 0;
+    padding: 10px 8px; /* Adjusted padding */
+    min-width: 40px;
+    font-size: 16px; /* Adjusted font size */
+    line-height: 20px;
+  }
+  .score-container:after, .best-container:after {
+    top: 2px;
+  }
+
+
+  .game-intro {
+    width: 55%;
+    display: block;
+    box-sizing: border-box;
+    line-height: 1.65;
+  }
+
+  .restart-button {
+    width: 42%;
+    padding: 0;
+    display: block;
+    box-sizing: border-sizing;
+    margin-top: 2px;
+  }
+
+  .game-container {
+    margin-top: 4px;
+    padding: 10px;
+    width: 280px;
+    height: 280px;
+  }
+    .game-container .game-message {
+      background: rgba(255, 255, 255, 0.8); /* Lighter message background */
+      color: var(--text-color);
+    }
+      .game-container .game-message p {
+        font-size: 30px !important;
+        height: 30px !important;
+        line-height: 30px !important;
+        margin-top: 90px !important;
+      }
+      .game-container .game-message .lower {
+        margin-top: 30px !important;
+      }
+      .game-container .game-message a {
+        background: var(--primary-color);
+        color: var(--card-background);
+      }
+      .game-container .game-message.game-won {
+        background: rgba(0, 123, 255, 0.5); /* Themed won background */
+        color: var(--card-background);
+      }
+
+  .grid-row {
+    margin-bottom: 10px;
+  }
+
+  .grid-cell {
+    width: 57.5px;
+    height: 57.5px;
+    margin-right: 10px;
+  }
+
+  .tile, .tile .tile-inner {
+    width: 58px;
+    height: 58px;
+    line-height: 58px;
+  }
+
+  .tile .tile-inner {
+    font-size: 30px;
+  }
+}

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Palace - Puzzles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Skip to Main Content</a>
+    <button class="hamburger-menu" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="logo">Pixel Palace</div>
+            <div class="search-container">
+                <input type="text" id="game-search" class="search-input" placeholder="Search games..."
+                    aria-label="Search games">
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Arcade</a></li>
+                <li><a href="puzzles.html" class="active-link">Puzzles</a></li>
+                <li><a href="tabletop.html">Tabletop</a></li>
+                <li><a href="challenges.html">Challenges</a></li>
+                <li><a href="creative.html">Creative</a></li>
+                <li><a href="tools.html">Tools</a></li>
+                <li><a href="education.html">Education</a></li>
+            </ul>
+        </aside>
+        <div class="sidebar-overlay"></div>
+
+        <main class="main-content" id="main-content">
+
+            <header class="header">
+                <h1>Pixel Palace</h1>
+                <p>Explore Digital Realms</p>
+                <p class="tagline">A vibrant collection of student-built mini-games. No logins, no ads, just pure fun!
+                </p>
+            </header>
+
+            <div id="puzzles" class="category-section">
+                <h2 class="category-title">Puzzles</h2>
+                <div class="game-section">
+                    <h3>Featured Games</h3>
+                    <div class="game-grid">
+                        <article class="game-card featured" data-category=\"action classic">
+
+                            <div class="image-container">
+                                <img src="assets/images/game_2048.svg"
+                                    alt="3D Cover art for 2048 Merge Odyssey game">
+                            </div>
+                            <div class="card-content">
+                                <h3>2048 Merge Odyssey</h3>
+                                <p class="description">Slide and combine numbered tiles to reach the ultimate 2048 tile
+                                    in this addictive puzzle!</p>
+                                <div class="card-buttons">
+                                    <a href="Puzzles/2048 Merge Odyssey/index.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#merge-odyssey-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="merge-odyssey-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: 2048 Merge Odyssey</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Combine tiles with the same number by sliding them across the grid to reach a
+                                        tile with the number 2048.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Arrow Keys (Up, Down, Left, Right):</strong> Slide all tiles on the
+                                            board in the chosen direction.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>When two tiles with the same number touch, they merge into one tile with the
+                                            sum of their numbers.</li>
+                                        <li>A new tile (2 or 4) appears on the board after every move.</li>
+                                        <li>The game ends when the board is full and no more moves are possible.</li>
+                                        <li>Try to keep higher numbered tiles in a corner or along one edge.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/mind_vault_cover.svg"
+                                    alt="Mind Vault Memory 3D Cyber Cover Art">
+                            </div>
+                            <div class="card-content">
+                                <h3>Mind Vault Memory</h3>
+                                <p class="description">Test your memory and concentration by matching pairs of hidden
+                                    cards.</p>
+                                <div class="card-buttons">
+                                    <a href="Puzzles/Mind Vault Memory/mainGame.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#mind-vault-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="mind-vault-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Mind Vault Memory</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Find all matching pairs of cards by flipping them two at a time. The goal is to
+                                        clear the board in the fewest moves possible.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Mouse Click:</strong> Click on two cards to flip them over.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>If the two flipped cards match, they remain face-up and are removed from
+                                            play.</li>
+                                        <li>If they don't match, they flip back face-down after a short delay.</li>
+                                        <li>Try to remember the position of cards to make successful matches.</li>
+                                        <li>Focus and concentration are key to improving your score!</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-section">
+                    <h3>All Games</h3>
+                    <div class="game-grid">
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/game_2048.svg" alt="Chromatic Reflex preview">
+                            </div>
+                            <div class="card-content">
+                                <h3>Chromatic Reflex</h3>
+                                <p class="description">Test your color perception and speed by guessing the correct
+                                    color!</p>
+                                <div class="card-buttons">
+                                    <a href="Puzzles/Chromatic Reflex/color-guessor/index.html"
+                                        class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#chromatic-reflex-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="chromatic-reflex-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Chromatic Reflex</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Identify and select the color that matches the given RGB code or name as quickly
+                                        as possible.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Mouse Click:</strong> Click on the color swatch that matches the
+                                            target.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>The game provides a target color and several options.</li>
+                                        <li>Each correct guess earns points, and incorrect guesses may penalize you or
+                                            end the round.</li>
+                                        <li>Focus on quick recognition and decision-making to achieve a high score.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="Puzzles/Character Match Mania/images/din_djarin.png"
+                                    alt="Screenshot of Character Match Mania, a game featuring various character images.">
+                            </div>
+                            <div class="card-content">
+                                <h3>Character Match Mania</h3>
+                                <p class="description">Match pairs of popular characters in this fun and engaging memory
+                                    game!</p>
+                                <div class="card-buttons">
+                                    <a href="Puzzles/Character Match Mania/index.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#character-match-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="character-match-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Character Match Mania</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Flip cards to find and match pairs of identical characters. Clear the board to
+                                        win!</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Mouse Click:</strong> Click on two cards to reveal them.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>If the two revealed characters match, they stay face-up.</li>
+                                        <li>If they don't match, they flip back over.</li>
+                                        <li>Try to remember where each character is to make quick matches.</li>
+                                        <li>Faster completion often leads to higher scores.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/brick_smash.svg" alt="Mystery Number Quest preview">
+                            </div>
+                            <div class="card-content">
+                                <h3>Mystery Number Quest</h3>
+                                <p class="description">Guess the secret number within a limited number of attempts. A
+                                    classic guessing game!</p>
+                                <div class="card-buttons">
+                                    <a href="Puzzles/Mystery Number Quest/index.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#mystery-number-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="mystery-number-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Mystery Number Quest</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Guess the randomly generated secret number within a specific range using hints
+                                        provided after each guess.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Input Field:</strong> Type your guess into the provided input box.
+                                        </li>
+                                        <li><strong>"Guess" Button:</strong> Submit your guess.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>After each guess, you'll be told if your guess was too high or too low.</li>
+                                        <li>Try to narrow down the range of possible numbers with each guess.</li>
+                                        <li>The game tracks the number of attempts – try to guess the number in the
+                                            fewest tries!</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/brick_smash.svg" alt="Puzzle Realm preview">
+                            </div>
+                            <div class="card-content">
+                                <h3>Puzzle Realm</h3>
+                                <p class="description">Solve various sliding tile puzzles by arranging pieces to form a
+                                    complete image.</p>
+                                <div class="card-buttons">
+                                    <a href="Puzzles/Puzzle Realm/index.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#puzzle-realm-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="puzzle-realm-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Puzzle Realm</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Rearrange scrambled tiles to complete a picture or numerical sequence within a
+                                        grid.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Mouse Click:</strong> Click on a tile adjacent to the empty space to
+                                            slide it into the empty spot.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>The goal is to restore the original image or order of numbers.</li>
+                                        <li>Plan your moves carefully to avoid getting stuck.</li>
+                                        <li>Some puzzles may track your moves or time – try to solve them efficiently!
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/flappy_flight.svg" alt="Simon Sequence Challenge preview">
+                            </div>
+                            <div class="card-content">
+                                <h3>Simon Sequence Challenge</h3>
+                                <p class="description">Test your memory and pattern recognition by repeating
+                                    increasingly complex sequences of lights and sounds!</p>
+                                <div class="card-buttons">
+                                    <a href="Puzzles/Simon Sequence Challenge/index.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#simon-challenge-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="simon-challenge-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Simon Sequence Challenge</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Memorize and repeat increasingly long sequences of flashing lights and tones
+                                        generated by the game.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Mouse Click:</strong> Click on the colored buttons in the correct
+                                            sequence.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>The game will present a sequence, which you must then replicate.</li>
+                                        <li>Each correct sequence adds another element to the pattern, increasing
+                                            difficulty.</li>
+                                        <li>A mistake ends the game. Try to achieve the longest possible sequence!</li>
+                                        <li>Pay close attention to both the visual and auditory cues.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/game_2048.svg" alt="Sudoku Master Solver preview">
+                            </div>
+                            <div class="card-content">
+                                <h3>Sudoku Master Solver</h3>
+                                <p class="description">Solve challenging Sudoku puzzles and test your logical deduction
+                                    skills.</p>
+                                <div class="card-buttons">
+                                    <a href="Puzzles/Sudoku Master Solver/sudoku/index.html"
+                                        class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#sudoku-solver-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="sudoku-solver-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Sudoku Master Solver</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Fill a 9x9 grid with digits so that each column, each row, and each of the nine
+                                        3x3 subgrids contain all of the digits from 1 to 9.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Mouse Click:</strong> Select a cell and then choose a digit from 1-9
+                                            to fill it.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>Each number must appear only once in each row, column, and 3x3 block.</li>
+                                        <li>Start by filling in numbers where there are fewer possibilities.</li>
+                                        <li>Use process of elimination to deduce the correct digits.</li>
+                                        <li>The game provides hints or checks your answers in some versions.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.game-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationDelay = `${entry.target.dataset.delay}s`;
+                        entry.target.classList.add('in-view');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            cards.forEach((card, index) => {
+                card.dataset.delay = index * 0.05;
+                observer.observe(card);
+            });
+
+            // Modal Logic
+            const howToPlayButtons = document.querySelectorAll('.how-to-play-button');
+            const modals = document.querySelectorAll('.modal');
+
+            howToPlayButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const modalTargetId = button.dataset.modalTarget;
+                    const modal = document.querySelector(modalTargetId);
+                    if (modal) {
+                        modal.style.display = 'flex'; // Use flex to center the modal content
+                    }
+                });
+            });
+
+            modals.forEach(modal => {
+                const closeButton = modal.querySelector('.close-button');
+                if (closeButton) {
+                    closeButton.addEventListener('click', () => {
+                        modal.style.display = 'none';
+                    });
+                }
+
+                // Close modal when clicking outside of the modal content
+                modal.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    modals.forEach(modal => {
+                        if (modal.style.display === 'flex') {
+                            modal.style.display = 'none';
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

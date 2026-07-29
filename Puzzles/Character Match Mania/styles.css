@@ -1,0 +1,406 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap");
+
+:root {
+    --primary-color: #4CAF50; /* Green */
+    --secondary-color: #FFC107; /* Amber */
+    --background-color: #F5F5F5; /* Light Gray */
+    --card-background: #FFFFFF; /* White */
+    --text-color: #333333; /* Dark Gray */
+    --border-color: #E0E0E0; /* Lighter Gray */
+}
+
+* {
+	box-sizing: border-box;
+	font-family: 'Roboto', sans-serif;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: var(--background-color);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: 30px 30px; }
+}
+
+.game-wrapper {
+    text-align: center;
+    background: var(--card-background);
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    box-sizing: border-box; /* Ensures padding is included in width/height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 95vw; /* Responsive width */
+    max-width: 1024px; /* Max width based on original design + padding */
+    height: auto; /* Height will adjust to content */
+    max-height: calc(100vh - 80px); /* Limit total height to prevent scroll, allow some margin */
+    color: var(--text-color); /* Default text color for the wrapper */
+}
+
+h1 { /* Main game title */
+    font-family: 'Press Start 2P', cursive;
+    color: var(--text-color);
+    text-align: center;
+    font-size: 2.5em;
+    margin: 20px 0;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+    z-index: 100;
+}
+
+header,
+main,
+footer {
+	color: var(--text-color);
+	padding: 20px 0;
+    width: 100%; /* Ensure they take full width within game-wrapper */
+}
+
+header,
+footer {
+	background: var(--background-color); /* Lighter background for header/footer */
+    border-bottom: 1px solid var(--border-color);
+}
+footer {
+    border-top: 1px solid var(--border-color);
+    border-bottom: none;
+}
+
+
+nav {
+	display: flex;
+	align-items: center;
+	margin-top: 10px;
+}
+
+nav button {
+	background: var(--primary-color);
+	border: none;
+	color: var(--card-background);
+	cursor: pointer;
+	font-size: 1rem;
+	outline: none;
+	text-align: left;
+	width: 80px; /* Slightly wider button */
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-family: 'Press Start 2P', cursive;
+    transition: background-color 0.2s ease;
+}
+
+nav button:hover {
+	background: var(--secondary-color);
+}
+
+nav a {
+	margin-left: 28px;
+	padding: 5px;
+	color: var(--text-color); /* Themed link color */
+}
+
+nav a:hover {
+	border-radius: 3px;
+	background: var(--background-color); /* Themed hover background */
+    color: var(--primary-color);
+}
+
+footer a {
+    color: var(--primary-color);
+}
+footer a:hover {
+	color: var(--secondary-color);
+}
+
+.hide {
+	display: none;
+}
+
+/* Containers */
+.container {
+	margin: auto;
+	width: 80%;
+}
+
+.main-container h2 {
+	text-align: center;
+    font-family: 'Press Start 2P', cursive;
+    color: var(--text-color);
+    margin-bottom: 1em;
+}
+
+/* Float */
+.main-container .columns {
+	width: 100%;
+	min-height: 400px; /* Adjusted min-height for better light theme appearance */
+    display: flex; /* Use flexbox instead of floats for better layout control */
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.columns .left {
+	/* float: left; */ /* Removed float */
+	width: 30%;
+	max-width: 280px;
+    min-width: 250px; /* Ensure minimum width */
+    order: 1; /* For flexbox ordering */
+    background: var(--background-color);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    border: 1px solid var(--border-color);
+}
+
+.columns .right {
+	/* float: left; */ /* Removed float */
+	width: 60%;
+    min-width: 300px; /* Ensure minimum width */
+    order: 2; /* For flexbox ordering */
+    background: var(--background-color);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    border: 1px solid var(--border-color);
+}
+
+.columns::after {
+	content: "";
+	clear: both; /* Still good to keep for older browsers/fallback */
+}
+
+.left .rating {
+	margin-top: 20px;
+}
+
+.left .rating label {
+    color: var(--text-color);
+    margin-bottom: 10px;
+    display: block;
+}
+
+.left .rating input[type="range"] {
+	width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    background: var(--border-color);
+    outline: none;
+    opacity: 0.7;
+    transition: opacity .2s;
+    border-radius: 5px;
+}
+.left .rating input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    border: 2px solid var(--card-background);
+}
+.left .rating input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    cursor: pointer;
+    border: 2px solid var(--card-background);
+}
+
+
+.left img {
+	margin-top: 20px;
+	width: 100%;
+}
+
+/* Form */
+form {
+	text-align: center;
+	padding: 20px;
+}
+
+form label {
+    color: var(--text-color);
+    margin-bottom: 10px;
+    display: block;
+}
+
+form input[type="text"] {
+	border: 1px solid var(--border-color);
+	border-radius: 5px;
+	display: block;
+	margin: auto;
+	font-size: 1.2rem;
+	font-weight: bold;
+	padding: 8px;
+	text-align: center;
+	width: 90%; /* Make responsive */
+    max-width: 280px; /* Original max width */
+    background: var(--card-background);
+    color: var(--text-color);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+form input:focus {
+	outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-color);
+}
+
+form #form-result {
+	background: var(--background-color); /* Light themed background */
+	font-size: 0.9rem;
+	margin: 20px auto 0;
+	padding: 5px;
+	min-width: 280px;
+	max-width: 50%;
+    color: var(--text-color);
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+}
+
+form #form-result div {
+	margin: 5px;
+}
+
+#characters {
+	margin: 20px 0;
+	text-align: center;
+}
+
+#characters .chars {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+	align-items: center;
+	margin: 20px 0;
+	min-height: 120px;
+    gap: 10px; /* Spacing between characters */
+}
+
+#characters .chars .char {
+	background: var(--background-color); /* Light themed background */
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-weight: bold;
+	width: 120px;
+	height: 120px;
+	border-radius: 10px; /* Slightly rounded */
+    border: 2px solid var(--border-color);
+    color: var(--text-color);
+    transition: all 0.2s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+#characters .chars .char:hover {
+	transform: scale(1.05);
+    border-color: var(--primary-color);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* Character background images - keep original for visual identity */
+#characters .chars .char-1 { background-image: url("./images/din_djarin.png"); background-size: cover; background-position: center; }
+#characters .chars .char-2 { background-image: url("./images/han_solo.png"); background-size: cover; background-position: center; }
+#characters .chars .char-3 { background-image: url("./images/luke_skywalker.png"); background-size: cover; background-position: center; }
+#characters .chars .char-4 { background-image: url("./images/rey.png"); background-size: cover; background-position: center; }
+
+
+#random {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#random button {
+	background-color: var(--primary-color);
+	border: none;
+	border-radius: 5px;
+	color: var(--card-background);
+	cursor: pointer;
+	margin: 10px;
+	padding: 8px 15px;
+	outline: none;
+	width: 200px;
+    font-family: 'Press Start 2P', cursive;
+    transition: all 0.2s ease;
+}
+
+#random button:hover {
+	background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+#random #random-result {
+	background: var(--background-color); /* Light themed background */
+	display: flex;
+	justify-content: start;
+	align-items: center;
+	margin: 20px auto;
+	padding: 20px;
+	width: 80%;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+#random .char-image {
+	width: 30%;
+	text-align: center;
+}
+
+#random .char-image #char-img {
+	max-width: 200px;
+	max-height: 200px;
+}
+
+#random .char-details {
+	width: 70%;
+    text-align: left;
+}
+
+#random .char-details div {
+    margin-bottom: 5px;
+}
+
+footer small {
+    color: #999;
+}

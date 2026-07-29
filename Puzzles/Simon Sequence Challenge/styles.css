@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap');
+
+:root {
+    --primary-color: #4CAF50; /* Green */
+    --secondary-color: #FFC107; /* Amber */
+    --background-color: #F5F5F5; /* Light Gray */
+    --card-background: #FFFFFF; /* White */
+    --text-color: #333333; /* Dark Gray */
+    --border-color: #E0E0E0; /* Lighter Gray */
+
+    /* Simon Game Specific Colors (Minimalist Light Theme) */
+    --simon-green-light: #C8E6C9; /* Light Green */
+    --simon-red-light: #FFCDD2; /* Light Red */
+    --simon-yellow-light: #FFECB3; /* Light Yellow */
+    --simon-blue-light: #BBDEFB; /* Light Blue */
+    --simon-pressed-bg: #E0E0E0; /* Light Gray for pressed state */
+    --simon-gameover-bg: #FFEBEE; /* Very Light Red for game over */
+}
+
+body {
+    text-align: center;
+    background-color: var(--background-color);
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: 30px 30px; }
+}
+
+.game-wrapper {
+    text-align: center;
+    background: var(--card-background);
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    box-sizing: border-box; /* Ensures padding is included in width/height */
+    display: flex; /* For centering content */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 95vw; /* Responsive width */
+    max-width: 864px; /* Max width based on original design + padding */
+    height: auto; /* Height will adjust to content */
+    max-height: calc(100vh - 80px); /* Limit total height to prevent scroll, allow some margin */
+}
+
+h1 { /* Main game title */
+    font-family: 'Press Start 2P', cursive;
+    color: var(--text-color);
+    text-align: center;
+    font-size: 2.5em;
+    margin: 20px 0;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+    z-index: 100;
+}
+
+#level-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 2rem; /* Adjusted font size */
+  margin:  20px 0;
+  color: var(--text-color);
+}
+
+.container {
+  display: grid; /* Use grid for responsive layout */
+  grid-template-columns: repeat(2, 1fr); /* Two columns, equal width */
+  gap: 20px; /* Spacing between buttons */
+  width: 100%; /* Fill parent */
+  max-width: 800px; /* Original fixed width for the game board */
+  height: auto; /* Height determined by aspect ratio */
+  aspect-ratio: 1/1; /* Maintain 1:1 aspect ratio */
+  margin: 0 auto;
+  background-color: var(--background-color);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+}
+
+.btn {
+  /* margin: 20px; - Removed margin to be handled by gap */
+  display: block; /* Use block for full grid cell */
+  width: 100%; /* Fill grid cell width */
+  height: auto; /* Height determined by padding-bottom for aspect ratio */
+  padding-bottom: 100%; /* Maintain 1:1 aspect ratio for each button */
+  border: 10px solid var(--border-color);
+  border-radius: 20%;
+  cursor: pointer;
+  transition: all 0.1s ease-out;
+  position: relative; /* For content inside if any */
+}
+
+/* Themed button colors */
+.green {
+  background-color: var(--simon-green-light);
+}
+
+.red {
+  background-color: var(--simon-red-light);
+}
+
+.yellow {
+  background-color: var(--simon-yellow-light);
+}
+
+.blue {
+  background-color: var(--simon-blue-light);
+}
+
+.game-over {
+  background-color: var(--simon-gameover-bg);
+  opacity: 0.9;
+  border: 10px solid var(--secondary-color);
+}
+
+.pressed {
+  box-shadow: 0 0 20px var(--primary-color); /* Vibrant shadow when pressed */
+  background-color: var(--simon-pressed-bg); /* Lighter pressed background */
+  opacity: 0.8;
+}
+
+/* Removed unused classes */
+/* .activated {
+  border: "2px solid #fff";
+}
+
+.animate {
+  border: 10px double violet;
+} */
