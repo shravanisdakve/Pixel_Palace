@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap');
+
+:root {
+    --primary-color: #FF00FF; /* Magenta */
+    --secondary-color: #00FFFF; /* Cyan */
+    --background-color: #222222; /* Dark Gray */
+    --card-background: #333333; /* Slightly lighter dark gray */
+    --text-color: #FFFFFF; /* White */
+    --border-color: #555555; /* Medium Gray */
+}
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--background-color);
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: var(--text-color);
+    text-align: center;
+}
+
+.game-wrapper {
+    text-align: center;
+    background: var(--card-background);
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    position: relative;
+    width: 95%;
+    max-width: 600px; /* Appropriate max-width for this game */
+}
+
+h2{
+    font-family: 'Press Start 2P', cursive;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+}
+
+.game{
+    width: 500px;
+    max-width: 100%; /* Make game responsive */
+    height: 200px;
+    border: 2px solid var(--border-color);
+    margin: auto;
+    background: #f0f0f0; /* Light background for game area */
+}
+
+#character{
+    width: 20px;
+    height: 50px;
+    background-color: red;
+    position:relative;
+    top: 150px;
+}
+.animate{
+    animation: jump 0.3s linear;
+}
+@keyframes jump{
+    0%{top: 150px;}
+    30%{top: 100px;}
+    70%{top: 100px;}
+    100%{top: 150px;}
+}
+
+#block{
+    background-color: blue;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: 130px;
+    left: 500px;
+    animation: block 1s infinite linear;
+}
+#block2{
+    background-color: orange;
+    width: 20px;
+    height: 20px;
+    position: relative;
+    top: 30px;
+    left: 500px;
+}
+.animate1{
+    animation: blocke 1.5s  infinite linear;
+}
+@keyframes blocke{
+    0%{left:500px}
+    100%{left:-20px}
+}
+@keyframes block{
+    0%{left: 500px}
+    100%{left: -20px}
+}
+p{
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.2em;
+}
+#co{
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-family: 'Press Start 2P', cursive;
+    color: var(--secondary-color);
+}
+.animate2{
+    animation: pa 1s ease-in-out;
+}
+.show{
+    opacity: 0;
+}
+
+/* Custom Alert Popup Styles */
+.custom-alert-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: 'Press Start 2P', cursive;
+}
+.custom-alert-popup {
+    background: #333;
+    color: white;
+    padding: 2em;
+    border-radius: 15px;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 20px var(--primary-color);
+    text-align: center;
+    max-width: 80%;
+}
+.custom-alert-popup p {
+    margin: 0 0 1.5em 0;
+    font-size: 1.2em;
+    line-height: 1.5;
+    color: var(--secondary-color);
+}
+.custom-alert-popup button {
+    background-color: var(--primary-color);
+    color: #333;
+    border: none;
+    padding: 1em 2em;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.custom-alert-popup button:hover {
+    background-color: var(--secondary-color);
+    color: #000;
+    box-shadow: 0 0 15px var(--secondary-color);
+}

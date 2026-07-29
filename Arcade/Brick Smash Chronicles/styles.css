@@ -1,0 +1,111 @@
+:root {
+    --primary-color: #FF00FF; /* Magenta */
+    --secondary-color: #00FFFF; /* Cyan */
+    --background-color: #222222; /* Dark Gray */
+    --card-background: #333333; /* Slightly lighter dark gray */
+    --text-color: #FFFFFF; /* White */
+    --border-color: #555555; /* Medium Gray */
+}
+
+body {
+    background-color: var(--background-color);
+    font-family: 'Press Start 2P', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.game-container {
+    text-align: center;
+    background: var(--card-background);
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+}
+
+h1 {
+    margin: 0 0 20px 0;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 2.5rem;
+    color: var(--text-color);
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+#mycanvas{
+    background-color: #000; /* Black background for the game canvas for contrast */
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+}
+
+/* Popup Styles */
+.popup-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+.popup {
+    background: var(--card-background);
+    padding: 2.5rem 4rem;
+    border-radius: 10px;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 20px var(--primary-color);
+    text-align: center;
+    color: var(--text-color);
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.popup h2 {
+    font-size: 2rem;
+    margin: 0 0 1.5rem 0;
+    color: var(--secondary-color);
+    text-shadow: 0 0 10px var(--secondary-color);
+}
+
+.popup button {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    border: none;
+    padding: 1rem 2rem;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.popup button:hover {
+    background-color: var(--secondary-color);
+    color: #000;
+    box-shadow: 0 0 15px var(--secondary-color);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

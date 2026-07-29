@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="styles.css">
+    <title>2D Brick Breaker</title>
+</head>
+
+<body>
+    <a href="../../index.html" class="back-link">&lt; Back to Pixel Palace</a>
+    <div class="game-container">
+        <h1>Brick Breaker</h1>
+        <canvas id="mycanvas" width="800" height="600">
+            I'm sorry your browser version does not support canvas <!--Fallback Content-->
+        </canvas>
+        <div id="popup-container" class="popup-container" style="display: none;">
+            <div class="popup">
+                <h2 id="popup-message"></h2>
+                <button id="play-again-btn">Play Again</button>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/sound_manager.js"></script>
+    <script src="../../js/score_manager.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

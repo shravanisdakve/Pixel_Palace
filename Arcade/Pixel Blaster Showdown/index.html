@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pixel Blaster Showdown</title>
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <a href="../../index.html" class="back-link">&lt; Back to Pixel Palace</a>
+    <div class="game-wrapper">
+        <h1>Pixel Blaster Showdown</h1>
+        <div class="container">
+      <button class="startBtn">START GAME!</button>
+
+      <div class="js_timer">
+        <div id="timer">00:00</div>
+      </div>
+
+      <img class="burst" src="burst.png" alt="" />
+      <img class="cursor" src="aim.png" alt="" />
+    </div>
+
+    <div id="custom-alert-container" class="custom-alert-container" style="display: none;">
+      <div class="custom-alert-popup">
+          <p id="custom-alert-message"></p>
+          <button id="custom-alert-btn">Play Again</button>
+      </div>
+    </div>
+
+    <script src="index.js"></script>
+  </body>
+</html>

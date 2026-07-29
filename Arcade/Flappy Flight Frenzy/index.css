@@ -1,0 +1,201 @@
+:root {
+    --primary-color: #FF00FF;
+    /* Magenta */
+    --secondary-color: #00FFFF;
+    /* Cyan */
+    --background-color: #222222;
+    /* Dark Gray */
+    --card-background: #333333;
+    /* Slightly lighter dark gray */
+    --text-color: #FFFFFF;
+    /* White */
+    --border-color: #555555;
+    /* Medium Gray */
+}
+
+body {
+    background-color: var(--background-color);
+    font-family: 'Press Start 2P', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+
+    /* Allow mouse dragging. */
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+
+    /* disable touch panning/zooming */
+    touch-action: none;
+}
+
+/* Global Accessibility: Touch Targets */
+button,
+.btn,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.play-button,
+.how-to-play-button {
+    min-height: 44px;
+    min-width: 44px;
+}
+
+.game-container {
+    text-align: center;
+    background: var(--card-background);
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    position: relative;
+    width: 95%;
+    max-width: 1400px;
+    /* Set a generous max-width */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+h1 {
+    margin: 0 0 20px 0;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 2.5rem;
+    color: var(--text-color);
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+    z-index: 2000;
+    white-space: nowrap;
+    /* Prevent line breaks */
+    overflow: visible;
+    /* Ensure text isn't clipped */
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Optional: semi-transparent bg for readability */
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+#screen {
+    /* This will be the main sizing element */
+    position: relative;
+    width: 90vw;
+    height: 85vh;
+    max-width: 1200px;
+    /* Cap the size */
+    max-height: 900px;
+}
+
+#screen canvas {
+    /* Force the canvas element to fill the #screen container */
+    width: 100% !important;
+    height: 100% !important;
+    /* Use object-fit to scale the game content within the canvas */
+    object-fit: contain;
+
+    /* Other visual styles */
+    margin: auto;
+    display: block;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    image-rendering: optimizeSpeed;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: -o-crisp-edges;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: optimize-contrast;
+    -ms-interpolation-mode: nearest-neighbor;
+}
+
+/* Custom font is still defined in the game's original context */
+@font-face {
+    font-family: 'gamefont';
+    src: url('data/css/gamefont.eot');
+    src: url('data/css/gamefont.eot?#iefix') format('embedded-opentype'),
+        url('data/css/gamefont.woff') format('woff'),
+        url('data/css/gamefont.ttf') format('truetype'),
+        url('data/css/gamefont.svg#gamefont') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Keeping original share and google styling, though not directly part of main game UI */
+#share {
+    margin: 10px auto;
+    text-align: center;
+}
+
+#share .fb-share-button iframe {
+    margin-top: -4px;
+}
+
+.google {
+    position: absolute;
+    left: 23%;
+}
+
+/* Custom Alert Popup Styles */
+.custom-alert-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: 'Press Start 2P', cursive;
+}
+
+.custom-alert-popup {
+    background: #333;
+    color: white;
+    padding: 2em;
+    border-radius: 15px;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 20px var(--primary-color);
+    text-align: center;
+    max-width: 80%;
+}
+
+.custom-alert-popup p {
+    margin: 0 0 1.5em 0;
+    font-size: 1.2em;
+    line-height: 1.5;
+    color: var(--secondary-color);
+}
+
+.custom-alert-popup button {
+    background-color: var(--primary-color);
+    color: #333;
+    border: none;
+    padding: 1em 2em;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.custom-alert-popup button:hover {
+    background-color: var(--secondary-color);
+    color: #000;
+    box-shadow: 0 0 15px var(--secondary-color);
+}

@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap');
+
+:root {
+    --primary-color: #FF00FF; /* Magenta */
+    --secondary-color: #00FFFF; /* Cyan */
+    --background-color: #222222; /* Dark Gray */
+    --card-background: #333333; /* Slightly lighter dark gray */
+    --text-color: #FFFFFF; /* White */
+    --border-color: #555555; /* Medium Gray */
+}
+
+body {
+    background-color: var(--background-color);
+    font-family: 'Press Start 2P', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Use min-height to ensure full page background */
+    margin: 0;
+    overflow: hidden;
+    color: var(--text-color);
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: 30px 30px; }
+}
+
+.game-wrapper {
+    text-align: center;
+    background: var(--card-background);
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    box-sizing: border-box; /* Crucial for padding */
+    display: flex; /* For centering content */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    /* Responsive sizing based on aspect ratio */
+    width: min(95vw, 800px); /* Take 95% of viewport width, max 800px */
+    max-height: min(95vh, calc(800px * (600 / 800) + (2 * 2em))); /* Max height based on width aspect ratio + padding, capped by 95vh */
+    height: auto; /* Let content determine height */
+}
+
+h1 {
+    font-family: 'Press Start 2P', cursive;
+    color: var(--text-color);
+    text-align: center;
+    font-size: 2.5em;
+    margin: 20px 0;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+    z-index: 100;
+}
+
+.game-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+input[type="number"] {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1em;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background-color: #f8f8f8;
+    color: var(--text-color);
+    width: 80px;
+    text-align: center;
+}
+
+input[type="button"] {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1em;
+    padding: 10px 20px;
+    background-color: var(--primary-color);
+    color: var(--card-background);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+input[type="button"]:hover {
+    background-color: var(--secondary-color);
+}
+
+#canvas-container {
+    position: relative;
+    width: 100%; /* Fill parent */
+    padding-bottom: 75%; /* 4:3 Aspect Ratio (height / width = 600 / 800 = 0.75) */
+    overflow: hidden; /* Hide anything that might spill */
+    margin-top: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    border: 2px solid var(--border-color);
+}
+
+#gameArea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* No need for background-color here, as the script fills it */
+}

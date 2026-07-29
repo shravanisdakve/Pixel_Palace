@@ -1,0 +1,197 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap');
+
+:root {
+    --primary-color: #FF00FF; /* Magenta */
+    --secondary-color: #00FFFF; /* Cyan */
+    --background-color: #222222; /* Dark Gray */
+    --card-background: #333333; /* Slightly lighter dark gray */
+    --text-color: #FFFFFF; /* White */
+    --border-color: #555555; /* Medium Gray */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--background-color);
+    font-family: 'Press Start 2P', cursive;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden; /* To prevent scrollbars from animated background */
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: 30px 30px; }
+}
+
+.game-wrapper {
+    text-align: center;
+    background: var(--card-background);
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    max-width: 864px;
+    width: 95%;
+    box-sizing: border-box;
+}
+
+.game-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.game-heading {
+    font-family: 'Press Start 2P', cursive;
+    color: var(--text-color);
+    text-align: center;
+    font-size: 2.5em;
+    margin: 20px 0;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+    z-index: 100;
+}
+
+
+.game {
+    width: 800px;
+    height: 600px;
+    /* margin: 0 auto; */ /* Centering is handled by parent flexbox */
+    display: flex;
+    border: 3px solid var(--border-color); /* Themed border */
+    position: relative; /* Added for absolute positioning of character/block */
+    overflow: hidden; /* Ensure cactus doesn't show outside */
+    background-color: #e0e0e0; /* A light background for the game area */
+    max-width: 100%; /* Make game area responsive */
+}
+
+.cactus {
+    height: 40px;
+    object-fit: contain;
+    position: absolute; /* Changed from relative */
+    bottom: 0; /* Position at the bottom of the game area */
+    animation: block 3s infinite linear;
+}
+
+.block {
+    /* height: 40px; */ /* This might interfere, let cactus define height */
+}
+
+.character {
+    height: 100px;
+}
+
+.dino {
+    height: 100px;
+    object-fit: contain;
+    position: absolute; /* Changed from relative */
+    bottom: 0; /* Position at the bottom of the game area */
+}
+
+.animate {
+    animation: character 500ms;
+}
+
+@keyframes block {
+    0% {
+        left: 800px; /* Start from outside right edge of game div */
+    }
+    100% {
+        left: -60px;
+    }
+}
+
+@keyframes character {
+    0% {
+        bottom: 0;
+    }
+    30% {
+        bottom: 300px; /* Jump height */
+    }
+    70% {
+        bottom: 300px;
+    }
+    100% {
+        bottom: 0;
+    }
+}
+
+/* Custom Alert Popup Styles */
+.custom-alert-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: 'Press Start 2P', cursive;
+}
+.custom-alert-popup {
+    background: #333;
+    color: white;
+    padding: 2em;
+    border-radius: 15px;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 20px var(--primary-color);
+    text-align: center;
+    max-width: 80%;
+}
+.custom-alert-popup p {
+    margin: 0 0 1.5em 0;
+    font-size: 1.2em;
+    line-height: 1.5;
+    color: var(--secondary-color);
+}
+.custom-alert-popup button {
+    background-color: var(--primary-color);
+    color: #333;
+    border: none;
+    padding: 1em 2em;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.custom-alert-popup button:hover {
+    background-color: var(--secondary-color);
+    color: #000;
+    box-shadow: 0 0 15px var(--secondary-color);
+}

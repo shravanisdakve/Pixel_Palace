@@ -1,0 +1,279 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap');
+
+:root {
+    --primary-color: #FF00FF; /* Magenta */
+    --secondary-color: #00FFFF; /* Cyan */
+    --background-color: #222222; /* Dark Gray */
+    --card-background: #333333; /* Slightly lighter dark gray */
+    --text-color: #FFFFFF; /* White */
+    --border-color: #555555; /* Medium Gray */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Press Start 2P', cursive;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: 30px 30px; }
+}
+
+.game-wrapper {
+  width: 95%;
+  max-width: 800px;
+  height: 90vh;
+  max-height: 600px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  background: var(--card-background);
+}
+
+
+a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+    z-index: 1000;
+}
+
+
+h1 {
+  line-height: 1.4;
+  font-family: 'Press Start 2P', cursive;
+  color: var(--text-color);
+}
+
+.btn {
+  border: 0;
+  background-color: var(--primary-color);
+  color: var(--card-background);
+  padding: 15px 20px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.btn:focus {
+  outline: 0;
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  transition: margin 0.5s ease-out;
+  background-color: var(--card-background); /* Apply card background */
+  overflow: auto; /* In case content overflows */
+}
+
+.screen.up {
+  margin-top: -100%;
+}
+
+.insects-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  list-style-type: none;
+  padding: 0;
+}
+
+.insects-list li {
+  margin: 10px;
+}
+
+.choose-insect-btn {
+  background-color: var(--card-background);
+  border: 2px solid var(--primary-color);
+  color: var(--text-color);
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+  width: 150px;
+  height: 150px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+.choose-insect-btn:hover {
+  background-color: var(--primary-color);
+  color: var(--card-background);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.choose-insect-btn:active {
+  background-color: var(--primary-color);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transform: translateY(0);
+}
+
+.choose-insect-btn img {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+
+.game-container {
+  position: relative;
+  /* Additional styling for the game screen itself if needed */
+}
+
+.time,
+.score {
+  position: absolute;
+  top: 20px;
+  font-family: 'Press Start 2P', cursive;
+  color: var(--text-color);
+}
+
+.time {
+  left: 20px;
+}
+
+.score {
+  right: 20px;
+}
+
+.message {
+  line-height: 1.7;
+  background-color: rgba(0, 0, 0, 0.1); /* Lighter background for message */
+  width: 100%;
+  padding: 20px;
+  z-index: 100;
+  text-align: center;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -150%);
+  transition: transform 0.4s ease-in;
+  color: var(--text-color);
+  font-family: 'Roboto', sans-serif;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+.message.visible {
+  transform: translate(-50%, 0); /* Adjust to make it visible from top */
+  opacity: 1;
+}
+
+.insect {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  transform: translate(-50%, -50%) scale(1);
+  transition: transform 0.3s ease-in-out;
+}
+
+.insect.caught {
+  transform: translate(-50%, -50%) scale(0);
+}
+
+.insect img {
+  width: 100px;
+  height: 100px;
+}
+
+/* Custom Alert Popup Styles */
+.custom-alert-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: 'Press Start 2P', cursive;
+}
+.custom-alert-popup {
+    background: #333;
+    color: white;
+    padding: 2em;
+    border-radius: 15px;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 20px var(--primary-color);
+    text-align: center;
+    max-width: 80%;
+}
+.custom-alert-popup p {
+    margin: 0 0 1.5em 0;
+    font-size: 1.2em;
+    line-height: 1.5;
+    color: var(--secondary-color);
+}
+.custom-alert-popup button {
+    background-color: var(--primary-color);
+    color: #333;
+    border: none;
+    padding: 1em 2em;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.custom-alert-popup button:hover {
+    background-color: var(--secondary-color);
+    color: #000;
+    box-shadow: 0 0 15px var(--secondary-color);
+}

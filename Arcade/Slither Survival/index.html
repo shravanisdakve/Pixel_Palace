@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slither Survival</title>
+  <link rel="stylesheet" href="./style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap" rel="stylesheet">
+ </head>
+ <body>
+  <a href="../../index.html" class="back-link">&lt; Back to Pixel Palace</a>
+  <div class="game-wrapper">
+    <h1>SLITHER SURVIVAL</h1>
+    <div class="game-content">
+      Speed:
+      <input type="number" id="gameSpeed" value="5" min="1" max="9" step="1" />
+
+      <input type="button" value="start" id="gameStart" onclick="initialize()" />
+      <br />
+      <br />
+
+      <div id="canvas-container">
+       <canvas id="gameArea"></canvas>
+      </div>
+    </div>
+  </div>
+  <script src="./script.js"></script>
+ </body>
+</html>
