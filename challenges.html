@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Palace - Challenges</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Skip to Main Content</a>
+    <button class="hamburger-menu" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="logo">Pixel Palace</div>
+            <div class="search-container">
+                <input type="text" id="game-search" class="search-input" placeholder="Search games..."
+                    aria-label="Search games">
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Arcade</a></li>
+                <li><a href="puzzles.html">Puzzles</a></li>
+                <li><a href="tabletop.html">Tabletop</a></li>
+                <li><a href="challenges.html" class="active-link">Challenges</a></li>
+                <li><a href="creative.html">Creative</a></li>
+                <li><a href="tools.html">Tools</a></li>
+                <li><a href="education.html">Education</a></li>
+            </ul>
+        </aside>
+        <div class="sidebar-overlay"></div>
+
+        <main class="main-content" id="main-content">
+
+            <header class="header">
+                <h1>Pixel Palace</h1>
+                <p>Explore Digital Realms</p>
+                <p class="tagline">A vibrant collection of student-built mini-games. No logins, no ads, just pure fun!
+                </p>
+            </header>
+
+            <div id="challenges" class="category-section">
+                <h2 class="category-title">Challenges</h2>
+                <div class="game-section">
+                    <h3>Featured Games</h3>
+                    <div class="game-grid">
+                        <article class="game-card featured" data-category=\"action classic">
+
+                            <div class="image-container">
+                                <img src="assets/images/typing_sprint.svg"
+                                    alt="3D Cover art for Typing Sprint Arena game">
+                            </div>
+                            <div class="card-content">
+                                <h3>Typing Sprint Arena</h3>
+                                <p class="description">Improve your typing speed and accuracy with various challenging
+                                    text passages.</p>
+                                <div class="card-buttons">
+                                    <a href="Challenges/Typing Sprint Arena/index.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#typing-sprint-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="typing-sprint-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Typing Sprint Arena</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Type the provided text accurately and quickly to achieve a high WPM (Words Per
+                                        Minute) score.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Keyboard:</strong> Type the displayed text.</li>
+                                        <li><strong>"Start" Button:</strong> Begin the typing test.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>Focus on accuracy first, then speed. Mistakes can slow you down.</li>
+                                        <li>Keep your eyes on the screen, not your keyboard.</li>
+                                        <li>Practice regularly to see significant improvements in your typing speed.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/typing_sprint.svg" alt="Wordmaster Challenge preview">
+                            </div>
+                            <div class="card-content">
+                                <h3>Wordmaster Challenge</h3>
+                                <p class="description">Unscramble letters to form words and expand your vocabulary in
+                                    this exciting word puzzle!</p>
+                                <div class="card-buttons">
+                                    <a href="Challenges/Wordmaster Challenge/index.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#wordmaster-challenge-instructions-modal">How to
+                                        Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="wordmaster-challenge-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Wordmaster Challenge</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Form as many words as possible from a given set of scrambled letters within a
+                                        time limit.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Keyboard:</strong> Type in words you find.</li>
+                                        <li><strong>"Submit" Button:</strong> Enter your guessed word.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>Words must typically be a minimum length (e.g., 3 letters).</li>
+                                        <li>You cannot use the same letter more times than it appears in the scrambled
+                                            set.</li>
+                                        <li>Longer and more complex words often yield higher scores.</li>
+                                        <li>Look for common prefixes, suffixes, and letter combinations.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-section">
+                    <h3>All Games</h3>
+                    <div class="game-grid">
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/game_2048.svg" alt="Number Cruncher Quest preview">
+                            </div>
+                            <div class="card-content">
+                                <h3>Number Cruncher Quest</h3>
+                                <p class="description">Solve math problems quickly and accurately to test your numerical
+                                    skills!</p>
+                                <div class="card-buttons">
+                                    <a href="Challenges/Number Cruncher Quest/quiz.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#number-cruncher-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="number-cruncher-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Number Cruncher Quest</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Answer a series of arithmetic questions correctly within a time limit to achieve
+                                        the highest score.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Input Field:</strong> Type your numerical answer.</li>
+                                        <li><strong>"Submit" Button:</strong> Check your answer.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>Questions can involve addition, subtraction, multiplication, and division.
+                                        </li>
+                                        <li>Accuracy and speed are both important.</li>
+                                        <li>Practice regularly to improve your mental math abilities.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/game_2048.svg" alt="Brain Teaser Hub preview">
+                            </div>
+                            <div class="card-content">
+                                <h3>Brain Teaser Hub</h3>
+                                <p class="description">A collection of various brain-teasing puzzles and riddles to
+                                    challenge your mind.</p>
+                                <div class="card-buttons">
+                                    <a href="Challenges/Brain Teaser Hub/index.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#brain-teaser-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="brain-teaser-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Brain Teaser Hub</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Solve a variety of logic puzzles, riddles, and brain teasers. The objective
+                                        varies per puzzle, but generally involves critical thinking and problem-solving.
+                                    </p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Mouse Click/Keyboard Input:</strong> Interact with each puzzle as
+                                            required by its specific design.</li>
+                                    </ul>
+                                    <h4>Rules & Tips:</h4>
+                                    <ul>
+                                        <li>Read the instructions for each individual brain teaser carefully.</li>
+                                        <li>Don't be afraid to think outside the box!</li>
+                                        <li>Some puzzles may have a time limit or a limited number of attempts.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.game-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationDelay = `${entry.target.dataset.delay}s`;
+                        entry.target.classList.add('in-view');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            cards.forEach((card, index) => {
+                card.dataset.delay = index * 0.05;
+                observer.observe(card);
+            });
+
+            // Modal Logic
+            const howToPlayButtons = document.querySelectorAll('.how-to-play-button');
+            const modals = document.querySelectorAll('.modal');
+
+            howToPlayButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const modalTargetId = button.dataset.modalTarget;
+                    const modal = document.querySelector(modalTargetId);
+                    if (modal) {
+                        modal.style.display = 'flex'; // Use flex to center the modal content
+                    }
+                });
+            });
+
+            modals.forEach(modal => {
+                const closeButton = modal.querySelector('.close-button');
+                if (closeButton) {
+                    closeButton.addEventListener('click', () => {
+                        modal.style.display = 'none';
+                    });
+                }
+
+                // Close modal when clicking outside of the modal content
+                modal.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    modals.forEach(modal => {
+                        if (modal.style.display === 'flex') {
+                            modal.style.display = 'none';
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

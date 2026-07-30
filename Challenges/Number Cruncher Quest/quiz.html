@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="quiz.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap" rel="stylesheet">
+    <title>Number Cruncher Quest</title>
+</head>
+<body>
+    <a href="../../index.html" class="back-link">&lt; Back to Pixel Palace</a>
+    <div class="game-wrapper">
+        <h1>NUMBER CRUNCHER QUEST</h1>
+        <section>
+          <div id="feedback-message" class="message"></div>
+          <div class="centerdiv">
+              <div class="insertBox">
+                  <div class="box1">
+                      <input type="text" id="v1" readonly>
+                  </div>
+                  <div class="box1">
+                       <p>+</p>
+                    </div>
+                    <div class="box1">
+                        <input type="text" id="v2" readonly>
+                    </div>
+              </div>
+            <div class="middleBox">
+                <input type="text" id="answer">
+            </div>  
+            <div class="sentBox">
+                <button onclick="jsGame()">Check answer</button>
+            </div>
+          </div>
+        </section>
+    </div>
+
+
+<script>
+    var n1,n2;
+    n1 = Math.floor(Math.random()*10+1);
+    n2 = Math.floor(Math.random()*10+1);
+
+    console.log(n1,n2);
+
+    document.getElementById('v1').value = n1;
+    document.getElementById('v2').value = n2;
+
+    var ans = n1+n2;
+    async function jsGame() {
+        var userans = document.getElementById("answer").value;
+        var feedbackMessage = document.getElementById("feedback-message");
+        
+        if(userans == ans){
+            feedbackMessage.textContent = 'Well Done! Your answer is correct.';
+            feedbackMessage.style.backgroundColor = 'rgba(0, 128, 0, 0.7)'; // Green for correct
+        }
+        else{
+            feedbackMessage.textContent = "Correct answer is " + ans + ". Try again.";
+            feedbackMessage.style.backgroundColor = 'rgba(255, 0, 0, 0.7)'; // Red for incorrect
+        }
+        feedbackMessage.style.opacity = 1;
+        setTimeout(() => {
+            feedbackMessage.style.opacity = 0;
+            history.go(0);
+        }, 1500); // Show message for 1.5 seconds then reload
+    }
+</script>
+</body>
+</html>

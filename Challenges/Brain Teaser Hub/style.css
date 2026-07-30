@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap');
+
+:root {
+    --primary-color: #E91E63; /* Deep Pink/Magenta */
+    --secondary-color: #00BCD4; /* Cyan/Teal */
+    --background-color: #212121; /* Very Dark Gray */
+    --card-background: #303030; /* Dark Gray */
+    --text-color: #E0E0E0; /* Light Gray */
+    --border-color: #424242; /* Medium Dark Gray */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+    background-color: var(--background-color);
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    overflow: hidden;
+    color: var(--text-color);
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: 30px 30px; }
+}
+
+.game-wrapper {
+    text-align: center;
+    background: var(--card-background);
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    box-sizing: border-box; /* Ensures padding is included in width/height */
+    display: flex; /* For centering content */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 95vw; /* Responsive width */
+    max-width: 864px; /* Max width based on original design + padding */
+    height: auto; /* Height will adjust to content */
+    max-height: calc(100vh - 80px); /* Limit total height to prevent scroll, allow some margin */
+}
+
+h1 { /* Main game title */
+    font-family: 'Press Start 2P', cursive;
+    color: var(--text-color);
+    text-align: center;
+    font-size: 2.5em;
+    margin: 20px 0;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+    z-index: 100;
+}
+
+.quiz-container {
+  background-color: var(--card-background);
+  border-radius: 10px;
+  box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.1);
+  width: 100%; /* Fill parent */
+  height: auto; /* Height determined by aspect ratio */
+  max-width: 800px; /* Original content width */
+  max-height: 600px; /* Original content height */
+  aspect-ratio: 4/3; /* Maintain aspect ratio */
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.quiz-header {
+  padding: 2rem; /* Adjusted padding */
+  background-color: var(--background-color);
+  border-bottom: 1px solid var(--border-color);
+}
+
+h2 { /* Question text */
+  padding: 1rem;
+  text-align: center;
+  margin: 0;
+  font-family: 'Roboto', sans-serif;
+  color: var(--text-color);
+  font-size: 1.8rem;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 1rem 0;
+  flex-grow: 1;
+}
+
+ul li {
+  font-size: 1.2rem;
+  margin: 1rem 0;
+  padding: 0.8rem 2rem; /* Add padding to list items */
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+  transition: background-color 0.2s ease;
+}
+
+ul li:last-child {
+    border-bottom: none;
+}
+
+ul li:hover {
+    background-color: #f8f8f8; /* Light hover effect */
+}
+
+
+ul li label {
+  cursor: pointer;
+  color: var(--text-color);
+  padding: 0.5rem 0; /* Add padding to label */
+  display: block; /* Make label clickable area larger */
+}
+
+input[type="radio"] {
+    margin-right: 10px;
+    accent-color: var(--primary-color); /* Themed radio button */
+}
+
+button {
+  background-color: var(--primary-color);
+  color: var(--card-background);
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  font-family: 'Press Start 2P', cursive;
+  padding: 1rem;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  margin-top: auto;
+}
+
+button:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-2px);
+}
+
+button:focus {
+  outline: none;
+  background-color: var(--primary-color);
+}
