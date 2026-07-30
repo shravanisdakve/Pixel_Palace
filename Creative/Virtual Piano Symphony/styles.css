@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap');
+
+:root {
+    --primary-color: #FF6F61; /* Coral/Light Red */
+    --secondary-color: #FFD166; /* Light Yellow/Gold */
+    --background-color: #FDFD96; /* Pale Yellow */
+    --card-background: #FFFFFF; /* White */
+    --text-color: #4CAF50; /* Green */
+    --border-color: #B0E0E6; /* Light Blue */
+}
+
+body {
+    background-color: var(--background-color);
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    color: var(--text-color);
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: 30px 30px; }
+}
+
+.game-wrapper {
+    text-align: center;
+    background: var(--card-background);
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    box-sizing: border-box; /* Ensures padding is included in width/height */
+    display: flex; /* For centering content */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 95vw; /* Responsive width */
+    max-width: 1024px; /* Max width based on original design + padding */
+    height: auto; /* Height will adjust to content */
+    max-height: calc(100vh - 80px); /* Limit total height to prevent scroll, allow some margin */
+}
+
+h1 { /* Main game title */
+    font-family: 'Press Start 2P', cursive;
+    color: var(--text-color);
+    text-align: center;
+    font-size: 2.5em;
+    margin: 20px 0;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+    z-index: 100;
+}
+
+#piano {
+  width: 100%; /* Fill parent */
+  height: auto; /* Height determined by aspect ratio */
+  aspect-ratio: 1024 / 380; /* Approximate original aspect ratio of piano container (width / total height) */
+  max-width: 960px; /* Max width for inner piano content */
+  max-height: 380px; /* Max height for inner piano content */
+  background-color: var(--background-color); /* Light background for the piano frame */
+  border-radius: 10px;
+  margin: auto;
+  border: 2px solid var(--border-color);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  overflow: hidden; /* Ensure keys stay within bounds */
+  position: relative; /* For absolute positioned keys */
+}
+
+.keys {
+  position: relative;
+}
+
+.white-keys {
+  display: flex;
+}
+.black-keys {
+  display: flex;
+}
+
+.white-key {
+  width: 68px;
+  height: 280px;
+  background-color: var(--card-background); /* White for keys */
+  border-radius: 0 0 5px 5px;
+  border: solid var(--border-color) 2px; /* Themed border */
+  box-sizing: border-box;
+}
+.black-key {
+  width: 38px;
+  height: 180px;
+  border-radius: 0 0 5px 5px;
+  background-color: var(--text-color); /* Dark for black keys */
+  box-sizing: border-box;
+  position: absolute;
+  border: solid var(--border-color) 2px; /* Themed border */
+}
+
+.pressed {
+    box-shadow: 0 3px 4px 0 var(--primary-color); /* Vibrant shadow when pressed */
+    opacity: 0.8; /* Slightly less opaque */
+    transform: translateY(2px);
+}
+  
+
+.black-key:nth-child(1) { left: 48px; }
+.black-key:nth-child(2) { left: 117px; }
+.black-key:nth-child(3) { left: 253px; }
+.black-key:nth-child(4) { left: 320px; }
+.black-key:nth-child(5) { left: 389px; }
+.black-key:nth-child(6) { left: 525px; }
+.black-key:nth-child(7) { left: 594px; }
+.black-key:nth-child(8) { left: 662px; }
+.black-key:nth-child(9) { left: 797px; }
+.black-key:nth-child(10) { left: 865px; }
+
+
+@media (max-width: 990px){
+  
+  #piano {
+    height: 300px;
+  }
+  
+  .keys {
+    position: relative;
+  }
+  
+  .white-keys {
+    display: flex;
+  }
+  .black-keys {
+    display: flex;
+  }
+  
+  .white-key {
+    width: 23px;
+    height: 200px;
+    border-radius: 0 0 3px 3px;
+    border: solid var(--border-color) 1px;
+  }
+  .black-key {
+    width: 10px;
+    height: 130px;
+    border-radius: 0 0 3px 3px;
+    border: solid var(--border-color) 1px;
+  }
+  
+  .black-key:nth-child(1) { left: 18px; }
+  .black-key:nth-child(2) { left: 41px; }
+  .black-key:nth-child(3) { left: 87px; }
+  .black-key:nth-child(4) { left: 110px; }
+  .black-key:nth-child(5) { left: 133px; }
+  .black-key:nth-child(6) { left: 156px; }
+  .black-key:nth-child(7) { left: 204px; }
+  .black-key:nth-child(8) { left: 227px; }
+  .black-key:nth-child(9) { left: 270px; }
+  .black-key:nth-child(10) { left: 293px; }
+}

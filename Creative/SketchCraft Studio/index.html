@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>SketchCraft Studio</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <a href="../../index.html" class="back-link">&lt; Back to Pixel Palace</a>
+    <div class="game-wrapper">
+        <h1>SKETCHCRAFT STUDIO</h1>
+        <div class="container">
+            <!-- Left side: Canvas -->
+            <div class="canvas-container">
+                <!-- Title -->
+                <div id="header">Drawing Canvas</div>
+
+        <!-- Input -->
+        <div class="inputContainer">
+          <!-- Color -->
+          <div class="input" id="colorInput">
+            <input type="color" list id="paintColor" />
+          </div>
+
+          <!-- Line thickness -->
+          <div class="input" id="thickenessInput">
+            <div id="circle"></div>
+          </div>
+
+          <!-- Slider -->
+          <div class="input">
+            <div id="slider"></div>
+          </div>
+        </div>
+
+        <!-- Canvas -->
+        <div id="canvasContainer">
+          <canvas id="paint" width="800px" height="600px"></canvas>
+        </div>
+
+        <!-- Buttons -->
+        <div class="btnContainer">
+          <!-- Erase button -->
+          <div class="btnInput">
+            <span id="erase" class="button">Erase</span>
+          </div>
+          <!-- Save button -->
+          <div class="btnInput">
+            <span id="save" class="button">Save</span>
+          </div>
+          <!-- Reset button -->
+          <div class="btnInput">
+            <span id="reset" class="button">Reset</span>
+          </div>
+        </div>
+      </div>
+
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+    <!-- jQuery UI -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+    <!-- JavaScript -->
+    <script src="javascript.js"></script>
+    <div id="custom-alert-container" class="custom-alert-container" style="display: none;">
+      <div class="custom-alert-popup">
+          <p id="custom-alert-message"></p>
+          <button id="custom-alert-btn">OK</button>
+      </div>
+    </div>
+  </body>
+</html>

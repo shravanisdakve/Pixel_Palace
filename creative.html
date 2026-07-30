@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Palace - Creative</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Skip to Main Content</a>
+    <button class="hamburger-menu" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="logo">Pixel Palace</div>
+            <div class="search-container">
+                <input type="text" id="game-search" class="search-input" placeholder="Search games..."
+                    aria-label="Search games">
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Arcade</a></li>
+                <li><a href="puzzles.html">Puzzles</a></li>
+                <li><a href="tabletop.html">Tabletop</a></li>
+                <li><a href="challenges.html">Challenges</a></li>
+                <li><a href="creative.html" class="active-link">Creative</a></li>
+                <li><a href="tools.html">Tools</a></li>
+                <li><a href="education.html">Education</a></li>
+            </ul>
+        </aside>
+        <div class="sidebar-overlay"></div>
+
+        <main class="main-content" id="main-content">
+
+            <header class="header">
+                <h1>Pixel Palace</h1>
+                <p>Explore Digital Realms</p>
+                <p class="tagline">A vibrant collection of student-built mini-games. No logins, no ads, just pure fun!
+                </p>
+            </header>
+
+            <div id="creative" class="category-section">
+                <h2 class="category-title">Creative</h2>
+                <div class="game-section">
+                    <h3>Featured Games</h3>
+                    <div class="game-grid">
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="Creative/SketchCraft Studio/images/drawscreen1.png"
+                                    alt="Screenshot of SketchCraft Studio drawing application.">
+                            </div>
+                            <div class="card-content">
+                                <h3>SketchCraft Studio</h3>
+                                <p class="description">Unleash your creativity with this digital drawing application.
+                                    Sketch, doodle, and paint!</p>
+                                <div class="card-buttons">
+                                    <a href="Creative/SketchCraft Studio/index.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#sketchcraft-studio-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="sketchcraft-studio-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Use: SketchCraft Studio</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Create digital drawings, sketches, and paintings using various tools and colors.
+                                    </p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Mouse Left Click & Drag:</strong> Draw on the canvas.</li>
+                                        <li><strong>Color Picker:</strong> Select different colors for your brush.</li>
+                                        <li><strong>Brush Size Slider:</strong> Adjust the thickness of your brush
+                                            strokes.</li>
+                                    </ul>
+                                    <h4>Tips:</h4>
+                                    <ul>
+                                        <li>Experiment with different colors and brush sizes to create unique artwork.
+                                        </li>
+                                        <li>Use the eraser tool to correct mistakes or create interesting effects.</li>
+                                        <li>Don't be afraid to try new things and let your imagination guide you!</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/digital_whiteboard_cover.svg"
+                                    alt="Digital Whiteboard Canvas 3D Neon Cover Art">
+                            </div>
+                            <div class="card-content">
+                                <h3>Digital Whiteboard Canvas</h3>
+                                <p class="description">A versatile digital whiteboard for brainstorming, drawing, and
+                                    visual collaboration.</p>
+                                <div class="card-buttons">
+                                    <a href="Creative/Digital Whiteboard Canvas/index.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#whiteboard-canvas-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="whiteboard-canvas-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Use: Digital Whiteboard Canvas</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Utilize a digital canvas for drawing, writing, and sharing ideas freely.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Mouse Left Click & Drag:</strong> Draw on the whiteboard.</li>
+                                        <li><strong>Tool Palette:</strong> Select different drawing tools (pen, eraser),
+                                            colors, and line thicknesses.</li>
+                                        <li><strong>Clear Button:</strong> Erase everything on the whiteboard.</li>
+                                    </ul>
+                                    <h4>Tips:</h4>
+                                    <ul>
+                                        <li>This tool is great for quick sketches, brainstorming sessions, or explaining
+                                            concepts visually.</li>
+                                        <li>Experiment with various colors and brush sizes to make your ideas stand out.
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="game-section">
+                    <h3>All Games</h3>
+                    <div class="game-grid">
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/digital_whiteboard_cover.svg"
+                                    alt="3D Cover art for Virtual Piano Symphony game">
+                            </div>
+                            <div class="card-content">
+                                <h3>Virtual Piano Symphony</h3>
+                                <p class="description">Play a virtual piano right in your browser. Practice melodies or
+                                    compose new tunes!</p>
+                                <div class="card-buttons">
+                                    <a href="Creative/Virtual Piano Symphony/index.html" class="play-button">Play</a>
+                                    <button class="how-to-play-button"
+                                        data-modal-target="#piano-symphony-instructions-modal">How to Play</button>
+                                </div>
+                            </div>
+                        </article>
+                        <div id="piano-symphony-instructions-modal" class="modal">
+                            <div class="modal-content">
+                                <span class="close-button">&times;</span>
+                                <h2>How to Play: Virtual Piano Symphony</h2>
+                                <div class="instructions-body">
+                                    <h4>Objective:</h4>
+                                    <p>Play musical notes and create melodies using a virtual piano keyboard.</p>
+                                    <h4>Controls:</h4>
+                                    <ul>
+                                        <li><strong>Keyboard Keys:</strong> Press corresponding keyboard keys to play
+                                            piano notes.</li>
+                                        <li><strong>Mouse Click:</strong> Click on the piano keys directly.</li>
+                                    </ul>
+                                    <h4>Tips:</h4>
+                                    <ul>
+                                        <li>Familiarize yourself with which keyboard keys correspond to which piano
+                                            notes.</li>
+                                        <li>Practice scales and chords to improve your virtual piano skills.</li>
+                                        <li>Experiment with different tempos and rhythms to compose your own music.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/brick_smash.svg" alt="GitLab CSS Art preview">
+                            </div>
+                            <div class="card-content">
+                                <h3>GitLab CSS Art</h3>
+                                <p class="description">A pure HTML & CSS recreation of the GitLab logo.</p>
+                                <div class="card-buttons">
+                                    <a href="Gitlab Logo Using HTML & CSS3/Gitlab Logo.html"
+                                        class="play-button">View</a>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/flappy_flight.svg" alt="Bouncing Balls preview">
+                            </div>
+                            <div class="card-content">
+                                <h3>Bouncing Balls</h3>
+                                <p class="description">A mesmerizing simulation of bouncing balls.</p>
+                                <div class="card-buttons">
+                                    <a href="bouncing-balls/index.html" class="play-button">Play</a>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.game-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationDelay = `${entry.target.dataset.delay}s`;
+                        entry.target.classList.add('in-view');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            cards.forEach((card, index) => {
+                card.dataset.delay = index * 0.05;
+                observer.observe(card);
+            });
+
+            // Modal Logic
+            const howToPlayButtons = document.querySelectorAll('.how-to-play-button');
+            const modals = document.querySelectorAll('.modal');
+
+            howToPlayButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const modalTargetId = button.dataset.modalTarget;
+                    const modal = document.querySelector(modalTargetId);
+                    if (modal) {
+                        modal.style.display = 'flex'; // Use flex to center the modal content
+                    }
+                });
+            });
+
+            modals.forEach(modal => {
+                const closeButton = modal.querySelector('.close-button');
+                if (closeButton) {
+                    closeButton.addEventListener('click', () => {
+                        modal.style.display = 'none';
+                    });
+                }
+
+                // Close modal when clicking outside of the modal content
+                modal.addEventListener('click', (event) => {
+                    if (event.target === modal) {
+                        modal.style.display = 'none';
+                    }
+                });
+            });
+
+            // Close modal with Escape key
+            document.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    modals.forEach(modal => {
+                        if (modal.style.display === 'flex') {
+                            modal.style.display = 'none';
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+
+    <script src="main.js"></script>
+</body>
+
+</html>

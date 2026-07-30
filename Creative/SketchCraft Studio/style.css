@@ -1,0 +1,288 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap');
+
+:root {
+    --primary-color: #FF6F61; /* Coral/Light Red */
+    --secondary-color: #FFD166; /* Light Yellow/Gold */
+    --background-color: #FDFD96; /* Pale Yellow */
+    --card-background: #FFFFFF; /* White */
+    --text-color: #4CAF50; /* Green */
+    --border-color: #B0E0E6; /* Light Blue */
+}
+
+body {
+    background-color: var(--background-color);
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    color: var(--text-color);
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: 30px 30px; }
+}
+
+.game-wrapper {
+    text-align: center;
+    background: var(--card-background);
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    width: 864px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 { /* Main game title */
+    font-family: 'Press Start 2P', cursive;
+    color: var(--text-color);
+    text-align: center;
+    font-size: 2.5em;
+    margin: 20px 0;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+    z-index: 100;
+}
+
+.container { /* This is the inner container for the layout */
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping for responsiveness */
+  justify-content: center;
+  gap: 20px;
+}
+
+.canvas-container {
+  flex: 1;
+  min-width: 300px; /* Minimum width for canvas container */
+  padding: 10px;
+  background-color: var(--card-background); /* White background for canvas area */
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  border: 1px solid var(--border-color);
+}
+
+#header { /* Internal title within the app */
+  font-family: 'Press Start 2P', cursive;
+  background: var(--primary-color);
+  color: var(--card-background);
+  height: 40px;
+  width: 100%; /* Adjusted width */
+  margin: 10px auto;
+  font-size: 1.5em;
+  line-height: 40px;
+  border-radius: 8px;
+  text-shadow: none;
+}
+
+/* Input controls */
+.inputContainer {
+  width: 100%;
+  margin: 10px auto;
+  display: flex;
+  flex-direction: column; /* Stack inputs vertically */
+  align-items: center;
+  gap: 10px;
+}
+
+.input {
+  font-size: 1.2em;
+  color: var(--text-color);
+}
+
+#paintColor {
+  width: 150px; /* Adjusted width */
+  height: 30px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  background: var(--card-background);
+}
+
+#slider {
+  width: 200px;
+  margin: 0; /* Handled by gap */
+  background: var(--border-color); /* Themed track */
+  border-radius: 5px;
+}
+
+/* Custom style for the slider handle */
+#slider .ui-slider-handle {
+  background-color: var(--primary-color); /* Themed handle */
+  border: 2px solid var(--card-background);
+  height: 18px;
+  width: 18px;
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* Custom style for the slider track */
+#slider .ui-slider-range {
+  background-color: var(--secondary-color); /* Themed track fill */
+}
+
+#circle {
+  width: 10px; /* Increased circle size */
+  height: 10px; /* Increased circle size */
+  background-color: var(--primary-color); /* Themed color */
+  border-radius: 50%;
+  margin: 0;
+  position: relative; /* Changed from absolute, handled by flexbox */
+  transform: none; /* Remove previous transform */
+}
+
+#thickenessInput {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+/*canvas*/
+#canvasContainer {
+  width: 800px;
+  height: 600px;
+  border: 2px solid var(--primary-color);
+  border-radius: 10px;
+  margin: 10px auto;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  overflow: hidden; /* Ensure drawing stays within bounds */
+}
+
+#paint {
+  background-color: #f8f8f8; /* Light background for drawing */
+  cursor: crosshair;
+}
+
+/*buttons*/
+.btnContainer {
+  width: 100%;
+  margin: 20px auto 0 auto;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.btnInput {
+  flex: 1; /* Distribute space */
+  min-width: 100px; /* Minimum width for buttons */
+  max-width: 150px;
+}
+
+.button {
+  background-color: var(--primary-color);
+  color: var(--card-background);
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0px 3px rgba(0, 0, 0, 0.2);
+  position: relative;
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: block; /* Make span behave like a block for full click area */
+  width: 100%;
+}
+
+.button:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-2px);
+  box-shadow: 0px 5px rgba(0, 0, 0, 0.3);
+}
+
+.button:active {
+  top: 1px;
+  box-shadow: 0px 2px rgba(0, 0, 0, 0.2);
+}
+
+.eraseMode {
+  background-color: var(--secondary-color);
+  color: var(--card-background);
+}
+
+/* Adjustments for jQuery UI original styles */
+.ui-widget-content {
+    background: transparent;
+    border: none;
+}
+
+.ui-widget-header {
+    background: transparent;
+    border: none;
+}
+
+/* Custom Alert Popup Styles */
+.custom-alert-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: 'Press Start 2P', cursive;
+}
+.custom-alert-popup {
+    background: var(--card-background);
+    color: var(--text-color);
+    padding: 2em;
+    border-radius: 15px;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 20px rgba(255, 111, 97, 0.5);
+    text-align: center;
+    max-width: 80%;
+}
+.custom-alert-popup p {
+    margin: 0 0 1.5em 0;
+    font-size: 1.2em;
+    line-height: 1.5;
+    color: var(--primary-color);
+}
+.custom-alert-popup button {
+    background-color: var(--primary-color);
+    color: var(--card-background);
+    border: none;
+    padding: 1em 2em;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.custom-alert-popup button:hover {
+    background-color: var(--secondary-color);
+    color: #333;
+    box-shadow: 0 0 15px var(--secondary-color);
+}

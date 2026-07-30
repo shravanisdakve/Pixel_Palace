@@ -1,0 +1,314 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap');
+
+:root {
+    --primary-color: #FF6F61; /* Coral/Light Red */
+    --secondary-color: #FFD166; /* Light Yellow/Gold */
+    --background-color: #FDFD96; /* Pale Yellow */
+    --card-background: #FFFFFF; /* White */
+    --text-color: #4CAF50; /* Green */
+    --border-color: #B0E0E6; /* Light Blue */
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+    background-color: var(--background-color);
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    color: var(--text-color);
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: 30px 30px; }
+}
+
+.game-wrapper {
+    text-align: center;
+    background: var(--card-background);
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    box-sizing: border-box; /* Ensures padding is included in width/height */
+    display: flex; /* For centering content */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 95vw; /* Responsive width */
+    max-width: 864px; /* Max width based on original design + padding */
+    height: auto; /* Height will adjust to content */
+    max-height: calc(100vh - 80px); /* Limit total height to prevent scroll, allow some margin */
+}
+
+h1 { /* Main app title */
+    font-family: 'Press Start 2P', cursive;
+    color: var(--text-color);
+    text-align: center;
+    font-size: 2.5em;
+    margin: 20px 0;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+    z-index: 100;
+}
+
+.tools-container {
+  height: auto; /* Auto height */
+  min-height: 60px; /* Minimum height for options */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.tools-content {
+  height: 100%;
+  width: 90%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  background: var(--background-color); /* Light themed background */
+  border-radius: 10px;
+  transform: translateY(0); /* No transform */
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  border: 1px solid var(--border-color);
+}
+
+.tool {
+  height: 70%;
+  width: 10%;
+  position: relative;
+  display: flex; /* For centering content */
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tool:hover {
+    background-color: rgba(0,0,0,0.05);
+    border-radius: 5px;
+}
+
+.tool img {
+  height: 80%;
+  width: 80%;
+  object-fit: contain;
+}
+
+.active-tool {
+    background-color: var(--primary-color);
+    border-radius: 5px;
+    box-shadow: 0 0 8px var(--primary-color);
+}
+.active-tool img {
+    filter: brightness(0) invert(1); /* Invert color for active icon */
+}
+
+.fade {
+  opacity: 0.6;
+}
+
+.drawing-container {
+    width: 100%; /* Fill parent */
+    height: auto; /* Height determined by aspect ratio */
+    max-width: 800px; /* Original content width */
+    max-height: 600px; /* Original content height */
+    aspect-ratio: 4/3; /* Maintain aspect ratio */
+    background-color: var(--card-background); /* White canvas background */
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+#canvas {
+    background-color: var(--card-background); /* White canvas background */
+    cursor: crosshair;
+    width: 100%; /* Fill drawing-container */
+    height: 100%; /* Fill drawing-container */
+}
+
+/* Tool Options */
+.tool-options {
+  height: auto; /* Auto height */
+  width: 150px; /* Increased width for options */
+  position: absolute;
+  top: 90%; /* Position below tool */
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--card-background);
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  z-index: 99; /* Ensure options appear above canvas */
+}
+
+.hide {
+  display: none;
+}
+
+.pen-size, .eraser-size {
+    padding: 10px 0;
+}
+
+.pen-size input, .eraser-size input {
+  width: 100%;
+  -webkit-appearance: none; /* Remove default styling */
+  height: 8px;
+  background: var(--border-color);
+  border-radius: 5px;
+  outline: none;
+  opacity: 0.7;
+  transition: opacity .2s;
+}
+
+.pen-size input:hover, .eraser-size input:hover {
+  opacity: 1;
+}
+
+.pen-size input::-webkit-slider-thumb, .eraser-size input::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  cursor: pointer;
+  border: 2px solid var(--card-background);
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+.pen-colors {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  padding: 10px 0;
+}
+
+.pen-colors div {
+  height: 20px;
+  width: 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  border: 2px solid var(--card-background); /* White border for distinction */
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  transition: transform 0.1s ease;
+}
+
+.pen-colors div:hover {
+    transform: scale(1.1);
+}
+
+/* Specific color styles (keep original as they are drawing colors) */
+.black { background: black; }
+.yellow { background: yellow; }
+.blue { background: blue; }
+.green { background: green; }
+.red { background: red; }
+
+
+/* Sticky Notes Styling */
+.sticky {
+  position: absolute;
+  height: 200px;
+  width: 250px;
+  background: var(--secondary-color); /* Themed background for sticky notes */
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  z-index: 50; /* Ensure sticky notes are above canvas */
+  overflow: hidden;
+}
+
+.sticky-header {
+  height: 15%; /* Slightly larger header */
+  background: var(--primary-color); /* Themed header */
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  cursor: grab;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.sticky-header div {
+  height: 18px; /* Consistent size */
+  width: 18px;
+  margin-right: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8em;
+  color: var(--card-background);
+  font-weight: bold;
+}
+
+.minimize { background: var(--secondary-color); } /* Themed minimize */
+.close { background: var(--secondary-color); } /* Themed close */
+
+.sticky-content {
+  height: 85%;
+  background: var(--card-background);
+  outline: none;
+  padding: 10px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.1em;
+  color: var(--text-color);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  resize: none; /* Disable native textarea resize */
+}
+
+.sticky-image-div {
+  height: 85%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sticky-image {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
