@@ -1,0 +1,235 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap');
+
+:root {
+    --primary-color: #6D4C41; /* Brown */
+    --secondary-color: #8D6E63; /* Lighter Brown */
+    --background-color: #A1887F; /* Warm Gray/Taupe, for the overall background */
+    --card-background: #FFFFFF; /* White, for cards or game pieces */
+    --text-color: #3E2723; /* Dark Brown */
+    --border-color: #5D4037; /* Darker Brown */
+}
+
+body {
+    background-color: var(--background-color);
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    color: var(--text-color);
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: 30px 30px; }
+}
+
+.game-wrapper {
+    text-align: center;
+    background: var(--card-background);
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    box-sizing: border-box; /* Ensures padding is included in width/height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 95vw; /* Responsive width */
+    max-width: 1024px; /* Max width based on original design + padding */
+    height: auto; /* Height will adjust to content */
+    max-height: calc(100vh - 80px); /* Limit total height to prevent scroll, allow some margin */
+    aspect-ratio: 16/9; /* Standard widescreen aspect ratio */
+}
+
+h1 { /* Main game title */
+    font-family: 'Press Start 2P', cursive;
+    color: var(--text-color);
+    text-align: center;
+    font-size: 2.5em;
+    margin: 20px 0;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+    z-index: 100;
+}
+
+.container {
+  width: 100%; /* Fill game-wrapper */
+  height: 100%; /* Fill game-wrapper */
+  margin: 0 auto;
+  text-align: center;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+  border: 1px solid var(--border-color);
+  display: flex; /* Use flexbox to organize rows */
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.container h1 { /* Game's internal h1 */
+    font-size: 2em;
+    margin-bottom: 1em;
+    color: var(--primary-color);
+}
+
+.container h3 {
+    font-size: 1.5em;
+    margin-bottom: 1em;
+    color: var(--secondary-color);
+}
+
+.flex-blackjack-row-1,
+.flex-blackjack-row-2,
+.flex-blackjack-row-3 {
+  display: flex;
+  padding: 10px;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  background-color: var(--card-background); /* White background for game rows */
+  border: 10px solid var(--border-color);
+  border-radius: 8px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  flex-grow: 1; /* Allow rows to grow and fill space */
+}
+
+.flex-blackjack-row-2 div {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  flex: 1;
+  height: auto; /* Height will adjust based on aspect ratio */
+  aspect-ratio: 1/1; /* Make these boxes square, assuming cards fill them */
+  text-align: center;
+  border-radius: 8px;
+  margin: 5px;
+  background-color: #f8f8f8; /* Very light background for player/dealer box */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden; /* Hide overflowing cards */
+}
+
+.flex-blackjack-row-2 div img {
+  padding: 5px;
+  max-width: 80px; /* Max size for card images */
+  height: auto;
+  margin: 0 auto;
+}
+
+table {
+    border: 1px solid var(--border-color);
+    border-collapse: collapse;
+    padding:10px;
+    width: 60%;
+    max-width: 400px;
+    background-color: var(--card-background);
+    text-align: center;
+    border-radius: 8px;
+    margin: 15px auto 0 auto;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+table th, table td {
+    border: 1px solid var(--border-color);
+    padding: 8px;
+    color: var(--text-color);
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.9em;
+}
+table th {
+    background-color: var(--background-color);
+    font-weight: bold;
+}
+
+.flex-blackjack-row-3 {
+  padding: 15px;
+  gap: 10px; /* Spacing between buttons */
+  justify-content: center;
+}
+
+.flex-blackjack-row-3 button {
+  padding: 10px 20px;
+  margin-bottom: 0; /* Remove default margin */
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.9em;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  color: var(--card-background); /* Default button text color */
+}
+
+/* Specific button styles */
+#blackjack-hit-button {
+    background-color: var(--primary-color);
+}
+#blackjack-hit-button:hover {
+    background-color: #0056b3;
+}
+
+#blackjack-stand-button {
+    background-color: #ffc107; /* Yellow */
+    color: var(--text-color);
+}
+#blackjack-stand-button:hover {
+    background-color: #e0a800;
+}
+
+#blackjack-deal-button {
+    background-color: var(--secondary-color); /* Red */
+}
+#blackjack-deal-button:hover {
+    background-color: #dc3545;
+}
+
+#blackjack-reset-button {
+    background-color: #28a745; /* Green */
+}
+#blackjack-reset-button:hover {
+    background-color: #218838;
+}
+
+/* General btn-lg styling (was part of Bootstrap) */
+.btn-lg {
+    min-width: 120px;
+}
+
+.blackjack-card-image {
+  max-width: 100%; /* Make card image fill its container */
+  max-height: 100%;
+  object-fit: contain; /* Maintain aspect ratio */
+  position: absolute; /* Position to fill the div */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Center the card image */
+}

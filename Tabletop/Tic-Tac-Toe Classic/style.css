@@ -1,0 +1,338 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap');
+
+:root {
+    --primary-color: #6D4C41; /* Brown */
+    --secondary-color: #8D6E63; /* Lighter Brown */
+    --background-color: #A1887F; /* Warm Gray/Taupe, for the overall background */
+    --card-background: #FFFFFF; /* White, for cards or game pieces */
+    --text-color: #3E2723; /* Dark Brown */
+    --border-color: #5D4037; /* Darker Brown */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif; /* Default font */
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  background: var(--background-color);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--text-color);
+  overflow: hidden;
+  flex-direction: column; /* Allow game-wrapper to stack */
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: 30px 30px; }
+}
+
+.game-wrapper {
+    text-align: center;
+    background: var(--card-background);
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    box-sizing: border-box; /* Ensures padding is included in width/height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 95vw; /* Responsive width */
+    max-width: 450px; /* Max width based on original design + padding */
+    height: auto; /* Height will adjust to content */
+    max-height: calc(100vh - 80px); /* Limit total height to prevent scroll, allow some margin */
+}
+
+h1 { /* Main game title */
+    font-family: 'Press Start 2P', cursive;
+    color: var(--text-color);
+    text-align: center;
+    font-size: 2.5em;
+    margin: 20px 0;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+    z-index: 100;
+}
+
+
+/* Remove dark mode toggle styles */
+.toggle-btn, .toggle-btn .inner-circle, .toggle-btn.active {
+    display: none !important;
+}
+
+
+.select-box,
+.play-board,
+.result-box {
+  position: static; /* Change to static to flow normally */
+  transform: none; /* Remove transform */
+  transition: all 0.3s ease;
+  background: var(--card-background); /* Themed background */
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  border: 1px solid var(--border-color);
+  max-width: 100%; /* Fill parent width */
+  width: auto; /* Auto width based on content */
+  margin: 20px auto; /* Center with margin */
+}
+
+.select-box.hide, .play-board.hide, .result-box.hide {
+  opacity: 0;
+  pointer-events: none;
+  display: none; /* Hide completely */
+}
+
+.select-box header {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 2rem;
+  font-weight: 600;
+  padding-bottom: 0.8rem;
+  border-bottom: 0.1rem solid var(--border-color);
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.select-box .content .title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin: 2rem 0;
+  color: var(--text-color);
+}
+
+.select-box .options {
+  display: flex;
+  width: 100%;
+}
+
+.options button {
+  width: 100%;
+  font-size: 1.5rem;
+  font-weight: 500;
+  padding: 0.8rem 0;
+  border: none;
+  background: var(--primary-color);
+  border-radius: 0.5rem;
+  color: var(--card-background);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Press Start 2P', cursive;
+}
+
+.options button:hover {
+  transform: scale(0.98);
+  background: var(--secondary-color);
+  color: var(--text-color);
+}
+
+.options button.playerX {
+  margin-right: 0.5rem;
+}
+
+.options button.playerO {
+  margin-left: 0.5rem;
+}
+
+.play-board.show {
+  opacity: 1;
+  pointer-events: auto;
+  /* Removed transform */
+}
+
+.play-board .details {
+  background: var(--background-color);
+  padding: 0.7rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+.play-board .details .players {
+  display: flex;
+  width: 100%;
+  position: relative;
+  justify-content: space-between;
+}
+
+.play-board .details span {
+  width: 100%;
+  color: var(--text-color);
+  border-radius: 0.5rem;
+  padding: 0.7rem 0;
+  font-size: 1.5rem;
+  font-weight: 500;
+  cursor: default;
+  text-align: center;
+  position: relative;
+  z-index: 5;
+  transition: all 0.3s ease;
+  font-family: 'Press Start 2P', cursive;
+}
+
+.details .slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 50%;
+  background: var(--primary-color);
+  border-radius: 0.5rem;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.players.active span:first-child {
+  color: var(--card-background);
+}
+
+.players.active span:nth-child(2) {
+  color: var(--text-color); /* Corrected: inactive player's turn text */
+}
+.players.active .slider {
+  left: 50%;
+}
+
+.play-board .play-area {
+  margin-top: 2rem;
+  width: 100%; /* Fill parent */
+  height: auto; /* Height adapts to aspect ratio */
+  aspect-ratio: 1/1; /* Tic-Tac-Toe grid is square */
+  display: flex; /* Override section's flex */
+  flex-direction: column; /* Stack sections */
+  justify-content: space-between; /* Space out sections */
+}
+
+.play-board section {
+  display: flex;
+  flex-grow: 1; /* Make sections fill space */
+  justify-content: space-between; /* Space out spans */
+}
+
+.play-board section span {
+  display: flex; /* Make it a flex container */
+  justify-content: center; /* Center content horizontally */
+  align-items: center; /* Center content vertically */
+  margin: 0.5rem; /* Adjusted margin */
+  flex-grow: 1; /* Make spans fill space */
+  height: auto; /* Height adapts to aspect ratio */
+  padding-bottom: calc(33.33% - 1rem); /* Make cells square (1/3 of total width - margin) */
+  background: var(--background-color);
+  border: 2px solid var(--border-color); /* Themed border */
+  border-radius: 0.5rem;
+  font-size: clamp(2rem, 8vw, 4rem); /* Responsive font size */
+  color: var(--primary-color); /* X and O color */
+  cursor: pointer;
+  position: relative; /* For X/O content centering */
+  /* Removed ::before pseudo-element styling */
+}
+
+.play-board section span:empty:hover { /* Hover effect for empty cells */
+    background-color: #f8f8f8;
+}
+
+
+.result-box.show {
+  opacity: 1;
+  pointer-events: auto;
+  /* Removed transform */
+}
+
+.result-box .won-text {
+  font-size: 2rem;
+  color: var(--text-color);
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  font-family: 'Press Start 2P', cursive;
+  margin-bottom: 1rem;
+}
+
+.result-box .won-text p {
+  font-weight: 600;
+  margin: 0 0.5rem;
+  padding: 0;
+}
+
+.result-box .btn {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.result-box .btn button {
+  font-size: 1.5rem;
+  font-weight: 500;
+  padding: 0.8rem 2rem;
+  color: var(--card-background);
+  border: none;
+  background: var(--primary-color);
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Press Start 2P', cursive;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.result-box .btn button:hover {
+    background: var(--secondary-color);
+    color: var(--text-color);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+
+.result-box .btn button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.footer {
+  position: static; /* Change to static */
+  padding: 1rem;
+  color: var(--text-color);
+  text-align: center;
+  width: 100%;
+  margin-top: 2rem; /* Add some space from game content */
+  font-family: 'Roboto', sans-serif;
+  font-size: 0.9em;
+  border-top: 1px solid var(--border-color);
+}
+.footer h4 {
+  color: var(--text-color);
+  text-align: center;
+  margin: 0;
+}

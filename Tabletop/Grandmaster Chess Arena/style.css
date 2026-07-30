@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto&display=swap');
+
+:root {
+    --primary-color: #6D4C41; /* Brown */
+    --secondary-color: #8D6E63; /* Lighter Brown */
+    --background-color: #A1887F; /* Warm Gray/Taupe, for the overall background */
+    --card-background: #FFFFFF; /* White, for cards or game pieces */
+    --text-color: #3E2723; /* Dark Brown */
+    --border-color: #5D4037; /* Darker Brown */
+
+    /* Chessboard specific colors (Earthy Tones) */
+    --chess-light-square: #F0DAB5; /* Light square color - creamy beige */
+    --chess-dark-square: #A87C5C;  /* Dark square color - earthy brown */
+    --chess-highlight-square: #B0A06D; /* Highlight color - muted gold */
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    flex-direction: column; /* Allow wrapper to stack */
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: 30px 30px; }
+}
+
+.game-wrapper {
+    text-align: center;
+    background: var(--card-background);
+    padding: 2em;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    position: relative;
+    box-sizing: border-box; /* Ensures padding is included in width/height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    width: 95vw; /* Responsive width */
+    max-width: 640px; /* Max width based on original design + padding */
+    height: auto; /* Height will adjust to content */
+    max-height: calc(100vh - 80px); /* Limit total height to prevent scroll, allow some margin */
+}
+
+h1 { /* Main game title */
+    font-family: 'Press Start 2P', cursive;
+    color: var(--text-color);
+    text-align: center;
+    font-size: 2.5em;
+    margin: 20px 0;
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+    z-index: 100;
+}
+
+#turn {
+    max-width: 451px;
+    width: 100%;
+    height: 30px;
+    position: relative;
+    margin: 10px auto; /* Centered with margin */
+    border-radius: 5px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    padding: 5px 0 0 0;
+    background: var(--background-color);
+    transition: .3s linear;
+    color: var(--text-color);
+    font-family: 'Press Start 2P', cursive;
+    font-size: clamp(0.8em, 2vw, 1.2em); /* Responsive font size */
+}
+
+.turnhighlight {
+    background: var(--primary-color) !important; /* Themed highlight */
+    color: var(--card-background) !important;
+}
+
+#game {
+    width: 100%; /* Fill parent width */
+    height: auto; /* Height determined by aspect-ratio */
+    aspect-ratio: 1/1; /* Chessboard is square, including prefix cells */
+    position: relative;
+    margin: 20px auto;
+    border: 2px solid var(--border-color); /* Border for the whole board container */
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    display: grid;
+    grid-template-columns: repeat(9, 1fr); /* 8 columns + 1 for cellprefix */
+    grid-template-rows: repeat(9, 1fr); /* 8 rows + 1 for cellprefix */
+    overflow: hidden; /* Hide any overflow */
+}
+
+.cellprefix {
+    width: 100%; /* Fill cell */
+    height: 0; /* Height determined by padding-bottom */
+    padding-bottom: 100%; /* Make square */
+    float: none; /* Remove float */
+    margin: 0; /* Remove margin */
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    color: #999;
+    display: flex; /* Center content */
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(0.6em, 2vw, 1em); /* Responsive font size */
+}
+
+.gamecell {
+    border: 1px solid var(--border-color);
+    width: 100%; /* Fill cell */
+    height: 0; /* Height determined by padding-bottom */
+    padding-bottom: 100%; /* Make square */
+    float: none; /* Remove float */
+    margin: 0; /* Remove margin */
+    transition: all 0.5s ease-in-out;
+    border-radius: 5px;
+    font-size: clamp(1.5em, 5vw, 30pt); /* Responsive font size */
+    text-align: center;
+    line-height: 0; /* Adjust line-height to center piece (padding-bottom technique) */
+    cursor: pointer;
+    z-index: 1;
+    color: var(--text-color); /* Default piece color */
+    background-color: var(--chess-light-square); /* Default light square color */
+    display: flex; /* Center pieces */
+    justify-content: center;
+    align-items: center;
+}
+
+.grey {
+    background: var(--chess-dark-square); /* Dark square color */
+}
+
+.green {
+    background: var(--chess-highlight-square) !important; /* Highlight color */
+}
+
+/* Remove all neon and shake animation CSS */
+.neonblue_txt, .neonorange_txt, .neongreen_txt, .shake-little, .shake-freeze {
+    animation: none !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+@keyframes neonBlueText {}
+@keyframes neonOrangeText {}
+@keyframes neonGreenText {}
+@keyframes neonBlue {}
+@keyframes shake-little {}
