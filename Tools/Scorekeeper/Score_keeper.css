@@ -1,0 +1,198 @@
+:root {
+    --primary-color: #00ffcc;
+    --secondary-color: #ffcc00;
+    --background-color: #0d0d0d;
+    --card-background: #1a1a1a;
+    --text-color: #e0e0e0;
+    --shadow-color: rgba(0, 255, 204, 0.3);
+    --card-border: #2a2a2a;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background-color: var(--background-color);
+    font-family: 'Roboto', sans-serif;
+    color: var(--text-color);
+    overflow: hidden; /* Ensure no body scroll */
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: moveGrid 20s linear infinite;
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: 30px 30px; }
+}
+
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+    z-index: 100;
+}
+
+.sk {
+    background-color: var(--card-background);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 2em; /* Keep padding */
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    text-align: center;
+    box-sizing: border-box; /* Include padding in width/height */
+    
+    width: 95vw; /* Responsive width */
+    max-width: 600px; /* Reasonable max width */
+    height: auto; /* Height adapts to content */
+    max-height: calc(100vh - 40px); /* Limit total height, more generous */
+    display: flex; /* For centering content */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto; /* Allow scrolling within the wrapper if content exceeds max-height */
+}
+
+h1 {
+    font-family: 'Press Start 2P', cursive;
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 1em;
+}
+
+.players {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 2.5rem;
+    color: var(--text-color);
+    margin-bottom: 0.5em;
+}
+
+.label {
+    color: var(--secondary-color);
+    font-weight: bolder;
+    font-family: "Roboto", sans-serif;
+    line-height: 1.8;
+    font-size: 1.2em;
+}
+
+.limit {
+    background-color: #333;
+    color: var(--text-color);
+    border: 1px solid var(--card-border);
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1em;
+    margin-bottom: 1.5em;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  gap: 1em;
+}
+
+.p1button, .p2button, .reset {
+  background-color: #333;
+  box-shadow: 0 5px 15px 0 rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  font-size: 16px;
+  border: 1px solid var(--card-border);
+  padding: 15px 32px;
+  font-weight: bolder;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.p1button:hover, .p2button:hover, .reset:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.5);
+}
+.p1button:active, .p2button:active, .reset:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.3);
+}
+
+.p1button {
+    background-color: #005f4e;
+}
+.p2button {
+    background-color: #665200;
+}
+.reset {
+    background-color: #5c2c0a;
+}
+
+.winner {
+  color: #28a745; /* A vibrant green */
+}
+
+.loser {
+  color: #dc3545; /* A vibrant red */
+}
+
+/* Custom Alert Popup Styles */
+.custom-alert-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-family: 'Press Start 2P', cursive;
+}
+.custom-alert-popup {
+    background: #333;
+    color: white;
+    padding: 2em;
+    border-radius: 15px;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 20px var(--shadow-color);
+    text-align: center;
+    max-width: 80%;
+}
+.custom-alert-popup p {
+    margin: 0 0 1.5em 0;
+    font-size: 1.2em;
+    line-height: 1.5;
+    color: var(--secondary-color);
+}
+.custom-alert-popup button {
+    background-color: var(--primary-color);
+    color: var(--card-background);
+    border: none;
+    padding: 1em 2em;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.custom-alert-popup button:hover {
+    background-color: var(--secondary-color);
+    color: #000;
+    box-shadow: 0 0 15px var(--secondary-color);
+}

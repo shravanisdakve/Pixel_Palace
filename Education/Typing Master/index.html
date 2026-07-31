@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Master - Pixel Palace</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a2e 100%);
+            font-family: 'Courier New', monospace;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .game-container {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #00ffff;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 48px;
+            color: #ffff00;
+            text-shadow: 0 0 20px rgba(255, 255, 0, 0.5);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #00ffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #1a4a4a 0%, #0a2a2a 100%);
+            border: 2px solid #00bfbf;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #7fdbca;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00ffff;
+        }
+
+        .game-board {
+            background: linear-gradient(135deg, #1a3a4a 0%, #0a1a2a 100%);
+            border: 3px solid #00ffff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .text-display {
+            background: rgba(0, 20, 40, 0.8);
+            border: 2px solid #00bfbf;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            min-height: 80px;
+            font-size: 28px;
+            line-height: 1.8;
+            letter-spacing: 2px;
+            word-wrap: break-word;
+            user-select: none;
+        }
+
+        .char {
+            position: relative;
+            transition: all 0.1s ease;
+            color: #b0e0e6;
+        }
+
+        .char.correct {
+            color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .char.incorrect {
+            color: #ff0000;
+            background: rgba(255, 0, 0, 0.3);
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+            border-radius: 4px;
+            padding: 0 2px;
+        }
+
+        .char.current {
+            background: #00ffff;
+            color: #000;
+            border-radius: 4px;
+            padding: 0 2px;
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            49% {
+                opacity: 1;
+            }
+
+            50%,
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        .input-field {
+            width: 100%;
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            padding: 15px;
+            font-size: 18px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin-bottom: 20px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+            border-color: #00ffff;
+        }
+
+        .input-field::placeholder {
+            color: rgba(0, 255, 255, 0.5);
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, #00ffff 0%, #00bfbf 100%);
+            color: #000;
+        }
+
+        .btn-start:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: #fff;
+        }
+
+        .btn-reset:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .difficulty-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .difficulty-btn {
+            background: linear-gradient(135deg, #1a4a4a 0%, #0a2a2a 100%);
+            color: #00ffff;
+            border: 2px solid #00bfbf;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .difficulty-btn.active {
+            background: linear-gradient(135deg, #00ffff 0%, #00bfbf 100%);
+            color: #000;
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+        }
+
+        .difficulty-btn:hover {
+            border-color: #00ffff;
+        }
+
+        .timer {
+            font-size: 36px;
+            color: #ffff00;
+            text-align: center;
+            margin: 20px 0;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(255, 255, 0, 0.5);
+        }
+
+        .timer.warning {
+            color: #ff6b6b;
+            animation: pulse-warning 0.5s infinite;
+        }
+
+        @keyframes pulse-warning {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        /* Results Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #1a3a4a 0%, #0a1a2a 100%);
+            border: 3px solid #00ffff;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-content h2 {
+            font-size: 42px;
+            color: #ffff00;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 255, 0, 0.5);
+        }
+
+        .result-stat {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .result-item {
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #00bfbf;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .result-item-label {
+            font-size: 12px;
+            color: #7fdbca;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .result-item-value {
+            font-size: 28px;
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 30px;
+            font-weight: bold;
+            animation: particle-float 1s ease-out forwards;
+        }
+
+        @keyframes particle-float {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-100px) scale(0);
+            }
+        }
+
+        .status-message {
+            text-align: center;
+            font-size: 18px;
+            color: #00ffff;
+            margin: 15px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-height: 25px;
+        }
+
+        .status-message.success {
+            color: #00ff00;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .status-message.error {
+            color: #ff0000;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 36px;
+            }
+
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .text-display {
+                font-size: 20px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <button class="back-btn" onclick="goBack()">← BACK</button>
+
+    <div class="game-container">
+        <div class="header">
+            <h1>⌨️ TYPING MASTER</h1>
+            <p class="subtitle">Test Your Typing Speed & Accuracy</p>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-label">WPM</div>
+                <div class="stat-value" id="wpm">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Accuracy</div>
+                <div class="stat-value" id="accuracy">100%</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Score</div>
+                <div class="stat-value" id="score">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Streak</div>
+                <div class="stat-value" id="streak">0</div>
+            </div>
+        </div>
+
+        <div class="game-board">
+            <div class="difficulty-selector" id="difficultySelector">
+                <button class="difficulty-btn active" onclick="setDifficulty('easy')">EASY</button>
+                <button class="difficulty-btn" onclick="setDifficulty('medium')">MEDIUM</button>
+                <button class="difficulty-btn" onclick="setDifficulty('hard')">HARD</button>
+            </div>
+
+            <div class="timer" id="timer">60s</div>
+
+            <div class="text-display" id="textDisplay"></div>
+
+            <input type="text" class="input-field" id="inputField" placeholder="Click START and begin typing..."
+                disabled autocomplete="off">
+
+            <div class="status-message" id="statusMessage"></div>
+
+            <div class="controls">
+                <button class="btn btn-start" id="startBtn" onclick="startGame()">START</button>
+                <button class="btn btn-reset" onclick="resetGame()">RESET</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div class="modal" id="resultsModal">
+        <div class="modal-content">
+            <h2>GAME OVER!</h2>
+            <div class="result-stat">
+                <div class="result-item">
+                    <div class="result-item-label">Words Per Min</div>
+                    <div class="result-item-value" id="finalWpm">0</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-item-label">Accuracy</div>
+                    <div class="result-item-value" id="finalAccuracy">0%</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-item-label">Total Score</div>
+                    <div class="result-item-value" id="finalScore">0</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-item-label">Characters</div>
+                    <div class="result-item-value" id="finalChars">0</div>
+                </div>
+            </div>
+            <button class="btn btn-start" onclick="closeModal()">PLAY AGAIN</button>
+        </div>
+    </div>
+
+    <script>
+        // Game Configuration
+        const texts = {
+            easy: [
+                "cat dog run jump play happy blue red green sun moon star fish bird tree flower book pen paper desk chair table eat sleep drink walk talk smile laugh cry love like",
+                "the quick brown fox jumps over the lazy dog",
+                "hello world simple typing is fun and easy",
+                "apple banana orange grape melon berry fruit"
+            ],
+            medium: [
+                "The sun rises in the east and sets in the west every single day without fail.",
+                "Computers are incredible machines that can process information at lightning speeds.",
+                "Programming is the art of telling a computer what to do using precise instructions.",
+                "Education is the passport to the future, for tomorrow belongs to those who prepare for it today.",
+                "Success is not final, failure is not fatal: it is the courage to continue that counts."
+            ],
+            hard: [
+                "The intricate mechanisms of the quantum computer challenge our fundamental understanding of physics and reality itself.",
+                "Photosynthesis is the process by which green plants and some other organisms use sunlight to synthesize foods from carbon dioxide and water.",
+                "Cryptocurrency uses decentralized control as opposed to centralized digital currency and central banking systems.",
+                "Artificial intelligence leverages neural networks to identify patterns and make decisions with increasing autonomy and complexity.",
+                "The mitochondria is known as the powerhouse of the cell because it generates most of the cell's supply of adenosine triphosphate."
+            ]
+        };
+
+        // Game State
+        let gameState = {
+            timeLeft: 60,
+            timerInterval: null,
+            isActive: false,
+            difficulty: 'easy',
+            text: '',
+            charIndex: 0,
+            mistakes: 0,
+            isTyping: false,
+            wpm: 0,
+            score: 0,
+            streak: 0
+        };
+
+        // DOM Elements
+        const textDisplay = document.getElementById('textDisplay');
+        const inputField = document.getElementById('inputField');
+        const timerElement = document.getElementById('timer');
+        const startBtn = document.getElementById('startBtn');
+        const wpmElement = document.getElementById('wpm');
+        const accuracyElement = document.getElementById('accuracy');
+        const scoreElement = document.getElementById('score');
+        const streakElement = document.getElementById('streak');
+        const statusMessage = document.getElementById('statusMessage');
+        const resultsModal = document.getElementById('resultsModal');
+
+        // Audio Context
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+
+            const now = audioContext.currentTime;
+
+            if (type === 'type') {
+                osc.frequency.setValueAtTime(800, now);
+                osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
+                gain.gain.setValueAtTime(0.1, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            } else if (type === 'error') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.linearRampToValueAtTime(100, now + 0.2);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'complete') {
+                osc.frequency.setValueAtTime(500, now);
+                osc.frequency.exponentialRampToValueAtTime(1000, now + 0.1);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            }
+        }
+
+        // Difficulty Handling
+        function setDifficulty(level) {
+            if (gameState.isActive) return;
+            gameState.difficulty = level;
+            document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            resetGame();
+        }
+
+        function loadParagraph() {
+            const levelTexts = texts[gameState.difficulty];
+            const randIndex = Math.floor(Math.random() * levelTexts.length);
+            gameState.text = levelTexts[randIndex];
+
+            textDisplay.innerHTML = "";
+            gameState.text.split("").forEach(char => {
+                let span = `<span>${char}</span>`;
+                textDisplay.innerHTML += span;
+            });
+            textDisplay.querySelectorAll("span")[0].classList.add("current");
+        }
+
+        function startGame() {
+            if (gameState.isActive) return;
+
+            loadParagraph();
+            gameState.isActive = true;
+            inputField.disabled = false;
+            inputField.value = "";
+            inputField.focus();
+            inputField.placeholder = "Type here...";
+            startBtn.disabled = true;
+
+            statusMessage.textContent = "GO!";
+            statusMessage.className = "status-message success";
+
+            gameState.timeLeft = 60;
+            timerElement.textContent = gameState.timeLeft + "s";
+            timerElement.classList.remove("warning");
+
+            gameState.timerInterval = setInterval(initTimer, 1000);
+        }
+
+        function initTimer() {
+            if (gameState.timeLeft > 0) {
+                gameState.timeLeft--;
+                timerElement.textContent = gameState.timeLeft + "s";
+
+                if (gameState.timeLeft < 10) {
+                    timerElement.classList.add("warning");
+                }
+            } else {
+                endGame();
+            }
+        }
+
+        function initTyping() {
+            if (!gameState.isActive) return;
+
+            const characters = textDisplay.querySelectorAll("span");
+            let typedChar = inputField.value.split("")[gameState.charIndex];
+
+            if (gameState.charIndex < characters.length && gameState.timeLeft > 0) {
+                if (!gameState.isTyping) {
+                    gameState.isTyping = true;
+                }
+
+                if (typedChar == null) { // Backspace
+                    if (gameState.charIndex > 0) {
+                        gameState.charIndex--;
+                        if (characters[gameState.charIndex].classList.contains("incorrect")) {
+                            gameState.mistakes--;
+                        }
+                        characters[gameState.charIndex].classList.remove("correct", "incorrect");
+                        characters[gameState.charIndex + 1].classList.remove("current");
+                        characters[gameState.charIndex].classList.add("current");
+                    }
+                } else {
+                    if (characters[gameState.charIndex].innerText === typedChar) {
+                        characters[gameState.charIndex].classList.add("correct");
+                        playSound('type');
+                        gameState.score += 10 + (gameState.streak * 2);
+                        gameState.streak++;
+
+                        // Particle effect on correct type
+                        if (gameState.streak % 5 === 0) {
+                            showFloatingText(inputField, `+${gameState.streak} STREAK!`, '#00ffff');
+                        }
+                    } else {
+                        characters[gameState.charIndex].classList.add("incorrect");
+                        playSound('error');
+                        gameState.mistakes++;
+                        gameState.streak = 0;
+                        statusMessage.textContent = "Oops!";
+                        statusMessage.className = "status-message error";
+                        setTimeout(() => statusMessage.textContent = "", 500);
+                    }
+
+                    characters[gameState.charIndex].classList.remove("current");
+                    gameState.charIndex++;
+
+                    if (gameState.charIndex < characters.length) {
+                        characters[gameState.charIndex].classList.add("current");
+                    } else {
+                        // Completed sentence
+                        playSound('complete');
+                        gameState.score += 500;
+                        gameState.timeLeft += 5; // Bonus time
+                        showFloatingText(textDisplay, "+5 SECONDS", '#00ff00');
+                        loadParagraph();
+                        inputField.value = "";
+                        gameState.charIndex = 0;
+                    }
+                }
+
+                // Calculate Stats
+                let wpm = Math.round(((gameState.charIndex - gameState.mistakes) / 5) / ((60 - gameState.timeLeft) / 60));
+                wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
+                gameState.wpm = wpm;
+
+                let accuracy = Math.floor(((gameState.charIndex - gameState.mistakes) / gameState.charIndex) * 100);
+                accuracy = isNaN(accuracy) ? 100 : accuracy;
+
+                wpmElement.innerText = wpm;
+                accuracyElement.innerText = accuracy + "%";
+                scoreElement.innerText = gameState.score;
+                streakElement.innerText = gameState.streak;
+            }
+        }
+
+        function showFloatingText(element, text, color) {
+            const rect = element.getBoundingClientRect();
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.textContent = text;
+            particle.style.left = (rect.left + rect.width / 2) + 'px';
+            particle.style.top = rect.top + 'px';
+            particle.style.color = color;
+            particle.style.textShadow = `0 0 10px ${color}`;
+            document.body.appendChild(particle);
+            setTimeout(() => particle.remove(), 1000);
+        }
+
+        function resetGame() {
+            loadParagraph(); // Reload text based on current difficulty
+            clearInterval(gameState.timerInterval);
+            gameState.timeLeft = 60;
+            gameState.charIndex = 0;
+            gameState.mistakes = 0;
+            gameState.isTyping = false;
+            gameState.isActive = false;
+            gameState.score = 0;
+            gameState.streak = 0;
+            gameState.wpm = 0;
+
+            inputField.value = "";
+            inputField.disabled = true;
+            inputField.placeholder = "Click START to begin...";
+            startBtn.disabled = false;
+
+            timerElement.textContent = "60s";
+            timerElement.classList.remove("warning");
+            wpmElement.innerText = 0;
+            accuracyElement.innerText = "100%";
+            scoreElement.innerText = 0;
+            streakElement.innerText = 0;
+            statusMessage.textContent = "";
+            resultsModal.classList.remove("show");
+        }
+
+        function endGame() {
+            clearInterval(gameState.timerInterval);
+            gameState.isActive = false;
+            inputField.disabled = true;
+            inputField.value = "";
+
+            document.getElementById('finalWpm').innerText = gameState.wpm;
+
+            let accuracy = Math.floor(((gameState.charIndex - gameState.mistakes) / gameState.charIndex) * 100);
+            if (isNaN(accuracy)) accuracy = 0;
+            document.getElementById('finalAccuracy').innerText = accuracy + "%";
+
+            document.getElementById('finalScore').innerText = gameState.score;
+            document.getElementById('finalChars').innerText = gameState.charIndex;
+
+            resultsModal.classList.add("show");
+        }
+
+        function closeModal() {
+            resultsModal.classList.remove("show");
+            resetGame();
+        }
+
+        function goBack() {
+            window.location.href = '../../education.html';
+        }
+
+        // Event Listeners
+        inputField.addEventListener("input", initTyping);
+
+        // Initial setup
+        loadParagraph();
+
+    </script>
+</body>
+
+</html>

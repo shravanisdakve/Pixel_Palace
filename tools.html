@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Palace - Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <a href="#main-content" class="skip-link">Skip to Main Content</a>
+    <button class="hamburger-menu" aria-label="Toggle navigation" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="logo">Pixel Palace</div>
+            <div class="search-container">
+                <input type="text" id="game-search" class="search-input" placeholder="Search games..."
+                    aria-label="Search games">
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Arcade</a></li>
+                <li><a href="puzzles.html">Puzzles</a></li>
+                <li><a href="tabletop.html">Tabletop</a></li>
+                <li><a href="challenges.html">Challenges</a></li>
+                <li><a href="creative.html">Creative</a></li>
+                <li><a href="tools.html" class="active-link">Tools</a></li>
+                <li><a href="education.html">Education</a></li>
+            </ul>
+        </aside>
+        <div class="sidebar-overlay"></div>
+
+        <main class="main-content" id="main-content">
+
+            <header class="header">
+                <h1>Pixel Palace</h1>
+                <p>Explore Digital Realms</p>
+                <p class="tagline">A vibrant collection of student-built mini-games. No logins, no ads, just pure fun!
+                </p>
+            </header>
+
+            <div id="tools" class="category-section">
+                <h2 class="category-title">Tools</h2>
+                <div class="game-section">
+                    <h3>All Tools</h3>
+                    <div class="game-grid">
+                        <a href="Tools/Scorekeeper/Score_keeper.html" class="game-card featured" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/typing_sprint.svg" alt="Scorekeeper tool preview">
+                            </div>
+                            <div class="card-content">
+                                <h3>Scorekeeper</h3>
+                                <p class="description">Keep track of scores for your favorite games.</p>
+                            </div>
+                        </a>
+                        <a href="5-digit-counter/index.html" class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/game_2048.svg" alt="5-Digit Counter tool preview">
+                            </div>
+                            <div class="card-content">
+                                <h3>5-Digit Counter</h3>
+                                <p class="description">A simple counter tool.</p>
+                            </div>
+                        </a>
+                        <a href="pokedex/index.html" class="game-card" data-category=\"action classic">
+                            <div class="image-container">
+                                <img src="assets/images/slither_survival.svg" alt="Pokedex tool preview">
+                            </div>
+                            <div class="card-content">
+                                <h3>Pokedex</h3>
+                                <p class="description">Browse and search for Pokemon information.</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+</html>
