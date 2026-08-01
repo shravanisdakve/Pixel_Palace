@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1f1c2c"/>
+      <stop offset="100%" stop-color="#928dab"/>
+    </linearGradient>
+    <linearGradient id="paddle" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ff7e5f"/>
+      <stop offset="100%" stop-color="#feb47b"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <!-- Sunset Bricks -->
+  <g fill="#ff7e5f" rx="4">
+    <rect x="120" y="80" width="100" height="30" rx="6"/>
+    <rect x="240" y="80" width="100" height="30" rx="6" fill="#feb47b"/>
+    <rect x="360" y="80" width="100" height="30" rx="6" fill="#ff7e5f"/>
+    <rect x="480" y="80" width="100" height="30" rx="6" fill="#feb47b"/>
+    <rect x="600" y="80" width="100" height="30" rx="6" fill="#ff7e5f"/>
+    
+    <rect x="180" y="125" width="100" height="30" rx="6" fill="#f76b1c"/>
+    <rect x="300" y="125" width="100" height="30" rx="6" fill="#fad961"/>
+    <rect x="420" y="125" width="100" height="30" rx="6" fill="#f76b1c"/>
+    <rect x="540" y="125" width="100" height="30" rx="6" fill="#fad961"/>
+  </g>
+  <!-- Shattered Particle Sparkles -->
+  <circle cx="370" cy="180" r="6" fill="#feb47b"/>
+  <circle cx="390" cy="210" r="4" fill="#ff7e5f"/>
+  <circle cx="340" cy="220" r="8" fill="#fad961"/>
+  <!-- Ball -->
+  <circle cx="380" cy="270" r="16" fill="#ffffff"/>
+  <!-- Paddle -->
+  <rect x="300" y="360" width="200" height="20" rx="10" fill="url(#paddle)"/>
+  <text x="400" y="420" font-family="sans-serif" font-weight="800" font-size="20" fill="#ffffff" text-anchor="middle" letter-spacing="2">BRICK SMASH</text>
+</svg>

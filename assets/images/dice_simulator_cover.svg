@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-space" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#090514"/>
+      <stop offset="100%" stop-color="#190a2c"/>
+    </linearGradient>
+    <linearGradient id="dice1-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff007f"/>
+      <stop offset="100%" stop-color="#7f00ff"/>
+    </linearGradient>
+    <linearGradient id="dice2-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ffff"/>
+      <stop offset="100%" stop-color="#007fff"/>
+    </linearGradient>
+    <filter id="glow-heavy" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <rect width="800" height="450" fill="url(#bg-space)"/>
+
+  <!-- Motion Speed Lines -->
+  <path d="M 150 120 L 300 180 M 120 250 L 280 260 M 200 350 L 350 320" stroke="rgba(255, 0, 255, 0.4)" stroke-width="3" stroke-dasharray="20, 10"/>
+  <path d="M 650 100 L 500 170 M 680 230 L 520 240 M 600 340 L 450 310" stroke="rgba(0, 255, 255, 0.4)" stroke-width="3" stroke-dasharray="20, 10"/>
+
+  <!-- 3D Glowing Dice 1 (Magenta) -->
+  <g transform="translate(240, 100) rotate(-15)" filter="url(#glow-heavy)">
+    <!-- Top Face -->
+    <polygon points="70,10 130,40 70,70 10,40" fill="url(#dice1-grad)" opacity="0.9" stroke="#ffffff" stroke-width="2"/>
+    <!-- Left Face -->
+    <polygon points="10,40 70,70 70,140 10,110" fill="#a0007f" stroke="#ffffff" stroke-width="2"/>
+    <!-- Right Face -->
+    <polygon points="70,70 130,40 130,110 70,140" fill="#6000a0" stroke="#ffffff" stroke-width="2"/>
+    
+    <!-- Dots -->
+    <circle cx="70" cy="40" r="7" fill="#ffffff"/>
+    <circle cx="40" cy="90" r="6" fill="#ffffff"/>
+    <circle cx="40" cy="65" r="6" fill="#ffffff"/>
+    <circle cx="100" cy="90" r="6" fill="#ffffff"/>
+    <circle cx="100" cy="65" r="6" fill="#ffffff"/>
+  </g>
+
+  <!-- 3D Glowing Dice 2 (Cyan) -->
+  <g transform="translate(420, 130) rotate(20)" filter="url(#glow-heavy)">
+    <!-- Top Face -->
+    <polygon points="70,10 130,40 70,70 10,40" fill="url(#dice2-grad)" opacity="0.95" stroke="#ffffff" stroke-width="2"/>
+    <!-- Left Face -->
+    <polygon points="10,40 70,70 70,140 10,110" fill="#0080a0" stroke="#ffffff" stroke-width="2"/>
+    <!-- Right Face -->
+    <polygon points="70,70 130,40 130,110 70,140" fill="#004080" stroke="#ffffff" stroke-width="2"/>
+
+    <!-- Dots (6 Dots) -->
+    <circle cx="40" cy="30" r="6" fill="#ffffff"/>
+    <circle cx="100" cy="50" r="6" fill="#ffffff"/>
+    <circle cx="40" cy="90" r="6" fill="#ffffff"/>
+    <circle cx="100" cy="90" r="6" fill="#ffffff"/>
+    <circle cx="70" cy="105" r="6" fill="#ffffff"/>
+  </g>
+
+  <!-- Title Badge -->
+  <rect x="230" y="360" width="340" height="50" rx="25" fill="rgba(15, 10, 30, 0.9)" stroke="#ff00ff" stroke-width="2" filter="url(#glow-heavy)"/>
+  <text x="400" y="392" font-family="sans-serif" font-weight="900" font-size="18" fill="#ffffff" text-anchor="middle" letter-spacing="3">DICE ROLL SIMULATOR 3D</text>
+</svg>

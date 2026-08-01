@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="100%" height="100%">
+  <rect width="800" height="450" fill="#1e272e"/>
+  <!-- Minimal Mechanical Keyboard & Speed Lines -->
+  <g transform="translate(150, 100)">
+    <rect x="0" y="0" width="500" height="220" rx="20" fill="#2d3436" stroke="#485460" stroke-width="4"/>
+    <!-- Keys -->
+    <rect x="30" y="30" width="440" height="40" rx="8" fill="#0984e3"/>
+    <text x="250" y="56" font-family="monospace" font-weight="bold" font-size="18" fill="#ffffff" text-anchor="middle">FAST TYPING SPRINT</text>
+
+    <rect x="30" y="85" width="60" height="45" rx="6" fill="#d2dae2"/>
+    <rect x="100" y="85" width="60" height="45" rx="6" fill="#d2dae2"/>
+    <rect x="170" y="85" width="60" height="45" rx="6" fill="#00b894"/>
+    <rect x="240" y="85" width="60" height="45" rx="6" fill="#d2dae2"/>
+    <rect x="310" y="85" width="60" height="45" rx="6" fill="#d2dae2"/>
+    <rect x="380" y="85" width="90" height="45" rx="6" fill="#e17055"/>
+
+    <rect x="30" y="140" width="440" height="45" rx="8" fill="#fdcb6e"/>
+    <text x="250" y="168" font-family="monospace" font-weight="bold" font-size="20" fill="#2d3436" text-anchor="middle">S P A C E B A R</text>
+  </g>
+  <text x="400" y="395" font-family="sans-serif" font-weight="800" font-size="20" fill="#00d2d3" text-anchor="middle" letter-spacing="2">TYPING SPRINT ARENA</text>
+</svg>
