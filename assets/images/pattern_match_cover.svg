@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="pm-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0520"/>
+      <stop offset="100%" stop-color="#150a30"/>
+    </linearGradient>
+    <filter id="pm-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <rect width="600" height="400" rx="16" fill="url(#pm-bg)"/>
+  <!-- Shape pattern sequence: circle, square, triangle, circle, square, ? -->
+  <!-- Row 1: colored shape sequence -->
+  <circle cx="80" cy="155" r="30" fill="#ff4488" filter="url(#pm-glow)"/>
+  <rect x="125" y="125" width="60" height="60" rx="6" fill="#00ccff" filter="url(#pm-glow)"/>
+  <polygon points="245,125 275,185 215,185" fill="#ffcc00" filter="url(#pm-glow)"/>
+  <circle cx="330" cy="155" r="30" fill="#ff4488" filter="url(#pm-glow)"/>
+  <rect x="375" y="125" width="60" height="60" rx="6" fill="#00ccff" filter="url(#pm-glow)"/>
+  <!-- Question box (next in sequence) -->
+  <rect x="460" y="118" width="74" height="74" rx="10" fill="#1a0a30" stroke="#ffcc00" stroke-width="3" stroke-dasharray="8,4" filter="url(#pm-glow)"/>
+  <text x="497" y="162" font-family="monospace" font-weight="bold" font-size="36" fill="#ffcc00" text-anchor="middle" filter="url(#pm-glow)">?</text>
+  <!-- Arrows between shapes -->
+  <text x="110" y="162" font-family="monospace" font-size="22" fill="#555" text-anchor="middle">→</text>
+  <text x="195" y="162" font-family="monospace" font-size="22" fill="#555" text-anchor="middle">→</text>
+  <text x="295" y="162" font-family="monospace" font-size="22" fill="#555" text-anchor="middle">→</text>
+  <text x="360" y="162" font-family="monospace" font-size="22" fill="#555" text-anchor="middle">→</text>
+  <text x="447" y="162" font-family="monospace" font-size="22" fill="#ffcc00" text-anchor="middle" filter="url(#pm-glow)">→</text>
+  <!-- Row 2: number pattern -->
+  <rect x="80" y="235" width="380" height="50" rx="10" fill="#0a0020" stroke="#aa44ff" stroke-width="2"/>
+  <text x="280" y="268" font-family="monospace" font-weight="bold" font-size="22" fill="#aa44ff" text-anchor="middle" filter="url(#pm-glow)">2, 4, 8, 16, 32, __?__</text>
+  <!-- Title -->
+  <text x="300" y="50" font-family="'Press Start 2P', monospace, sans-serif" font-weight="900" font-size="16" fill="#aa44ff" text-anchor="middle" filter="url(#pm-glow)">PATTERN MATCH</text>
+  <!-- Tagline -->
+  <text x="300" y="360" font-family="monospace" font-size="15" fill="#aa44ff" text-anchor="middle" opacity="0.8">FIND THE NEXT IN SEQUENCE</text>
+</svg>

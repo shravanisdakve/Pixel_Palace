@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="mm-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#050a18"/>
+      <stop offset="100%" stop-color="#0a1a30"/>
+    </linearGradient>
+    <filter id="mm-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <rect width="600" height="400" rx="16" fill="url(#mm-bg)"/>
+  <!-- Giant + symbol -->
+  <rect x="275" y="110" width="50" height="160" rx="8" fill="#ff4488" opacity="0.2"/>
+  <rect x="200" y="185" width="200" height="50" rx="8" fill="#ff4488" opacity="0.2"/>
+  <!-- Equations floating -->
+  <text x="110" y="130" font-family="monospace" font-weight="bold" font-size="36" fill="#00ffcc" filter="url(#mm-glow)">12 × 4</text>
+  <text x="370" y="130" font-family="monospace" font-weight="bold" font-size="36" fill="#ffcc00" filter="url(#mm-glow)">=  48</text>
+  <text x="90" y="200" font-family="monospace" font-weight="bold" font-size="30" fill="#ff88cc" filter="url(#mm-glow)">99 ÷ 11 = 9</text>
+  <text x="130" y="265" font-family="monospace" font-weight="bold" font-size="32" fill="#00ffcc" filter="url(#mm-glow)">7² = 49</text>
+  <text x="350" y="265" font-family="monospace" font-weight="bold" font-size="28" fill="#ffcc00" filter="url(#mm-glow)">√64=8</text>
+  <!-- Score badge -->
+  <rect x="200" y="305" width="200" height="38" rx="10" fill="#001020" stroke="#00ffcc" stroke-width="2" filter="url(#mm-glow)"/>
+  <text x="300" y="330" font-family="monospace" font-weight="bold" font-size="16" fill="#00ffcc" text-anchor="middle">SCORE: 9999</text>
+  <!-- Title -->
+  <text x="300" y="50" font-family="'Press Start 2P', monospace, sans-serif" font-weight="900" font-size="13" fill="#ff4488" text-anchor="middle" filter="url(#mm-glow)">MATH MASTER</text>
+  <text x="300" y="76" font-family="'Press Start 2P', monospace, sans-serif" font-weight="900" font-size="13" fill="#ffcc00" text-anchor="middle" filter="url(#mm-glow)">QUEST</text>
+</svg>

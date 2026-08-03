@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="hg-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a0a"/>
+      <stop offset="100%" stop-color="#1a1020"/>
+    </linearGradient>
+    <filter id="hg-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <rect width="600" height="400" rx="16" fill="url(#hg-bg)"/>
+  <!-- Gallows structure -->
+  <line x1="100" y1="340" x2="220" y2="340" stroke="#888888" stroke-width="6" stroke-linecap="round"/>
+  <line x1="160" y1="340" x2="160" y2="80" stroke="#888888" stroke-width="6" stroke-linecap="round"/>
+  <line x1="160" y1="80" x2="280" y2="80" stroke="#888888" stroke-width="6" stroke-linecap="round"/>
+  <line x1="280" y1="80" x2="280" y2="115" stroke="#888888" stroke-width="4" stroke-linecap="round"/>
+  <!-- Stick figure (neon) -->
+  <circle cx="280" cy="135" r="22" fill="none" stroke="#ff4466" stroke-width="4" filter="url(#hg-glow)"/>
+  <line x1="280" y1="157" x2="280" y2="230" stroke="#ff4466" stroke-width="4" stroke-linecap="round" filter="url(#hg-glow)"/>
+  <line x1="280" y1="180" x2="245" y2="210" stroke="#ff4466" stroke-width="4" stroke-linecap="round" filter="url(#hg-glow)"/>
+  <line x1="280" y1="180" x2="315" y2="210" stroke="#ff4466" stroke-width="4" stroke-linecap="round" filter="url(#hg-glow)"/>
+  <line x1="280" y1="230" x2="252" y2="270" stroke="#ff4466" stroke-width="4" stroke-linecap="round" filter="url(#hg-glow)"/>
+  <line x1="280" y1="230" x2="308" y2="270" stroke="#ff4466" stroke-width="4" stroke-linecap="round" filter="url(#hg-glow)"/>
+  <!-- Letter blanks -->
+  <g fill="none" stroke="#00ccff" stroke-width="3">
+    <line x1="370" y1="220" x2="410" y2="220"/>
+    <line x1="425" y1="220" x2="465" y2="220"/>
+    <line x1="480" y1="220" x2="520" y2="220"/>
+    <line x1="535" y1="220" x2="575" y2="220"/>
+  </g>
+  <!-- Guessed letters (wrong - grayed out) -->
+  <text x="370" y="265" font-family="monospace" font-size="14" fill="#555" text-anchor="middle">wrong: A E I</text>
+  <!-- Correct letter revealed -->
+  <text x="443" y="210" font-family="monospace" font-weight="bold" font-size="30" fill="#00ccff" text-anchor="middle" filter="url(#hg-glow)">P</text>
+  <!-- Attempts left -->
+  <text x="475" y="300" font-family="monospace" font-size="14" fill="#ff4466" text-anchor="middle" filter="url(#hg-glow)">3 lives left</text>
+  <!-- Title -->
+  <text x="300" y="48" font-family="'Press Start 2P', monospace, sans-serif" font-weight="900" font-size="20" fill="#ff4466" text-anchor="middle" filter="url(#hg-glow)">HANGMAN</text>
+  <!-- Guess input hint -->
+  <rect x="370" y="310" width="190" height="36" rx="8" fill="#0a0010" stroke="#00ccff" stroke-width="2"/>
+  <text x="465" y="332" font-family="monospace" font-size="13" fill="#00ccff" text-anchor="middle">GUESS A LETTER...</text>
+</svg>
