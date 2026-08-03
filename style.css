@@ -131,17 +131,17 @@ nav {
 
 .sidebar .logo,
 nav .logo {
-    text-align: center;
+    text-align: left;
     margin-bottom: 15px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
     color: var(--primary-color);
     text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
-    gap: 6px;
+    justify-content: flex-start;
+    gap: 8px;
     text-decoration: none;
     cursor: pointer;
     transition: transform 0.2s ease;
@@ -154,8 +154,8 @@ nav .logo:hover {
 }
 
 .logo-icon {
-    width: 64px;
-    height: 64px;
+    width: 48px;
+    height: 48px;
     flex-shrink: 0;
     object-fit: contain;
     border-radius: 8px;
