@@ -133,3 +133,52 @@ input[type="button"]:hover {
     height: 100%;
     /* No need for background-color here, as the script fills it */
 }
+
+/* Mobile D-Pad Controls */
+.mobile-controls {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-top: 15px;
+    width: 100%;
+}
+
+.horizontal-controls {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+}
+
+.control-btn {
+    width: 60px;
+    height: 60px;
+    font-size: 22px;
+    background: #111;
+    border: 2px solid var(--secondary-color);
+    color: var(--secondary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    transition: all 0.1s ease;
+}
+
+.control-btn:active {
+    background: var(--secondary-color);
+    color: #111;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+    transform: scale(0.9);
+}
+
+@media (max-width: 768px) {
+    .mobile-controls {
+        display: flex;
+    }
+}

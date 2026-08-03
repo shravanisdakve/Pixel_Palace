@@ -166,6 +166,15 @@ else if (keys == '38' && snakeDirection != 'down') snakeDirection = 'up';
 else if (keys == '37' && snakeDirection != 'right') snakeDirection = 'left';
 
 }
+
+function changeDirectionMobile(dir) {
+    if (dir === 'down' && snakeDirection != 'up') snakeDirection = 'down';
+    else if (dir === 'right' && snakeDirection != 'left') snakeDirection = 'right';
+    else if (dir === 'up' && snakeDirection != 'down') snakeDirection = 'up';
+    else if (dir === 'left' && snakeDirection != 'right') snakeDirection = 'left';
+}
+
+window.changeDirectionMobile = changeDirectionMobile;
 window.onkeydown = changeDirection;
 window.onload = initialize
 

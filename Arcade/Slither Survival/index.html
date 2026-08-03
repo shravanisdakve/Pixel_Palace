@@ -23,6 +23,16 @@
       <div id="canvas-container">
        <canvas id="gameArea"></canvas>
       </div>
+
+      <!-- Mobile D-Pad Controls -->
+      <div class="mobile-controls">
+          <button class="control-btn btn-up" onclick="changeDirectionMobile('up')">▲</button>
+          <div class="horizontal-controls">
+              <button class="control-btn btn-left" onclick="changeDirectionMobile('left')">◀</button>
+              <button class="control-btn btn-right" onclick="changeDirectionMobile('right')">▶</button>
+          </div>
+          <button class="control-btn btn-down" onclick="changeDirectionMobile('down')">▼</button>
+      </div>
     </div>
   </div>
   <script src="./script.js"></script>
