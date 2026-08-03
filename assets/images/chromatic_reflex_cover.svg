@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="cr-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a1a"/>
+      <stop offset="100%" stop-color="#1a0a2a"/>
+    </linearGradient>
+    <filter id="cr-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <rect width="600" height="400" rx="16" fill="url(#cr-bg)"/>
+  <!-- Color swatches - a grid of bright swatches -->
+  <rect x="80" y="120" width="90" height="90" rx="12" fill="#ff2244" filter="url(#cr-glow)"/>
+  <rect x="190" y="120" width="90" height="90" rx="12" fill="#22ccff" filter="url(#cr-glow)"/>
+  <rect x="300" y="120" width="90" height="90" rx="12" fill="#ffdd00" filter="url(#cr-glow)"/>
+  <rect x="410" y="120" width="90" height="90" rx="12" fill="#44ff88" filter="url(#cr-glow)"/>
+  <rect x="135" y="230" width="90" height="90" rx="12" fill="#ff8800" filter="url(#cr-glow)"/>
+  <rect x="245" y="230" width="90" height="90" rx="12" fill="#cc44ff" filter="url(#cr-glow)"/>
+  <rect x="355" y="230" width="90" height="90" rx="12" fill="#00ffee" filter="url(#cr-glow)"/>
+  <!-- Cursor/pointer -->
+  <polygon points="295,195 310,230 302,224 296,240 290,224 282,230" fill="#ffffff" filter="url(#cr-glow)"/>
+  <!-- Title -->
+  <text x="300" y="55" font-family="'Press Start 2P', monospace, sans-serif" font-weight="900" font-size="16" fill="#ff2244" text-anchor="middle" filter="url(#cr-glow)">CHROMATIC</text>
+  <text x="300" y="80" font-family="'Press Start 2P', monospace, sans-serif" font-weight="900" font-size="16" fill="#22ccff" text-anchor="middle" filter="url(#cr-glow)">REFLEX</text>
+</svg>

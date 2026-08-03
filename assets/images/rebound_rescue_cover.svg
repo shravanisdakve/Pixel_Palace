@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="rebound-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#150a21"/>
+      <stop offset="100%" stop-color="#36104d"/>
+    </linearGradient>
+    <filter id="rebound-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="600" height="400" rx="16" fill="url(#rebound-bg)"/>
+
+  <!-- Glowing Rescued Stars -->
+  <polygon points="180,100 192,128 222,128 198,146 206,174 180,156 154,174 162,146 138,128 168,128" fill="#ffff00" filter="url(#rebound-glow)"/>
+  <polygon points="420,110 432,138 462,138 438,156 446,184 420,166 394,184 402,156 378,138 408,138" fill="#ff00ff" filter="url(#rebound-glow)"/>
+
+  <!-- Energy Rebound Arc -->
+  <path d="M 150 280 Q 300 180 450 280" fill="none" stroke="#00ffff" stroke-width="4" stroke-dasharray="10,6" filter="url(#rebound-glow)"/>
+
+  <!-- Glowing Ball Bouncing -->
+  <circle cx="300" cy="230" r="18" fill="#ffff00" stroke="#ffffff" stroke-width="3" filter="url(#rebound-glow)"/>
+
+  <!-- Paddle -->
+  <rect x="210" y="320" width="180" height="24" rx="12" fill="#ff00ff" stroke="#00ffff" stroke-width="3" filter="url(#rebound-glow)"/>
+
+  <!-- Title Text -->
+  <text x="300" y="60" font-family="'Press Start 2P', monospace, sans-serif" font-weight="900" font-size="20" fill="#00ffff" text-anchor="middle" filter="url(#rebound-glow)">REBOUND RESCUE</text>
+</svg>

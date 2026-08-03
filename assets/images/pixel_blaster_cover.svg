@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="blaster-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#070c1f"/>
+      <stop offset="100%" stop-color="#19194d"/>
+    </linearGradient>
+    <filter id="blaster-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="600" height="400" rx="16" fill="url(#blaster-bg)"/>
+
+  <!-- Stars background -->
+  <circle cx="100" cy="80" r="2" fill="#ffffff"/>
+  <circle cx="240" cy="50" r="3" fill="#00ffff"/>
+  <circle cx="480" cy="90" r="2" fill="#ffffff"/>
+  <circle cx="520" cy="180" r="3" fill="#ff00ff"/>
+  <circle cx="80" cy="260" r="2" fill="#ffff00"/>
+
+  <!-- Laser Beams -->
+  <line x1="260" y1="240" x2="260" y2="80" stroke="#00ffff" stroke-width="6" stroke-linecap="round" filter="url(#blaster-glow)"/>
+  <line x1="340" y1="240" x2="340" y2="80" stroke="#00ffff" stroke-width="6" stroke-linecap="round" filter="url(#blaster-glow)"/>
+
+  <!-- Alien Targets Bursting -->
+  <polygon points="260,70 270,90 290,90 275,102 280,122 260,110 240,122 245,102 230,90 250,90" fill="#ff00ff" filter="url(#blaster-glow)"/>
+  <polygon points="340,70 350,90 370,90 355,102 360,122 340,110 320,122 325,102 310,90 330,90" fill="#ffff00" filter="url(#blaster-glow)"/>
+
+  <!-- Spaceship Blaster -->
+  <path d="M 300 220 L 350 320 L 310 310 L 300 340 L 290 310 L 250 320 Z" fill="#00ff66" stroke="#ffffff" stroke-width="3" filter="url(#blaster-glow)"/>
+  <circle cx="300" cy="270" r="12" fill="#00ffff"/>
+
+  <!-- Title Text -->
+  <text x="300" y="55" font-family="'Press Start 2P', monospace, sans-serif" font-weight="900" font-size="20" fill="#00ff66" text-anchor="middle" filter="url(#blaster-glow)">PIXEL BLASTER</text>
+</svg>

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="nc-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#051510"/>
+      <stop offset="100%" stop-color="#0a0a20"/>
+    </linearGradient>
+    <filter id="nc-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <rect width="600" height="400" rx="16" fill="url(#nc-bg)"/>
+  <!-- Big math equation style display -->
+  <!-- Numbers flying around -->
+  <text x="80" y="160" font-family="monospace" font-weight="bold" font-size="60" fill="#00ff88" text-anchor="middle" filter="url(#nc-glow)" opacity="0.4">7</text>
+  <text x="480" y="200" font-family="monospace" font-weight="bold" font-size="50" fill="#00ccff" text-anchor="middle" filter="url(#nc-glow)" opacity="0.4">3</text>
+  <text x="130" y="310" font-family="monospace" font-weight="bold" font-size="45" fill="#ffcc00" text-anchor="middle" filter="url(#nc-glow)" opacity="0.3">9</text>
+  <text x="490" y="120" font-family="monospace" font-weight="bold" font-size="40" fill="#ff88cc" text-anchor="middle" filter="url(#nc-glow)" opacity="0.3">5</text>
+  <!-- Main equation display panel -->
+  <rect x="120" y="140" width="360" height="80" rx="12" fill="#001808" stroke="#00ff88" stroke-width="3" filter="url(#nc-glow)"/>
+  <text x="300" y="196" font-family="monospace" font-weight="bold" font-size="40" fill="#00ff88" text-anchor="middle" filter="url(#nc-glow)">24 × 7 = ?</text>
+  <!-- Answer options -->
+  <rect x="130" y="250" width="90" height="45" rx="8" fill="#001808" stroke="#00ccff" stroke-width="2"/>
+  <text x="175" y="280" font-family="monospace" font-weight="bold" font-size="22" fill="#00ccff" text-anchor="middle">156</text>
+  <rect x="240" y="250" width="90" height="45" rx="8" fill="#001808" stroke="#ff8844" stroke-width="2"/>
+  <text x="285" y="280" font-family="monospace" font-weight="bold" font-size="22" fill="#ff8844" text-anchor="middle">168</text>
+  <rect x="350" y="250" width="90" height="45" rx="8" fill="#003008" stroke="#00ff88" stroke-width="3" filter="url(#nc-glow)"/>
+  <text x="395" y="280" font-family="monospace" font-weight="bold" font-size="22" fill="#00ff88" text-anchor="middle" filter="url(#nc-glow)">✓</text>
+  <!-- Timer bar -->
+  <rect x="130" y="320" width="340" height="14" rx="7" fill="#001808" stroke="#444444" stroke-width="1"/>
+  <rect x="130" y="320" width="220" height="14" rx="7" fill="#00ff88" filter="url(#nc-glow)"/>
+  <!-- Title -->
+  <text x="300" y="50" font-family="'Press Start 2P', monospace, sans-serif" font-weight="900" font-size="13" fill="#00ff88" text-anchor="middle" filter="url(#nc-glow)">NUMBER CRUNCHER</text>
+  <text x="300" y="78" font-family="'Press Start 2P', monospace, sans-serif" font-weight="900" font-size="13" fill="#ffcc00" text-anchor="middle" filter="url(#nc-glow)">QUEST</text>
+</svg>

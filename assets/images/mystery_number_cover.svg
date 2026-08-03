@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="mn-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0a20"/>
+      <stop offset="100%" stop-color="#1a1040"/>
+    </linearGradient>
+    <filter id="mn-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <rect width="600" height="400" rx="16" fill="url(#mn-bg)"/>
+  <!-- Big question mark -->
+  <text x="300" y="230" font-family="sans-serif" font-weight="900" font-size="160" fill="#ffdd00" text-anchor="middle" filter="url(#mn-glow)" opacity="0.15">?</text>
+  <!-- Number range hint indicators -->
+  <text x="130" y="200" font-family="monospace" font-weight="bold" font-size="40" fill="#00ffcc" text-anchor="middle" filter="url(#mn-glow)">1</text>
+  <text x="300" y="200" font-family="monospace" font-weight="bold" font-size="40" fill="#ffdd00" text-anchor="middle" filter="url(#mn-glow)">?</text>
+  <text x="470" y="200" font-family="monospace" font-weight="bold" font-size="40" fill="#00ffcc" text-anchor="middle" filter="url(#mn-glow)">100</text>
+  <!-- Arrow range line -->
+  <line x1="100" y1="220" x2="500" y2="220" stroke="#00ffcc" stroke-width="3" stroke-linecap="round" filter="url(#mn-glow)"/>
+  <polygon points="500,212 520,220 500,228" fill="#00ffcc" filter="url(#mn-glow)"/>
+  <!-- Guess chips -->
+  <rect x="160" y="255" width="80" height="30" rx="8" fill="#2a1060" stroke="#ff66cc" stroke-width="2"/>
+  <text x="200" y="275" font-family="monospace" font-size="14" fill="#ff66cc" text-anchor="middle">Too Low</text>
+  <rect x="280" y="255" width="80" height="30" rx="8" fill="#2a1060" stroke="#ffdd00" stroke-width="2"/>
+  <text x="320" y="275" font-family="monospace" font-size="14" fill="#ffdd00" text-anchor="middle">Correct!</text>
+  <rect x="360" y="255" width="80" height="30" rx="8" fill="#2a1060" stroke="#00ffcc" stroke-width="2"/>
+  <text x="400" y="275" font-family="monospace" font-size="13" fill="#00ffcc" text-anchor="middle">Too High</text>
+  <!-- Title -->
+  <text x="300" y="50" font-family="'Press Start 2P', monospace, sans-serif" font-weight="900" font-size="14" fill="#ffdd00" text-anchor="middle" filter="url(#mn-glow)">MYSTERY NUMBER</text>
+  <text x="300" y="76" font-family="'Press Start 2P', monospace, sans-serif" font-weight="900" font-size="14" fill="#00ffcc" text-anchor="middle" filter="url(#mn-glow)">QUEST</text>
+</svg>

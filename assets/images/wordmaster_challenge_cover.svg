@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="wm-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a0520"/>
+      <stop offset="100%" stop-color="#200a10"/>
+    </linearGradient>
+    <filter id="wm-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <rect width="600" height="400" rx="16" fill="url(#wm-bg)"/>
+  <!-- Letter tiles scattered -->
+  <rect x="80" y="130" width="62" height="62" rx="8" fill="#2a0a5a" stroke="#cc44ff" stroke-width="2" filter="url(#wm-glow)"/>
+  <text x="111" y="173" font-family="monospace" font-weight="bold" font-size="36" fill="#cc44ff" text-anchor="middle" filter="url(#wm-glow)">W</text>
+  <rect x="160" y="110" width="62" height="62" rx="8" fill="#2a0a5a" stroke="#ff44cc" stroke-width="2" filter="url(#wm-glow)"/>
+  <text x="191" y="153" font-family="monospace" font-weight="bold" font-size="36" fill="#ff44cc" text-anchor="middle" filter="url(#wm-glow)">O</text>
+  <rect x="240" y="130" width="62" height="62" rx="8" fill="#2a0a5a" stroke="#ffcc00" stroke-width="2" filter="url(#wm-glow)"/>
+  <text x="271" y="173" font-family="monospace" font-weight="bold" font-size="36" fill="#ffcc00" text-anchor="middle" filter="url(#wm-glow)">R</text>
+  <rect x="320" y="110" width="62" height="62" rx="8" fill="#2a0a5a" stroke="#00ffcc" stroke-width="2" filter="url(#wm-glow)"/>
+  <text x="351" y="153" font-family="monospace" font-weight="bold" font-size="36" fill="#00ffcc" text-anchor="middle" filter="url(#wm-glow)">D</text>
+  <rect x="400" y="130" width="62" height="62" rx="8" fill="#2a0a5a" stroke="#44ccff" stroke-width="2" filter="url(#wm-glow)"/>
+  <text x="431" y="173" font-family="monospace" font-weight="bold" font-size="36" fill="#44ccff" text-anchor="middle" filter="url(#wm-glow)">S</text>
+  <!-- Unscramble answer bar -->
+  <rect x="100" y="230" width="400" height="55" rx="10" fill="#110020" stroke="#cc44ff" stroke-width="3" filter="url(#wm-glow)"/>
+  <text x="300" y="266" font-family="monospace" font-weight="bold" font-size="30" fill="#cc44ff" text-anchor="middle" letter-spacing="8">W O R D S</text>
+  <!-- Title -->
+  <text x="300" y="55" font-family="'Press Start 2P', monospace, sans-serif" font-weight="900" font-size="14" fill="#cc44ff" text-anchor="middle" filter="url(#wm-glow)">WORDMASTER</text>
+  <text x="300" y="82" font-family="'Press Start 2P', monospace, sans-serif" font-weight="900" font-size="14" fill="#ff44cc" text-anchor="middle" filter="url(#wm-glow)">CHALLENGE</text>
+  <!-- Star score -->
+  <text x="300" y="360" font-family="monospace" font-size="28" fill="#ffcc00" text-anchor="middle" filter="url(#wm-glow)">★ ★ ★ ★ ★</text>
+</svg>

@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="su-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0a1520"/>
+      <stop offset="100%" stop-color="#05080f"/>
+    </linearGradient>
+    <filter id="su-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <rect width="600" height="400" rx="16" fill="url(#su-bg)"/>
+  <!-- Sudoku 9x9 grid (simplified 4x4 visible) centered -->
+  <g transform="translate(140, 70)">
+    <!-- Outer border -->
+    <rect x="0" y="0" width="320" height="300" rx="4" fill="none" stroke="#00ccff" stroke-width="3"/>
+    <!-- 3x3 inner box borders -->
+    <line x1="107" y1="0" x2="107" y2="300" stroke="#00ccff" stroke-width="2"/>
+    <line x1="213" y1="0" x2="213" y2="300" stroke="#00ccff" stroke-width="2"/>
+    <line x1="0" y1="100" x2="320" y2="100" stroke="#00ccff" stroke-width="2"/>
+    <line x1="0" y1="200" x2="320" y2="200" stroke="#00ccff" stroke-width="2"/>
+    <!-- Inner grid lines (thin) -->
+    <line x1="36" y1="0" x2="36" y2="300" stroke="#224466" stroke-width="1"/>
+    <line x1="71" y1="0" x2="71" y2="300" stroke="#224466" stroke-width="1"/>
+    <line x1="143" y1="0" x2="143" y2="300" stroke="#224466" stroke-width="1"/>
+    <line x1="178" y1="0" x2="178" y2="300" stroke="#224466" stroke-width="1"/>
+    <line x1="249" y1="0" x2="249" y2="300" stroke="#224466" stroke-width="1"/>
+    <line x1="285" y1="0" x2="285" y2="300" stroke="#224466" stroke-width="1"/>
+    <line x1="0" y1="33" x2="320" y2="33" stroke="#224466" stroke-width="1"/>
+    <line x1="0" y1="67" x2="320" y2="67" stroke="#224466" stroke-width="1"/>
+    <line x1="0" y1="133" x2="320" y2="133" stroke="#224466" stroke-width="1"/>
+    <line x1="0" y1="167" x2="320" y2="167" stroke="#224466" stroke-width="1"/>
+    <line x1="0" y1="233" x2="320" y2="233" stroke="#224466" stroke-width="1"/>
+    <line x1="0" y1="267" x2="320" y2="267" stroke="#224466" stroke-width="1"/>
+    <!-- A few filled cells (given numbers in cyan) -->
+    <text x="18" y="27" font-family="monospace" font-weight="bold" font-size="22" fill="#00ccff" text-anchor="middle">5</text>
+    <text x="54" y="27" font-family="monospace" font-weight="bold" font-size="22" fill="#00ccff" text-anchor="middle">3</text>
+    <text x="125" y="60" font-family="monospace" font-weight="bold" font-size="22" fill="#00ccff" text-anchor="middle">7</text>
+    <text x="161" y="93" font-family="monospace" font-weight="bold" font-size="22" fill="#00ccff" text-anchor="middle">9</text>
+    <!-- A user-entered answer in yellow (glowing) -->
+    <rect x="220" y="103" width="36" height="30" rx="3" fill="#001a30" stroke="#ffcc00" stroke-width="2"/>
+    <text x="238" y="124" font-family="monospace" font-weight="bold" font-size="22" fill="#ffcc00" text-anchor="middle" filter="url(#su-glow)">6</text>
+    <text x="53" y="193" font-family="monospace" font-weight="bold" font-size="22" fill="#00ccff" text-anchor="middle">8</text>
+    <text x="285" y="260" font-family="monospace" font-weight="bold" font-size="22" fill="#00ccff" text-anchor="middle">4</text>
+  </g>
+  <!-- Title -->
+  <text x="300" y="50" font-family="'Press Start 2P', monospace, sans-serif" font-weight="900" font-size="13" fill="#00ccff" text-anchor="middle" filter="url(#su-glow)">SUDOKU MASTER</text>
+  <text x="300" y="388" font-family="'Press Start 2P', monospace, sans-serif" font-weight="900" font-size="13" fill="#ffcc00" text-anchor="middle" filter="url(#su-glow)">SOLVER</text>
+</svg>
