@@ -133,23 +133,32 @@ nav {
 nav .logo {
     text-align: center;
     margin-bottom: 15px;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: bold;
     color: var(--primary-color);
     text-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.sidebar .logo:hover,
+nav .logo:hover {
+    transform: scale(1.03);
+    color: var(--secondary-color);
 }
 
 .logo-icon {
-    width: 68px;
-    height: 68px;
+    width: 90px;
+    height: 90px;
     flex-shrink: 0;
     object-fit: contain;
     border-radius: 8px;
-    filter: drop-shadow(0 0 8px rgba(0, 255, 255, 0.6));
+    filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.7));
 }
 
 .search-container {
