@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: pixel-palace
+    env: static
+    buildCommand: ""
+    staticPublishPath: ./
