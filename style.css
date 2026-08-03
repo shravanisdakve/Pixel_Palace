@@ -495,7 +495,7 @@ h3 {
         left: 0;
         right: 0;
         height: 56px;
-        z-index: 1002;
+        z-index: 1005; /* higher than sidebar and overlay */
         background: rgba(15, 15, 30, 0.97);
         border-bottom: 2px solid var(--secondary-color);
         padding: 0 14px;
@@ -524,19 +524,20 @@ h3 {
     /* Move hamburger button into topbar */
     .hamburger-menu {
         display: flex;
-        position: static;
+        position: relative;
         top: auto;
         left: auto;
-        z-index: 1003;
+        z-index: 1010; /* highest, always clickable */
         background: transparent;
         border: 2px solid var(--secondary-color);
         box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
     }
 
-    /* Hide sidebar logo on mobile — it's shown in the topbar */
+    /* Hide sidebar logo on mobile completely — it should NOT show in the slide-out menu */
     .sidebar .logo,
-    nav .logo {
-        display: none;
+    nav .logo,
+    aside.sidebar .logo {
+        display: none !important;
     }
 
     .sidebar,
@@ -552,11 +553,16 @@ h3 {
         box-shadow: 5px 0 30px rgba(0, 0, 0, 0.9);
         background: #0f0f1e;
         border-right: 2px solid var(--secondary-color);
+        padding-top: 20px; /* shift search container down now that logo is hidden */
     }
 
     .sidebar.open,
     nav.open {
         left: 0;
+    }
+
+    .sidebar-overlay {
+        z-index: 999; /* below topbar and hamburger */
     }
 
     .sidebar-overlay.active {
