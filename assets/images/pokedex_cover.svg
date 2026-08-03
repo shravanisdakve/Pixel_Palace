@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="poke-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#200a12"/>
+      <stop offset="100%" stop-color="#4d0d1e"/>
+    </linearGradient>
+    <filter id="poke-glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="600" height="400" rx="16" fill="url(#poke-bg)"/>
+
+  <!-- Pokedex Handheld Device (Red Cyber Shape) -->
+  <rect x="160" y="80" width="280" height="260" rx="20" fill="#e60039" stroke="#ff3366" stroke-width="4" filter="url(#poke-glow)"/>
+
+  <!-- Blue Camera Lens Light -->
+  <circle cx="210" cy="120" r="22" fill="#00ffff" stroke="#ffffff" stroke-width="4" filter="url(#poke-glow)"/>
+  <circle cx="204" cy="114" r="7" fill="#ffffff"/>
+
+  <!-- Small Indicator Lights (Red, Yellow, Green) -->
+  <circle cx="250" cy="110" r="6" fill="#ff0055"/>
+  <circle cx="268" cy="110" r="6" fill="#ffff00"/>
+  <circle cx="286" cy="110" r="6" fill="#00ff66"/>
+
+  <!-- Screen Frame & Display Screen -->
+  <rect x="190" y="160" width="220" height="130" rx="12" fill="#0b1b19" stroke="#00ffff" stroke-width="3"/>
+
+  <!-- Creature Silhouette inside Pokedex Screen -->
+  <circle cx="300" cy="220" r="30" fill="#00ff66" opacity="0.8" filter="url(#poke-glow)"/>
+  <!-- Pikachu / Creature ears silhouette -->
+  <path d="M 280 200 L 260 170 L 288 192 Z" fill="#ffff00"/>
+  <path d="M 320 200 L 340 170 L 312 192 Z" fill="#ffff00"/>
+
+  <!-- Screen Grid Details -->
+  <line x1="200" y1="270" x2="400" y2="270" stroke="#00ffff" stroke-width="2" stroke-dasharray="6,4"/>
+
+  <!-- D-Pad Button -->
+  <rect x="200" y="304" width="12" height="28" fill="#1a1a2e"/>
+  <rect x="192" y="312" width="28" height="12" fill="#1a1a2e"/>
+
+  <!-- Title Text -->
+  <text x="300" y="55" font-family="'Press Start 2P', monospace, sans-serif" font-weight="900" font-size="20" fill="#ff3366" text-anchor="middle" filter="url(#poke-glow)">POKEDEX</text>
+</svg>
