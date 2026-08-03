@@ -32,6 +32,14 @@ function myFunction(event){
     }
 }
 
+// Add touch/click listeners to make it mobile-playable
+document.addEventListener("click", jump);
+document.addEventListener("touchstart", function(e) {
+    // Avoid double trigger on hybrid devices
+    e.preventDefault();
+    jump();
+}, { passive: false });
+
 // --- NEW: Show Alert Function ---
 function showAlert(message) {
     // Stop all game loops
