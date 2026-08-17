@@ -18,6 +18,7 @@ let startTime, endTime;
 
 // --- Pixel Palace session tracking ---
 let currentSessionId = null;
+let lastEndSessionResult = null;
 
 // --- Personal best from PixelPalace (with legacy migration) ---
 let bestWPM = 0;
@@ -78,10 +79,13 @@ const endGame = () => {
 	let newRecord = false;
 	if (typeof window.PixelPalace !== 'undefined' && currentSessionId) {
 		var result = window.PixelPalace.endSession(currentSessionId, { score: wpm });
-		if (result.ok && result.personalBest) {
-			newRecord = result.personalBest.isNewBest;
-			if (newRecord) {
-				bestWPM = wpm;
+		if (result.ok) {
+			lastEndSessionResult = result;
+			if (result.personalBest) {
+				newRecord = result.personalBest.isNewBest;
+				if (newRecord) {
+					bestWPM = wpm;
+				}
 			}
 		}
 		currentSessionId = null;
@@ -106,6 +110,16 @@ const endGame = () => {
 	msg.innerText = finalMsg;
 	// Clear the textarea for the next round
 	typedWords.value = '';
+
+	// Show progression feedback overlay
+	if (typeof window.PixelPalaceProgressionFeedback !== 'undefined' && lastEndSessionResult) {
+		var normalized = window.PixelPalaceProgressionFeedback.normalizeResult(lastEndSessionResult);
+		if (normalized) {
+			window.PixelPalaceProgressionFeedback.show(normalized, function () {
+				btn.focus();
+			});
+		}
+	}
 }
 
 const wordCounter = (str) => {

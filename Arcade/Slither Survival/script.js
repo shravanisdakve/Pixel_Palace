@@ -21,6 +21,7 @@ imageIndex = Math.floor(Math.random() * 1000) % 3;
 var currentSessionId = null;
 var gameEnded = false;
 var personalBest = 0;
+var lastEndSessionResult = null;
 
 // Load personal best from PixelPalace
 function loadPersonalBest() {
@@ -50,9 +51,12 @@ function endGameSession(finalScore) {
 
     if (typeof window.PixelPalace !== 'undefined' && currentSessionId) {
         var result = window.PixelPalace.endSession(currentSessionId, { score: finalScore });
-        if (result.ok && result.personalBest) {
-            if (result.personalBest.isNewBest) {
-                personalBest = finalScore;
+        if (result.ok) {
+            lastEndSessionResult = result;
+            if (result.personalBest) {
+                if (result.personalBest.isNewBest) {
+                    personalBest = finalScore;
+                }
             }
         }
     }
@@ -137,6 +141,17 @@ if (
     writeScore()
     clearInterval(timer)
     gameStart.disabled = false;
+
+    // Show progression feedback overlay
+    if (typeof window.PixelPalaceProgressionFeedback !== 'undefined' && lastEndSessionResult) {
+        var normalized = window.PixelPalaceProgressionFeedback.normalizeResult(lastEndSessionResult);
+        if (normalized) {
+            window.PixelPalaceProgressionFeedback.show(normalized, function () {
+                gameStart.focus();
+            });
+        }
+    }
+
     return;
 }
 

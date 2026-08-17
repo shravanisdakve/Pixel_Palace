@@ -11,6 +11,7 @@ const playAgainBtn = document.getElementById('play-again-btn');
 // --- Pixel Palace session tracking ---
 let currentSessionId = null;
 let gameEnded = false;
+let lastEndSessionResult = null;
 
 // --- Legacy high score migration ---
 let highScore = 0;
@@ -78,8 +79,11 @@ function endGameSession(finalScore) {
 
     if (typeof window.PixelPalace !== 'undefined' && currentSessionId) {
         var result = window.PixelPalace.endSession(currentSessionId, { score: finalScore });
-        if (result.ok && result.personalBest) {
-            highScore = result.personalBest.isNewBest ? finalScore : highScore;
+        if (result.ok) {
+            lastEndSessionResult = result;
+            if (result.personalBest) {
+                highScore = result.personalBest.isNewBest ? finalScore : highScore;
+            }
         }
     }
 
@@ -247,6 +251,19 @@ function draw() {
 // --- Popup logic ---
 function showPopup(message) {
     clearInterval(interval);
+
+    // Try to show progression feedback overlay
+    if (typeof window.PixelPalaceProgressionFeedback !== 'undefined' && lastEndSessionResult) {
+        var normalized = window.PixelPalaceProgressionFeedback.normalizeResult(lastEndSessionResult);
+        if (normalized) {
+            window.PixelPalaceProgressionFeedback.show(normalized, function () {
+                document.location.reload();
+            });
+            return;
+        }
+    }
+
+    // Fallback to basic popup
     popupMessage.textContent = message;
     popupContainer.style.display = 'flex';
 }
