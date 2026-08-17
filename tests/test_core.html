@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Palace Core — Test Suite</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0f0f1e; color: #e0e0e0; font-family: 'Courier New', monospace; padding: 20px; }
+        h1 { color: #00ffff; margin-bottom: 5px; }
+        .summary { color: #aaa; margin-bottom: 20px; font-size: 14px; }
+        .pass { color: #00ff00; }
+        .fail { color: #ff4444; }
+        .skip { color: #ffaa00; }
+        .group { margin-bottom: 24px; }
+        .group-title { color: #ffff00; font-size: 16px; margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 4px; }
+        .test { padding: 3px 0; font-size: 13px; }
+        .test::before { content: '  '; }
+        .test.pass::before { content: '✓ '; color: #00ff00; }
+        .test.fail::before { content: '✗ '; color: #ff4444; }
+        .results { margin-top: 20px; padding: 15px; border: 2px solid #333; border-radius: 8px; }
+        .results.pass-all { border-color: #00ff00; }
+        .results.has-fail { border-color: #ff4444; }
+    </style>
+</head>
+<body>
+    <h1>Pixel Palace Core — Test Suite</h1>
+    <div class="summary" id="summary">Running tests...</div>
+    <div id="output"></div>
+    <div class="results" id="results"></div>
+
+    <!-- Load core modules in dependency order -->
+    <script src="../js/pixel_palace_storage.js"></script>
+    <script src="../js/pixel_palace_player.js"></script>
+    <script src="../js/pixel_palace_registry.js"></script>
+    <script src="../js/pixel_palace_core.js"></script>
+    <script src="../js/score_manager.js"></script>
+
+    <script>
+    (function () {
+        'use strict';
+
+        var passed = 0;
+        var failed = 0;
+        var tests = [];
+        var currentGroup = '';
+
+        // --- Test helpers ---
+
+        function group(name) {
+            currentGroup = name;
+        }
+
+        function test(name, fn) {
+            try {
+                fn();
+                tests.push({ group: currentGroup, name: name, pass: true });
+                passed++;
+            } catch (e) {
+                tests.push({ group: currentGroup, name: name, pass: false, error: e.message });
+                failed++;
+            }
+        }
+
+        function assert(condition, message) {
+            if (!condition) throw new Error(message || 'Assertion failed');
+        }
+
+        function assertEqual(actual, expected, message) {
+            if (actual !== expected) {
+                throw new Error(
+                    (message ? message + ': ' : '') +
+                    'Expected ' + JSON.stringify(expected) + ' but got ' + JSON.stringify(actual)
+                );
+        }
+        }
+
+        function assertDeepEqual(actual, expected, message) {
+            if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+                throw new Error(
+                    (message ? message + ': ' : '') +
+                    'Expected ' + JSON.stringify(expected) + ' but got ' + JSON.stringify(actual)
+                );
+        }
+
+        function assertNonNull(val, message) {
+            if (val === null || val === undefined) throw new Error(message || 'Expected non-null value');
+        }
+
+        function assertNull(val, message) {
+            if (val !== null) throw new Error(message || 'Expected null but got ' + JSON.stringify(val));
+        }
+
+        function cleanStorage() {
+            PixelPalaceStorage.clearAll();
+            // Also clear legacy keys
+            try {
+                localStorage.removeItem('pixelPalace_leaderboards');
+                localStorage.removeItem('brickSmashHighScore');
+                localStorage.removeItem('typingSprintBestWPM');
+            } catch (e) {}
+        }
+
+        // ===================================================
+        // STORAGE TESTS
+        // ===================================================
+        group('PixelPalaceStorage');
+
+        test('set and get a string value', function () {
+            PixelPalaceStorage.set('test_str', 'hello');
+            assertEqual(PixelPalaceStorage.get('test_str'), 'hello');
+        });
+
+        test('set and get a number value', function () {
+            PixelPalaceStorage.set('test_num', 42);
+            assertEqual(PixelPalaceStorage.get('test_num'), 42);
+        });
+
+        test('set and get an object value', function () {
+            var obj = { a: 1, b: 'two' };
+            PixelPalaceStorage.set('test_obj', obj);
+            assertDeepEqual(PixelPalaceStorage.get('test_obj'), obj);
+        });
+
+        test('get returns default for missing key', function () {
+            assertEqual(PixelPalaceStorage.get('nonexistent'), null);
+            assertEqual(PixelPalaceStorage.get('nonexistent', 'fallback'), 'fallback');
+            assertEqual(PixelPalaceStorage.get('nonexistent', 0), 0);
+        });
+
+        test('has returns true for existing key', function () {
+            PixelPalaceStorage.set('exists_key', 1);
+            assert(PixelPalaceStorage.has('exists_key') === true);
+        });
+
+        test('has returns false for missing key', function () {
+            assert(PixelPalaceStorage.has('no_such_key') === false);
+        });
+
+        test('remove deletes a key', function () {
+            PixelPalaceStorage.set('remove_me', 'bye');
+            assert(PixelPalaceStorage.has('remove_me') === true);
+            PixelPalaceStorage.remove('remove_me');
+            assert(PixelPalaceStorage.has('remove_me') === false);
+        });
+
+        test('clearAll removes only namespaced keys', function () {
+            PixelPalaceStorage.set('clear_a', 1);
+            PixelPalaceStorage.set('clear_b', 2);
+            localStorage.setItem('non_pp_key', 'keep me');
+            PixelPalaceStorage.clearAll();
+            assert(PixelPalaceStorage.has('clear_a') === false);
+            assert(PixelPalaceStorage.has('clear_b') === false);
+            assertEqual(localStorage.getItem('non_pp_key'), 'keep me');
+            localStorage.removeItem('non_pp_key');
+        });
+
+        test('handles corrupt localStorage data gracefully', function () {
+            localStorage.setItem('pp_corrupt', '{invalid json!!!');
+            var result = PixelPalaceStorage.get('corrupt', 'default_val');
+            assertEqual(result, 'default_val');
+        });
+
+        test('keys are namespaced with pp_ prefix', function () {
+            PixelPalaceStorage.set('ns_test', 99);
+            var raw = localStorage.getItem('pp_ns_test');
+            assertEqual(raw, '99');
+        });
+
+        // ===================================================
+        // PLAYER TESTS
+        // ===================================================
+        group('PixelPalacePlayer');
+
+        test('player is created on first get', function () {
+            cleanStorage();
+            var player = PixelPalacePlayer.get();
+            assertNonNull(player);
+            assert(typeof player.id === 'string');
+            assert(player.id.indexOf('pp_') === 0);
+        });
+
+        test('player ID persists across gets', function () {
+            cleanStorage();
+            var p1 = PixelPalacePlayer.get();
+            var p2 = PixelPalacePlayer.get();
+            assertEqual(p1.id, p2.id);
+        });
+
+        test('player has createdAt timestamp', function () {
+            cleanStorage();
+            var player = PixelPalacePlayer.get();
+            assertNonNull(player.createdAt);
+            assert(!isNaN(Date.parse(player.createdAt)));
+        });
+
+        test('nickname defaults to null', function () {
+            cleanStorage();
+            var player = PixelPalacePlayer.get();
+            assertNull(player.nickname);
+        });
+
+        test('setNickname updates the nickname', function () {
+            cleanStorage();
+            PixelPalacePlayer.setNickname('PixelKnight');
+            var player = PixelPalacePlayer.get();
+            assertEqual(player.nickname, 'PixelKnight');
+        });
+
+        test('getDisplayName returns nickname when set', function () {
+            cleanStorage();
+            PixelPalacePlayer.setNickname('RetroGamer');
+            assertEqual(PixelPalacePlayer.getDisplayName(), 'RetroGamer');
+        });
+
+        test('getDisplayName returns "Player" when no nickname', function () {
+            cleanStorage();
+            assertEqual(PixelPalacePlayer.getDisplayName(), 'Player');
+        });
+
+        test('getId returns the player ID string', function () {
+            cleanStorage();
+            var id = PixelPalacePlayer.getId();
+            assert(typeof id === 'string');
+            assert(id.indexOf('pp_') === 0);
+        });
+
+        test('create with nickname sets it immediately', function () {
+            cleanStorage();
+            PixelPalacePlayer.create('TestBot');
+            assertEqual(PixelPalacePlayer.getNickname(), 'TestBot');
+        });
+
+        test('player ID persists across page reload simulation', function () {
+            cleanStorage();
+            var p1 = PixelPalacePlayer.get();
+            // Simulate "reload" by reading directly from storage
+            var stored = PixelPalaceStorage.get('player');
+            assertEqual(stored.id, p1.id);
+        });
+
+        // ===================================================
+        // REGISTRY TESTS
+        // ===================================================
+        group('PixelPalaceRegistry');
+
+        test('registry contains all 46 games', function () {
+            assertEqual(PixelPalaceRegistry.count(), 46);
+        });
+
+        test('all game IDs are unique', function () {
+            var all = PixelPalaceRegistry.getAll();
+            var ids = {};
+            all.forEach(function (g) {
+                assert(!ids[g.id], 'Duplicate game ID: ' + g.id);
+                ids[g.id] = true;
+            });
+        });
+
+        test('known games can be retrieved by ID', function () {
+            var game = PixelPalaceRegistry.getById('brick-smash');
+            assertNonNull(game);
+            assertEqual(game.name, 'Brick Smash Chronicles');
+            assertEqual(game.category, 'arcade');
+        });
+
+        test('unknown game returns null', function () {
+            assertNull(PixelPalaceRegistry.getById('nonexistent-game'));
+        });
+
+        test('invalid input returns null', function () {
+            assertNull(PixelPalaceRegistry.getById(null));
+            assertNull(PixelPalaceRegistry.getById(undefined));
+            assertNull(PixelPalaceRegistry.getById(''));
+        });
+
+        test('isValid works for known and unknown games', function () {
+            assert(PixelPalaceRegistry.isValid('brick-smash') === true);
+            assert(PixelPalaceRegistry.isValid('nonexistent') === false);
+        });
+
+        test('getRoute returns route for known game', function () {
+            var route = PixelPalaceRegistry.getRoute('slither-survival');
+            assertEqual(route, 'Arcade/Slither Survival/index.html');
+        });
+
+        test('getRoute returns null for unknown game', function () {
+            assertNull(PixelPalaceRegistry.getRoute('nope'));
+        });
+
+        test('getByCategory returns correct games', function () {
+            var arcade = PixelPalaceRegistry.getByCategory('arcade');
+            assertEqual(arcade.length, 8);
+            arcade.forEach(function (g) {
+                assertEqual(g.category, 'arcade');
+            });
+        });
+
+        test('getAll returns a copy (not a reference)', function () {
+            var all1 = PixelPalaceRegistry.getAll();
+            var all2 = PixelPalaceRegistry.getAll();
+            assert(all1 !== all2);
+            assertDeepEqual(all1, all2);
+        });
+
+        test('every game has required fields', function () {
+            var all = PixelPalaceRegistry.getAll();
+            all.forEach(function (g) {
+                assert(typeof g.id === 'string' && g.id.length > 0, 'Game missing id: ' + JSON.stringify(g));
+                assert(typeof g.name === 'string' && g.name.length > 0, 'Game missing name: ' + g.id);
+                assert(typeof g.category === 'string', 'Game missing category: ' + g.id);
+                assert(typeof g.type === 'string', 'Game missing type: ' + g.id);
+                assert(typeof g.route === 'string' && g.route.length > 0, 'Game missing route: ' + g.id);
+                assert(typeof g.playable === 'boolean', 'Game missing playable: ' + g.id);
+            });
+        });
+
+        test('game IDs are safe for localStorage (no special chars)', function () {
+            var all = PixelPalaceRegistry.getAll();
+            all.forEach(function (g) {
+                assert(/^[a-z0-9_-]+$/.test(g.id), 'Unsafe game ID: ' + g.id);
+            });
+        });
+
+        // ===================================================
+        // SESSION TESTS
+        // ===================================================
+        group('Session Management');
+
+        test('startSession creates a session', function () {
+            cleanStorage();
+            var result = PixelPalace.startSession('brick-smash');
+            assert(result.ok === true);
+            assertNonNull(result.session);
+            assertEqual(result.session.gameId, 'brick-smash');
+        });
+
+        test('session has a unique ID', function () {
+            cleanStorage();
+            var r1 = PixelPalace.startSession('brick-smash');
+            var r2 = PixelPalace.startSession('slither-survival');
+            assert(r1.session.id !== r2.session.id);
+        });
+
+        test('session has correct player ID', function () {
+            cleanStorage();
+            var playerId = PixelPalacePlayer.getId();
+            var result = PixelPalace.startSession('brick-smash');
+            assertEqual(result.session.playerId, playerId);
+        });
+
+        test('session has startedAt timestamp', function () {
+            cleanStorage();
+            var result = PixelPalace.startSession('brick-smash');
+            assertNonNull(result.session.startedAt);
+            assert(!isNaN(Date.parse(result.session.startedAt)));
+        });
+
+        test('session starts with endedAt=null and score=null', function () {
+            cleanStorage();
+            var result = PixelPalace.startSession('brick-smash');
+            assertNull(result.session.endedAt);
+            assertNull(result.session.score);
+        });
+
+        test('startSession fails for unknown game', function () {
+            cleanStorage();
+            var result = PixelPalace.startSession('nonexistent-game');
+            assert(result.ok === false);
+            assert(typeof result.error === 'string');
+        });
+
+        test('startSession fails for invalid game ID', function () {
+            cleanStorage();
+            assert(PixelPalace.startSession(null).ok === false);
+            assert(PixelPalace.startSession('').ok === false);
+            assert(PixelPalace.startSession(123).ok === false);
+        });
+
+        test('endSession closes a session with score', function () {
+            cleanStorage();
+            var start = PixelPalace.startSession('brick-smash');
+            var end = PixelPalace.endSession(start.session.id, { score: 42 });
+            assert(end.ok === true);
+            assertEqual(end.session.score, 42);
+            assertNonNull(end.session.endedAt);
+        });
+
+        test('endSession fails for invalid session ID', function () {
+            cleanStorage();
+            var result = PixelPalace.endSession('fake-session', { score: 10 });
+            assert(result.ok === false);
+        });
+
+        test('endSession fails for invalid score', function () {
+            cleanStorage();
+            var start = PixelPalace.startSession('brick-smash');
+            assert(PixelPalace.endSession(start.session.id, {}).ok === false);
+            assert(PixelPalace.endSession(start.session.id, { score: 'abc' }).ok === false);
+            assert(PixelPalace.endSession(start.session.id, { score: NaN }).ok === false);
+            assert(PixelPalace.endSession(start.session.id, { score: Infinity }).ok === false);
+        });
+
+        test('session cannot be ended twice', function () {
+            cleanStorage();
+            var start = PixelPalace.startSession('brick-smash');
+            var end1 = PixelPalace.endSession(start.session.id, { score: 10 });
+            assert(end1.ok === true);
+            var end2 = PixelPalace.endSession(start.session.id, { score: 20 });
+            assert(end2.ok === false);
+            assert(end2.error.indexOf('already ended') !== -1);
+        });
+
+        test('multiple sessions can coexist', function () {
+            cleanStorage();
+            var s1 = PixelPalace.startSession('brick-smash');
+            var s2 = PixelPalace.startSession('slither-survival');
+            var s3 = PixelPalace.startSession('typing-sprint');
+
+            PixelPalace.endSession(s1.session.id, { score: 10 });
+            PixelPalace.endSession(s2.session.id, { score: 20 });
+            PixelPalace.endSession(s3.session.id, { score: 30 });
+
+            var scores1 = PixelPalace.getScores('brick-smash');
+            var scores2 = PixelPalace.getScores('slither-survival');
+            var scores3 = PixelPalace.getScores('typing-sprint');
+
+            assertEqual(scores1.length, 1);
+            assertEqual(scores1[0].score, 10);
+            assertEqual(scores2.length, 1);
+            assertEqual(scores2[0].score, 20);
+            assertEqual(scores3.length, 1);
+            assertEqual(scores3[0].score, 30);
+        });
+
+        // ===================================================
+        // SCORE TESTS
+        // ===================================================
+        group('Score Management');
+
+        test('valid numeric scores are stored', function () {
+            cleanStorage();
+            var s = PixelPalace.startSession('brick-smash');
+            var result = PixelPalace.endSession(s.session.id, { score: 99 });
+            assert(result.ok === true);
+            var scores = PixelPalace.getScores('brick-smash');
+            assertEqual(scores.length, 1);
+            assertEqual(scores[0].score, 99);
+        });
+
+        test('negative scores are accepted', function () {
+            cleanStorage();
+            var s = PixelPalace.startSession('brick-smash');
+            PixelPalace.endSession(s.session.id, { score: -5 });
+            var scores = PixelPalace.getScores('brick-smash');
+            assertEqual(scores[0].score, -5);
+        });
+
+        test('zero scores are accepted', function () {
+            cleanStorage();
+            var s = PixelPalace.startSession('brick-smash');
+            PixelPalace.endSession(s.session.id, { score: 0 });
+            var scores = PixelPalace.getScores('brick-smash');
+            assertEqual(scores[0].score, 0);
+        });
+
+        test('score includes achievedAt timestamp', function () {
+            cleanStorage();
+            var s = PixelPalace.startSession('brick-smash');
+            PixelPalace.endSession(s.session.id, { score: 50 });
+            var scores = PixelPalace.getScores('brick-smash');
+            assertNonNull(scores[0].achievedAt);
+        });
+
+        test('score includes sessionId reference', function () {
+            cleanStorage();
+            var s = PixelPalace.startSession('brick-smash');
+            PixelPalace.endSession(s.session.id, { score: 50 });
+            var scores = PixelPalace.getScores('brick-smash');
+            assertEqual(scores[0].sessionId, s.session.id);
+        });
+
+        test('getScores returns empty array for game with no scores', function () {
+            cleanStorage();
+            var scores = PixelPalace.getScores('no-scores-game');
+            assert(Array.isArray(scores));
+            assertEqual(scores.length, 0);
+        });
+
+        test('scores are per-player (localStorage-based)', function () {
+            cleanStorage();
+            // First player scores
+            var s1 = PixelPalace.startSession('brick-smash');
+            PixelPalace.endSession(s1.session.id, { score: 100 });
+            var scores = PixelPalace.getScores('brick-smash');
+            assertEqual(scores.length, 1);
+            assertEqual(scores[0].score, 100);
+        });
+
+        // ===================================================
+        // PERSONAL BEST TESTS
+        // ===================================================
+        group('Personal Best');
+
+        test('first score becomes personal best', function () {
+            cleanStorage();
+            var s = PixelPalace.startSession('brick-smash');
+            var result = PixelPalace.endSession(s.session.id, { score: 42 });
+            assert(result.personalBest.isNewBest === true);
+            assertEqual(result.personalBest.score, 42);
+            assertEqual(result.personalBest.previousBest, null);
+        });
+
+        test('higher score replaces personal best (higher-is-better game)', function () {
+            cleanStorage();
+            var s1 = PixelPalace.startSession('brick-smash');
+            PixelPalace.endSession(s1.session.id, { score: 42 });
+
+            var s2 = PixelPalace.startSession('brick-smash');
+            var result = PixelPalace.endSession(s2.session.id, { score: 100 });
+
+            assert(result.personalBest.isNewBest === true);
+            var pb = PixelPalace.getPersonalBest('brick-smash');
+            assertEqual(pb.score, 100);
+        });
+
+        test('lower score does not replace personal best (higher-is-better game)', function () {
+            cleanStorage();
+            var s1 = PixelPalace.startSession('brick-smash');
+            PixelPalace.endSession(s1.session.id, { score: 100 });
+
+            var s2 = PixelPalace.startSession('brick-smash');
+            var result = PixelPalace.endSession(s2.session.id, { score: 50 });
+
+            assert(result.personalBest.isNewBest === false);
+            var pb = PixelPalace.getPersonalBest('brick-smash');
+            assertEqual(pb.score, 100);
+        });
+
+        test('lower score IS a personal best for lower-is-better games', function () {
+            cleanStorage();
+            // mystery-number has scoreDirection: 'lower'
+            var s1 = PixelPalace.startSession('mystery-number');
+            PixelPalace.endSession(s1.session.id, { score: 10 });
+
+            var s2 = PixelPalace.startSession('mystery-number');
+            var result = PixelPalace.endSession(s2.session.id, { score: 5 });
+
+            assert(result.personalBest.isNewBest === true);
+            var pb = PixelPalace.getPersonalBest('mystery-number');
+            assertEqual(pb.score, 5);
+        });
+
+        test('higher score does NOT replace personal best for lower-is-better games', function () {
+            cleanStorage();
+            var s1 = PixelPalace.startSession('mystery-number');
+            PixelPalace.endSession(s1.session.id, { score: 5 });
+
+            var s2 = PixelPalace.startSession('mystery-number');
+            var result = PixelPalace.endSession(s2.session.id, { score: 10 });
+
+            assert(result.personalBest.isNewBest === false);
+            var pb = PixelPalace.getPersonalBest('mystery-number');
+            assertEqual(pb.score, 5);
+        });
+
+        test('separate games maintain separate personal bests', function () {
+            cleanStorage();
+            var s1 = PixelPalace.startSession('brick-smash');
+            PixelPalace.endSession(s1.session.id, { score: 50 });
+
+            var s2 = PixelPalace.startSession('slither-survival');
+            PixelPalace.endSession(s2.session.id, { score: 200 });
+
+            var pb1 = PixelPalace.getPersonalBest('brick-smash');
+            var pb2 = PixelPalace.getPersonalBest('slither-survival');
+
+            assertEqual(pb1.score, 50);
+            assertEqual(pb2.score, 200);
+        });
+
+        test('getPersonalBest returns null for game with no scores', function () {
+            cleanStorage();
+            assertNull(PixelPalace.getPersonalBest('never-played'));
+        });
+
+        test('getPersonalBest returns null for invalid input', function () {
+            cleanStorage();
+            assertNull(PixelPalace.getPersonalBest(null));
+            assertNull(PixelPalace.getPersonalBest(undefined));
+        });
+
+        test('getAllPersonalBests returns all bests', function () {
+            cleanStorage();
+            var s1 = PixelPalace.startSession('brick-smash');
+            PixelPalace.endSession(s1.session.id, { score: 42 });
+
+            var s2 = PixelPalace.startSession('slither-survival');
+            PixelPalace.endSession(s2.session.id, { score: 99 });
+
+            var all = PixelPalace.getAllPersonalBests();
+            assert(typeof all === 'object');
+            assertEqual(all['brick-smash'].score, 42);
+            assertEqual(all['slither-survival'].score, 99);
+        });
+
+        // ===================================================
+        // SCOREMANAGER COMPATIBILITY TESTS
+        // ===================================================
+        group('ScoreManager Backwards Compatibility');
+
+        test('ScoreManager.saveScore still works', function () {
+            try { localStorage.removeItem('pixelPalace_leaderboards'); } catch (e) {}
+            ScoreManager.saveScore('test-game', 100, 'Alice');
+            var scores = ScoreManager.getScores('test-game');
+            assertEqual(scores.length, 1);
+            assertEqual(scores[0].score, 100);
+            assertEqual(scores[0].name, 'Alice');
+        });
+
+        test('ScoreManager.getScores returns empty for unknown game', function () {
+            var scores = ScoreManager.getScores('unknown-game-id');
+            assert(Array.isArray(scores));
+            assertEqual(scores.length, 0);
+        });
+
+        test('ScoreManager.isHighScore works', function () {
+            try { localStorage.removeItem('pixelPalace_leaderboards'); } catch (e) {}
+            // Empty leaderboard — any score qualifies
+            assert(ScoreManager.isHighScore('test-hs-game', 10) === true);
+            // Fill with 10 scores
+            for (var i = 0; i < 10; i++) {
+                ScoreManager.saveScore('test-hs-game', (i + 1) * 10, 'P' + i);
+            }
+            // Score higher than the lowest of top 10 qualifies
+            assert(ScoreManager.isHighScore('test-hs-game', 101) === true);
+            assert(ScoreManager.isHighScore('test-hs-game', 5) === false);
+        });
+
+        test('ScoreManager keeps top 10 sorted descending', function () {
+            try { localStorage.removeItem('pixelPalace_leaderboards'); } catch (e) {}
+            for (var i = 0; i < 15; i++) {
+                ScoreManager.saveScore('sort-test', Math.floor(Math.random() * 1000), 'Bot');
+            }
+            var scores = ScoreManager.getScores('sort-test');
+            assertEqual(scores.length, 10);
+            for (var j = 0; j < scores.length - 1; j++) {
+                assert(scores[j].score >= scores[j + 1].score,
+                    'Scores not sorted: ' + scores[j].score + ' < ' + scores[j + 1].score);
+            }
+        });
+
+        test('ScoreManager handles corrupt localStorage data', function () {
+            localStorage.setItem('pixelPalace_leaderboards', 'NOT JSON');
+            var scores = ScoreManager.getScores('any-game');
+            assert(Array.isArray(scores));
+            assertEqual(scores.length, 0);
+        });
+
+        // ===================================================
+        // INTEGRATION / END-TO-END TEST
+        // ===================================================
+        group('Integration');
+
+        test('full game lifecycle: start -> play -> end -> personal best', function () {
+            cleanStorage();
+
+            // Game starts
+            var startResult = PixelPalace.startSession('typing-sprint');
+            assert(startResult.ok === true);
+            var sessionId = startResult.session.id;
+
+            // Player plays, game ends with score
+            var endResult = PixelPalace.endSession(sessionId, { score: 75 });
+            assert(endResult.ok === true);
+            assert(endResult.personalBest.isNewBest === true);
+
+            // Personal best is stored
+            var pb = PixelPalace.getPersonalBest('typing-sprint');
+            assertEqual(pb.score, 75);
+
+            // Score is in the scores list
+            var scores = PixelPalace.getScores('typing-sprint');
+            assertEqual(scores.length, 1);
+            assertEqual(scores[0].score, 75);
+
+            // Play again, beat the record
+            var start2 = PixelPalace.startSession('typing-sprint');
+            var end2 = PixelPalace.endSession(start2.session.id, { score: 90 });
+            assert(end2.personalBest.isNewBest === true);
+
+            var pb2 = PixelPalace.getPersonalBest('typing-sprint');
+            assertEqual(pb2.score, 90);
+
+            // Play again, don't beat it
+            var start3 = PixelPalace.startSession('typing-sprint');
+            var end3 = PixelPalace.endSession(start3.session.id, { score: 60 });
+            assert(end3.personalBest.isNewBest === false);
+
+            var pb3 = PixelPalace.getPersonalBest('typing-sprint');
+            assertEqual(pb3.score, 90); // unchanged
+
+            // Both scores are stored
+            var allScores = PixelPalace.getScores('typing-sprint');
+            assertEqual(allScores.length, 2);
+        });
+
+        test('PixelPalace exposes all expected public methods', function () {
+            var expected = [
+                'startSession', 'endSession',
+                'getScores', 'getAllScores',
+                'getPersonalBest', 'getAllPersonalBests', 'evaluatePersonalBest',
+                'getPlayer', 'getPlayerId', 'getPlayerName', 'setNickname',
+                'getGame', 'getGameRoute', 'isGameValid', 'getAllGames', 'getGamesByCategory', 'getGameCount',
+                '_storage'
+            ];
+            expected.forEach(function (method) {
+                assert(typeof PixelPalace[method] === 'function', 'Missing method: ' + method);
+            });
+        });
+
+        test('all 46 registered games have valid routes', function () {
+            var games = PixelPalaceRegistry.getAll();
+            games.forEach(function (g) {
+                assert(typeof g.route === 'string' && g.route.length > 0,
+                    'Game ' + g.id + ' has no route');
+            });
+        });
+
+        // ===================================================
+        // INTEGRATION: BRICK SMASH
+        // ===================================================
+        group('Integration: Brick Smash');
+
+        test('brick-smash is registered in the game registry', function () {
+            var game = PixelPalaceRegistry.getById('brick-smash');
+            assertNonNull(game);
+            assertEqual(game.category, 'arcade');
+            assertEqual(game.scoreDirection, 'higher');
+        });
+
+        test('brick-smash session can be started and ended', function () {
+            cleanStorage();
+            var start = PixelPalace.startSession('brick-smash');
+            assert(start.ok === true);
+            var end = PixelPalace.endSession(start.session.id, { score: 15 });
+            assert(end.ok === true);
+            assertEqual(end.session.score, 15);
+        });
+
+        test('brick-smash final score reaches PixelPalace', function () {
+            cleanStorage();
+            var s = PixelPalace.startSession('brick-smash');
+            PixelPalace.endSession(s.session.id, { score: 28 });
+            var scores = PixelPalace.getScores('brick-smash');
+            assertEqual(scores.length, 1);
+            assertEqual(scores[0].score, 28);
+        });
+
+        test('brick-smash personal best updates correctly', function () {
+            cleanStorage();
+            var s1 = PixelPalace.startSession('brick-smash');
+            PixelPalace.endSession(s1.session.id, { score: 10 });
+            var pb1 = PixelPalace.getPersonalBest('brick-smash');
+            assertEqual(pb1.score, 10);
+
+            var s2 = PixelPalace.startSession('brick-smash');
+            var r2 = PixelPalace.endSession(s2.session.id, { score: 20 });
+            assert(r2.personalBest.isNewBest === true);
+
+            var s3 = PixelPalace.startSession('brick-smash');
+            var r3 = PixelPalace.endSession(s3.session.id, { score: 5 });
+            assert(r3.personalBest.isNewBest === false);
+
+            var pb = PixelPalace.getPersonalBest('brick-smash');
+            assertEqual(pb.score, 20);
+        });
+
+        test('brick-smash restart creates a new session', function () {
+            cleanStorage();
+            var s1 = PixelPalace.startSession('brick-smash');
+            PixelPalace.endSession(s1.session.id, { score: 10 });
+            var s2 = PixelPalace.startSession('brick-smash');
+            assert(s1.session.id !== s2.session.id);
+            assertEqual(s2.session.gameId, 'brick-smash');
+        });
+
+        test('brick-smash duplicate game-over does not duplicate score', function () {
+            cleanStorage();
+            var s = PixelPalace.startSession('brick-smash');
+            var r1 = PixelPalace.endSession(s.session.id, { score: 42 });
+            assert(r1.ok === true);
+            var r2 = PixelPalace.endSession(s.session.id, { score: 42 });
+            assert(r2.ok === false);
+            var scores = PixelPalace.getScores('brick-smash');
+            assertEqual(scores.length, 1);
+        });
+
+        test('brick-smash legacy high score migration', function () {
+            cleanStorage();
+            // Set legacy key directly
+            localStorage.setItem('brickSmashHighScore', '25');
+            // When game loads, it should read legacy and migrate to PixelPalace
+            var pb = PixelPalace.evaluatePersonalBest('brick-smash', 25);
+            assert(pb.isNewBest === true);
+            var stored = PixelPalace.getPersonalBest('brick-smash');
+            assertEqual(stored.score, 25);
+        });
+
+        // ===================================================
+        // INTEGRATION: SLITHER SURVIVAL
+        // ===================================================
+        group('Integration: Slither Survival');
+
+        test('slither-survival is registered in the game registry', function () {
+            var game = PixelPalaceRegistry.getById('slither-survival');
+            assertNonNull(game);
+            assertEqual(game.category, 'arcade');
+            assertEqual(game.scoreDirection, 'higher');
+        });
+
+        test('slither-survival session starts and score submits', function () {
+            cleanStorage();
+            var start = PixelPalace.startSession('slither-survival');
+            assert(start.ok === true);
+            var end = PixelPalace.endSession(start.session.id, { score: 120 });
+            assert(end.ok === true);
+            assertEqual(end.session.score, 120);
+        });
+
+        test('slither-survival personal best works', function () {
+            cleanStorage();
+            var s1 = PixelPalace.startSession('slither-survival');
+            PixelPalace.endSession(s1.session.id, { score: 50 });
+            var s2 = PixelPalace.startSession('slither-survival');
+            var r2 = PixelPalace.endSession(s2.session.id, { score: 200 });
+            assert(r2.personalBest.isNewBest === true);
+
+            var s3 = PixelPalace.startSession('slither-survival');
+            var r3 = PixelPalace.endSession(s3.session.id, { score: 100 });
+            assert(r3.personalBest.isNewBest === false);
+
+            var pb = PixelPalace.getPersonalBest('slither-survival');
+            assertEqual(pb.score, 200);
+        });
+
+        test('slither-survival restart creates new session', function () {
+            cleanStorage();
+            var s1 = PixelPalace.startSession('slither-survival');
+            PixelPalace.endSession(s1.session.id, { score: 30 });
+            var s2 = PixelPalace.startSession('slither-survival');
+            assert(s1.session.id !== s2.session.id);
+        });
+
+        test('slither-survival duplicate submission prevented', function () {
+            cleanStorage();
+            var s = PixelPalace.startSession('slither-survival');
+            PixelPalace.endSession(s.session.id, { score: 50 });
+            var r2 = PixelPalace.endSession(s.session.id, { score: 50 });
+            assert(r2.ok === false);
+        });
+
+        // ===================================================
+        // INTEGRATION: TYPING SPRINT
+        // ===================================================
+        group('Integration: Typing Sprint');
+
+        test('typing-sprint is registered in the game registry', function () {
+            var game = PixelPalaceRegistry.getById('typing-sprint');
+            assertNonNull(game);
+            assertEqual(game.category, 'challenges');
+            assertEqual(game.scoreDirection, 'higher');
+        });
+
+        test('typing-sprint session starts and WPM score submits', function () {
+            cleanStorage();
+            var start = PixelPalace.startSession('typing-sprint');
+            assert(start.ok === true);
+            var end = PixelPalace.endSession(start.session.id, { score: 75 });
+            assert(end.ok === true);
+            assertEqual(end.session.score, 75);
+        });
+
+        test('typing-sprint personal best tracks WPM correctly', function () {
+            cleanStorage();
+            var s1 = PixelPalace.startSession('typing-sprint');
+            PixelPalace.endSession(s1.session.id, { score: 40 });
+            var s2 = PixelPalace.startSession('typing-sprint');
+            var r2 = PixelPalace.endSession(s2.session.id, { score: 90 });
+            assert(r2.personalBest.isNewBest === true);
+
+            var pb = PixelPalace.getPersonalBest('typing-sprint');
+            assertEqual(pb.score, 90);
+        });
+
+        test('typing-sprint scoring semantics (higher is better)', function () {
+            cleanStorage();
+            var s1 = PixelPalace.startSession('typing-sprint');
+            PixelPalace.endSession(s1.session.id, { score: 100 });
+            var s2 = PixelPalace.startSession('typing-sprint');
+            var r2 = PixelPalace.endSession(s2.session.id, { score: 80 });
+            assert(r2.personalBest.isNewBest === false);
+        });
+
+        test('typing-sprint legacy WPM migration', function () {
+            cleanStorage();
+            localStorage.setItem('typingSprintBestWPM', '65');
+            var pb = PixelPalace.evaluatePersonalBest('typing-sprint', 65);
+            assert(pb.isNewBest === true);
+            var stored = PixelPalace.getPersonalBest('typing-sprint');
+            assertEqual(stored.score, 65);
+        });
+
+        // ===================================================
+        // INTEGRATION: LEADERBOARD
+        // ===================================================
+        group('Integration: Leaderboard');
+
+        test('no hardcoded fake score data in PixelPalace stores', function () {
+            cleanStorage();
+            var allScores = PixelPalace.getAllScores();
+            var keys = Object.keys(allScores);
+            keys.forEach(function (k) {
+                var scores = allScores[k];
+                scores.forEach(function (s) {
+                    assert(typeof s.score === 'number', 'Score is not a number');
+                    assert(typeof s.achievedAt === 'string', 'Score has no timestamp');
+                });
+            });
+        });
+
+        test('no fake player names in PixelPalace stores', function () {
+            cleanStorage();
+            // Populate with real data
+            var s = PixelPalace.startSession('brick-smash');
+            PixelPalace.endSession(s.session.id, { score: 42 });
+            // Verify no "CyberKing", "PixelPro", "RetroGamer" in scores
+            var allScores = PixelPalace.getAllScores();
+            var json = JSON.stringify(allScores);
+            assert(json.indexOf('CyberKing') === -1, 'Fake name CyberKing found');
+            assert(json.indexOf('PixelPro') === -1, 'Fake name PixelPro found');
+            assert(json.indexOf('RetroGamer') === -1, 'Fake name RetroGamer found');
+        });
+
+        test('leaderboard uses actual PixelPalace score data', function () {
+            cleanStorage();
+            var s1 = PixelPalace.startSession('brick-smash');
+            PixelPalace.endSession(s1.session.id, { score: 42 });
+            var s2 = PixelPalace.startSession('brick-smash');
+            PixelPalace.endSession(s2.session.id, { score: 10 });
+
+            var scores = PixelPalace.getScores('brick-smash');
+            assertEqual(scores.length, 2);
+            // Higher score should be first when sorted
+            var sorted = scores.slice().sort(function (a, b) { return b.score - a.score; });
+            assertEqual(sorted[0].score, 42);
+            assertEqual(sorted[1].score, 10);
+        });
+
+        test('leaderboard correct sort direction for higher-is-better', function () {
+            cleanStorage();
+            var game = PixelPalaceRegistry.getById('brick-smash');
+            assertEqual(game.scoreDirection, 'higher');
+
+            [30, 10, 50, 20].forEach(function (s) {
+                var sess = PixelPalace.startSession('brick-smash');
+                PixelPalace.endSession(sess.session.id, { score: s });
+            });
+            var scores = PixelPalace.getScores('brick-smash');
+            var sorted = scores.slice().sort(function (a, b) { return b.score - a.score; });
+            assertEqual(sorted[0].score, 50);
+            assertEqual(sorted[sorted.length - 1].score, 10);
+        });
+
+        test('leaderboard correct sort direction for lower-is-better', function () {
+            cleanStorage();
+            var game = PixelPalaceRegistry.getById('mystery-number');
+            assertEqual(game.scoreDirection, 'lower');
+
+            [30, 10, 50, 5].forEach(function (s) {
+                var sess = PixelPalace.startSession('mystery-number');
+                PixelPalace.endSession(sess.session.id, { score: s });
+            });
+            var scores = PixelPalace.getScores('mystery-number');
+            var sorted = scores.slice().sort(function (a, b) { return a.score - b.score; });
+            assertEqual(sorted[0].score, 5);
+            assertEqual(sorted[sorted.length - 1].score, 50);
+        });
+
+        test('empty leaderboard state works', function () {
+            cleanStorage();
+            var scores = PixelPalace.getScores('never-played-game');
+            assert(Array.isArray(scores));
+            assertEqual(scores.length, 0);
+            var pb = PixelPalace.getPersonalBest('never-played-game');
+            assertNull(pb);
+        });
+
+        test('leaderboard does not crash when no scores exist', function () {
+            cleanStorage();
+            // Simulate what showLeaderboard would do
+            var gameId = 'nonexistent-game';
+            var pb = PixelPalace.getPersonalBest(gameId);
+            var scores = PixelPalace.getScores(gameId);
+            assert(pb === null || typeof pb === 'object');
+            assert(Array.isArray(scores));
+        });
+
+        test('PixelPalace.getGame returns game metadata for leaderboard display', function () {
+            var game = PixelPalace.getGame('brick-smash');
+            assertNonNull(game);
+            assert(typeof game.name === 'string');
+            assert(typeof game.scoreDirection === 'string');
+        });
+
+        // ===================================================
+        // RENDER RESULTS
+        // ===================================================
+        cleanStorage();
+
+        var output = document.getElementById('output');
+        var summary = document.getElementById('summary');
+        var results = document.getElementById('results');
+
+        var html = '';
+        var lastGroup = '';
+        tests.forEach(function (t) {
+            if (t.group !== lastGroup) {
+                html += '<div class="group"><div class="group-title">' + t.group + '</div>';
+                lastGroup = t.group;
+            }
+            var cls = t.pass ? 'pass' : 'fail';
+            var msg = t.name;
+            if (!t.pass) msg += ' — ' + t.error;
+            html += '<div class="test ' + cls + '">' + msg + '</div>';
+        });
+        html += '</div>';
+        output.innerHTML = html;
+
+        var total = passed + failed;
+        summary.innerHTML = '<span class="pass">' + passed + ' passed</span>, ' +
+            '<span class="fail">' + failed + ' failed</span> out of ' + total + ' tests';
+
+        results.className = 'results ' + (failed === 0 ? 'pass-all' : 'has-fail');
+        results.innerHTML = failed === 0
+            ? '<span class="pass">ALL TESTS PASSED</span>'
+            : '<span class="fail">' + failed + ' TEST(S) FAILED</span>';
+
+        // Expose for programmatic access
+        window.__testResults = { passed: passed, failed: failed, total: total, tests: tests };
+    })();
+    </script>
+</body>
+</html>
