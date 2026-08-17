@@ -3,6 +3,24 @@
     padding: 0px;
 }
 
+.back-link {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: #00e5ff;
+    text-decoration: none;
+    font-size: 1em;
+    font-weight: bold;
+    background: rgba(0,0,0,0.6);
+    padding: 8px 16px;
+    border-radius: 6px;
+    z-index: 9999;
+}
+.back-link:hover {
+    background: rgba(0,229,255,0.2);
+    color: #ffffff;
+}
+
 body {
     background-color: #d8f8ff;
     font-family: sans-serif;
