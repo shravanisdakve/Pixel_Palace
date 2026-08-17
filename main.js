@@ -212,8 +212,19 @@ document.addEventListener('DOMContentLoaded', () => {
     loadRecentGames();
 
     // Leaderboard UI Modal Logic
-    const leaderboardModal = document.getElementById('leaderboard-modal');
-    const closeLeaderboard = document.querySelector('.close-modal');
+    var leaderboardModal = document.getElementById('leaderboard-modal');
+    
+    // Dynamically create leaderboard modal if it doesn't exist in the HTML
+    if (!leaderboardModal) {
+        leaderboardModal = document.createElement('div');
+        leaderboardModal.id = 'leaderboard-modal';
+        leaderboardModal.className = 'modal';
+        leaderboardModal.style.display = 'none';
+        leaderboardModal.innerHTML = '<div class="modal-content"><span class="close-modal close-button">&times;</span><h2 class="modal-title">Leaderboard</h2><div class="scores-list"></div></div>';
+        document.body.appendChild(leaderboardModal);
+    }
+    
+    var closeLeaderboard = leaderboardModal.querySelector('.close-modal');
     
     document.querySelectorAll('.trophy-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -233,37 +244,71 @@ document.addEventListener('DOMContentLoaded', () => {
         const modalTitle = leaderboardModal.querySelector('.modal-title');
         const scoresContainer = leaderboardModal.querySelector('.scores-list');
         
-        if (modalTitle) modalTitle.textContent = `${title} - Top Scores`;
+        if (modalTitle) modalTitle.textContent = `${title} - Your Scores`;
         
         if (scoresContainer) {
-            scoresContainer.innerHTML = `
-                <table class="leaderboard-table" style="width:100%; border-collapse:collapse; margin-top:15px;">
-                    <thead>
-                        <tr style="border-bottom: 2px solid var(--secondary-color); color: var(--accent-color);">
-                            <th style="padding:8px; text-align:left;">Rank</th>
-                            <th style="padding:8px; text-align:left;">Player</th>
-                            <th style="padding:8px; text-align:right;">Score</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="border-bottom: 1px solid rgba(0,255,255,0.2);">
-                            <td style="padding:8px;">🥇 1st</td>
-                            <td style="padding:8px;">CyberKing</td>
-                            <td style="padding:8px; text-align:right; font-weight:bold; color:var(--secondary-color);">9,850</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid rgba(0,255,255,0.2);">
-                            <td style="padding:8px;">🥈 2nd</td>
-                            <td style="padding:8px;">PixelPro</td>
-                            <td style="padding:8px; text-align:right; font-weight:bold; color:var(--secondary-color);">8,420</td>
-                        </tr>
-                        <tr>
-                            <td style="padding:8px;">🥉 3rd</td>
-                            <td style="padding:8px;">RetroGamer</td>
-                            <td style="padding:8px; text-align:right; font-weight:bold; color:var(--secondary-color);">7,110</td>
-                        </tr>
-                    </tbody>
-                </table>
-            `;
+            // Use real PixelPalace data instead of fake hardcoded data
+            let html = '';
+            
+            if (typeof window.PixelPalace !== 'undefined') {
+                // Personal Best
+                var pb = window.PixelPalace.getPersonalBest(gameId);
+                if (pb) {
+                    html += '<div style="margin-bottom:15px; padding:12px; border:1px solid var(--secondary-color); border-radius:6px; background:rgba(0,255,255,0.05);">';
+                    html += '<div style="color:var(--accent-color); font-size:11px; margin-bottom:6px;">PERSONAL BEST</div>';
+                    html += '<div style="font-size:18px; font-weight:bold; color:var(--secondary-color);">' + pb.score + '</div>';
+                    html += '<div style="font-size:9px; color:#888; margin-top:4px;">Achieved ' + new Date(pb.achievedAt).toLocaleDateString() + '</div>';
+                    html += '</div>';
+                }
+
+                // Recent Scores
+                var scores = window.PixelPalace.getScores(gameId);
+                if (scores && scores.length > 0) {
+                    // Sort by score descending (higher is better for most games)
+                    var game = window.PixelPalace.getGame(gameId);
+                    var sorted = scores.slice().sort(function(a, b) {
+                        if (game && game.scoreDirection === 'lower') {
+                            return a.score - b.score;
+                        }
+                        return b.score - a.score;
+                    });
+                    
+                    html += '<div style="color:var(--accent-color); font-size:11px; margin-bottom:8px;">RECENT SCORES</div>';
+                    html += '<table class="leaderboard-table" style="width:100%; border-collapse:collapse;">';
+                    html += '<thead><tr style="border-bottom:2px solid var(--secondary-color); color:var(--accent-color);">';
+                    html += '<th style="padding:6px; text-align:left; font-size:10px;">#</th>';
+                    html += '<th style="padding:6px; text-align:right; font-size:10px;">Score</th>';
+                    html += '<th style="padding:6px; text-align:right; font-size:10px;">Date</th>';
+                    html += '</tr></thead><tbody>';
+                    
+                    var displayScores = sorted.slice(0, 10);
+                    for (var i = 0; i < displayScores.length; i++) {
+                        var s = displayScores[i];
+                        var dateStr = '';
+                        try {
+                            dateStr = new Date(s.achievedAt).toLocaleDateString();
+                        } catch (e) {}
+                        var medals = ['🥇', '🥈', '🥉'];
+                        var rank = i < 3 ? medals[i] : (i + 1);
+                        html += '<tr style="border-bottom:1px solid rgba(0,255,255,0.15);">';
+                        html += '<td style="padding:6px; font-size:11px;">' + rank + '</td>';
+                        html += '<td style="padding:6px; text-align:right; font-weight:bold; color:var(--secondary-color); font-size:12px;">' + s.score + '</td>';
+                        html += '<td style="padding:6px; text-align:right; color:#888; font-size:10px;">' + dateStr + '</td>';
+                        html += '</tr>';
+                    }
+                    html += '</tbody></table>';
+                } else if (!pb) {
+                    html += '<div style="text-align:center; padding:20px; color:#888; font-size:11px;">';
+                    html += 'No scores recorded yet.<br>Play this game to set a record!';
+                    html += '</div>';
+                }
+            } else {
+                html += '<div style="text-align:center; padding:20px; color:#888; font-size:11px;">';
+                html += 'Score system unavailable.';
+                html += '</div>';
+            }
+            
+            scoresContainer.innerHTML = html;
         }
         
         leaderboardModal.classList.add('active');
@@ -281,6 +326,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('click', (e) => {
         if (leaderboardModal && e.target === leaderboardModal) {
+            leaderboardModal.classList.remove('active');
+            leaderboardModal.style.display = 'none';
+        }
+    });
+
+    // Also close leaderboard on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && leaderboardModal && leaderboardModal.style.display === 'flex') {
             leaderboardModal.classList.remove('active');
             leaderboardModal.style.display = 'none';
         }

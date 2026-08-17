@@ -88,6 +88,8 @@
                                     <button class="how-to-play-button"
                                         data-modal-target="#brick-smash-instructions-modal"
                                         aria-label="How to play Brick Smash Chronicles">How to Play</button>
+                                    <button class="trophy-btn" data-game="brick-smash"
+                                        aria-label="View Brick Smash leaderboards">🏆</button>
                                 </div>
                             </div>
                         </article>
@@ -330,6 +332,8 @@
                                     <a href="Arcade/Slither Survival/index.html" class="play-button">Play</a>
                                     <button class="how-to-play-button"
                                         data-modal-target="#slither-survival-instructions-modal">How to Play</button>
+                                    <button class="trophy-btn" data-game="slither-survival"
+                                        aria-label="View Slither Survival leaderboards">🏆</button>
                                 </div>
                             </div>
                         </article>
@@ -360,6 +364,15 @@
                 </div>
             </div>
         </main>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div id="leaderboard-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close-modal close-button">&times;</span>
+            <h2 class="modal-title">Leaderboard</h2>
+            <div class="scores-list"></div>
+        </div>
     </div>
 
     <script>
@@ -481,6 +494,10 @@
         });
 
     </script>
+    <script src="js/pixel_palace_storage.js"></script>
+    <script src="js/pixel_palace_player.js"></script>
+    <script src="js/pixel_palace_registry.js"></script>
+    <script src="js/pixel_palace_core.js"></script>
     <script src="js/sound_manager.js"></script>
     <script src="js/score_manager.js"></script>
     <script src="main.js"></script>
