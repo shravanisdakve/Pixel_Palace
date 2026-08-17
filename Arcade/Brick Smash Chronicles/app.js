@@ -2,14 +2,36 @@
 let canvas = document.getElementById('mycanvas');
 let ctx = canvas.getContext('2d');
 
-// --- NEW: Sound & High Score variables ---
+// --- Sound & Popup references ---
 const soundManager = new SoundManager();
 const popupContainer = document.getElementById('popup-container');
 const popupMessage = document.getElementById('popup-message');
 const playAgainBtn = document.getElementById('play-again-btn');
 
-let highScore = localStorage.getItem('brickSmashHighScore') || 0;
-// --- END NEW ---
+// --- Pixel Palace session tracking ---
+let currentSessionId = null;
+let gameEnded = false;
+
+// --- Legacy high score migration ---
+let highScore = 0;
+let legacyValue = null;
+try {
+    legacyValue = localStorage.getItem('brickSmashHighScore');
+} catch (e) {}
+if (legacyValue !== null) {
+    highScore = Number(legacyValue) || 0;
+    // Migrate legacy value into PixelPalace if valid
+    if (highScore > 0 && typeof window.PixelPalace !== 'undefined') {
+        window.PixelPalace.evaluatePersonalBest('brick-smash', highScore);
+    }
+}
+// Also check PixelPalace for a higher personal best
+if (typeof window.PixelPalace !== 'undefined') {
+    var pb = window.PixelPalace.getPersonalBest('brick-smash');
+    if (pb && pb.score > highScore) {
+        highScore = pb.score;
+    }
+}
 
 let ballRadius = 10;
 let x = canvas.width / 2;
@@ -39,11 +61,45 @@ let score = 0;
 document.body.addEventListener('keydown', () => soundManager.init(), { once: true });
 document.body.addEventListener('click', () => soundManager.init(), { once: true });
 
+// Start Pixel Palace session
+function startGameSession() {
+    if (typeof window.PixelPalace !== 'undefined') {
+        var result = window.PixelPalace.startSession('brick-smash');
+        if (result.ok) {
+            currentSessionId = result.session.id;
+        }
+    }
+}
+
+// End Pixel Palace session with final score
+function endGameSession(finalScore) {
+    if (gameEnded) return; // Prevent duplicate submission
+    gameEnded = true;
+
+    if (typeof window.PixelPalace !== 'undefined' && currentSessionId) {
+        var result = window.PixelPalace.endSession(currentSessionId, { score: finalScore });
+        if (result.ok && result.personalBest) {
+            highScore = result.personalBest.isNewBest ? finalScore : highScore;
+        }
+    }
+
+    // Also update legacy key for backwards compatibility
+    try {
+        if (finalScore > Number(localStorage.getItem('brickSmashHighScore') || 0)) {
+            localStorage.setItem('brickSmashHighScore', finalScore);
+            highScore = finalScore;
+        }
+    } catch (e) {}
+}
+
+// Start the session when the page loads (game starts immediately)
+startGameSession();
+
 //Creating arrays for the bricks
 let bricks = [];
-for (c = 0; c < brickColumnCount; c++) {
+for (let c = 0; c < brickColumnCount; c++) {
     bricks[c] = [];
-    for (r = 0; r < brickRowCount; r++) {
+    for (let r = 0; r < brickRowCount; r++) {
         //set the x and y position of the bricks
         bricks[c][r] = { x: 0, y: 0, status: 1 };
     }
@@ -86,7 +142,7 @@ function keyUpHandler(e) {
 
 function drawBall() {
     ctx.beginPath();
-    ctx.arc(x, y, ballRadius, 0, Math.PI * 2); //centered at (x,y) position with radius r = ballRadius starting at 0 = startAngle, ending at Math.PI*2 = endAngle (in Radians)
+    ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
     ctx.fillStyle = '#FF4136';
     ctx.fill();
     ctx.closePath();
@@ -94,15 +150,15 @@ function drawBall() {
 //Create a function to create the paddle
 function drawPaddle() {
     ctx.beginPath();
-    ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight); //centered at (x,y) position with radius r = ballRadius starting at 0 = startAngle, ending at Math.PI*2 = endAngle (in Radians)
+    ctx.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
     ctx.fillStyle = '#007BFF';
     ctx.fill();
     ctx.closePath();
 }
 //Create a function to draw the bricks
 function drawBricks() {
-    for (c = 0; c < brickColumnCount; c++) {
-        for (r = 0; r < brickRowCount; r++) {
+    for (let c = 0; c < brickColumnCount; c++) {
+        for (let r = 0; r < brickRowCount; r++) {
             if (bricks[c][r].status === 1) {
                 let brickX = (c * (brickWidth + brickPadding)) + brickOffsetLeft;
                 let brickY = (r * (brickHeight + brickPadding)) + brickOffsetTop;
@@ -110,7 +166,6 @@ function drawBricks() {
                 bricks[c][r].y = brickY;
                 ctx.beginPath();
                 ctx.rect(brickX, brickY, brickWidth, brickHeight);
-                // We can have different brick colors, but for now let's use one
                 ctx.fillStyle = '#FF851B';
                 ctx.fill();
                 ctx.closePath();
@@ -118,58 +173,32 @@ function drawBricks() {
         }
     }
 }
-//Create function to keep track of score
+//Create function to keep track of score and personal best
 function drawScore() {
     ctx.font = '18px "Press Start 2P", cursive';
     ctx.fillStyle = '#FFFFFF';
     ctx.fillText('Score: ' + score, 8, 24);
-    ctx.fillText('High: ' + highScore, canvas.width - 130, 24); // Display High Score
+    ctx.fillText('High: ' + highScore, canvas.width - 130, 24);
 }
 
-//Collision dections for the bricks
+//Collision detection for the bricks
 function collisionDetection() {
-    for (c = 0; c < brickColumnCount; c++) {
-        for (r = 0; r < brickRowCount; r++) {
+    for (let c = 0; c < brickColumnCount; c++) {
+        for (let r = 0; r < brickRowCount; r++) {
             let b = bricks[c][r];
             if (b.status === 1) {
                 if (x > b.x && x < b.x + brickWidth && y > b.y && y < b.y + brickHeight) {
                     dy = -dy;
                     b.status = 0;
                     score++;
-                    soundManager.playBrickHit(); // Play sound
+                    soundManager.playBrickHit();
                     if (score === brickRowCount * brickColumnCount) {
-                        updateHighScore();
+                        endGameSession(score);
                         soundManager.playWin();
                         showPopup('YOU WIN! Score: ' + score);
                     }
                 }
             }
-        }
-    }
-}
-
-function checkHighScore() {
-    // Legacy simple storage (for compatibility/backup)
-    if (score > brickSmashHighScore) {
-        brickSmashHighScore = score;
-        localStorage.setItem("brickSmashHighScore", brickSmashHighScore);
-    }
-
-    // NEW: Central Leaderboard System
-    // Need to check if available
-    if (window.ScoreManager) {
-        if (window.ScoreManager.isHighScore('brick-smash', score)) {
-            // Prompt for name on new high score
-            setTimeout(() => {
-                let playerName = prompt("New High Score! Enter your name:", "Player 1");
-                if (!playerName) playerName = "Anonymous";
-                window.ScoreManager.saveScore('brick-smash', score, playerName);
-            }, 100);
-        } else {
-            // Always save attempt if score > 0 just in case list isn't full?
-            // Actually logic says only if isHighScore. 
-            // Logic: isHighScore returns true if top 10 not full OR score beats #10
-            window.ScoreManager.saveScore('brick-smash', score, "Player");
         }
     }
 }
@@ -182,7 +211,6 @@ function draw() {
     drawBall();
     drawPaddle();
     collisionDetection();
-    //Calculate collision detections
     //left and right walls
     if (x + dx > canvas.width - ballRadius || x + dx < ballRadius) {
         dx = -dx;
@@ -195,18 +223,14 @@ function draw() {
         //detect paddle hits
         if (x > paddleX && x < paddleX + paddleWidth) {
             dy = -dy;
-            soundManager.playPaddleHit(); // Play sound
+            soundManager.playPaddleHit();
         }
         //if no paddle hit, body of canvas is hit ==> game over
         else {
-            updateHighScore();
+            endGameSession(score);
             soundManager.playGameOver();
             showPopup('GAME OVER');
         }
-    }
-    //bottom wall
-    if (y + dy > canvas.height - ballRadius || y + dy < ballRadius) {
-        dy = -dy;
     }
     //Make paddle move
     if (rightPressed && paddleX < canvas.width - paddleWidth) {
@@ -216,13 +240,13 @@ function draw() {
         paddleX -= 7;
     }
     //Making the ball move
-    x += dx; //update x movement every frame
-    y += dy; //update y movement every frame
+    x += dx;
+    y += dy;
 }
 
-// --- NEW: Popup logic ---
+// --- Popup logic ---
 function showPopup(message) {
-    clearInterval(interval); // Stop the game
+    clearInterval(interval);
     popupMessage.textContent = message;
     popupContainer.style.display = 'flex';
 }
@@ -230,17 +254,7 @@ function showPopup(message) {
 playAgainBtn.addEventListener('click', () => {
     document.location.reload();
 });
-// --- END NEW ---
-
 
 //Create an infinite loop that creates the ball
 //paints the ball on the canvas every 10 milliseconds.
 let interval = setInterval(draw, 10);
-
-
-//Notes
-//Using HTML Canvas
-//Understanding HTML Coordinates 
-//Web APIs - https://developer.mozilla.org/en-US/docs/Web/API
-// Drawing shapes with Canvas: https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial
-//MDN BrickerBreaker Tutorial  https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript
