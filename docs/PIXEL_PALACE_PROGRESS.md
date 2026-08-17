@@ -2,7 +2,7 @@
 
 ## Overall Progress
 
-Overall completion: **16.7%** (M0 complete, M1 release candidate)
+Overall completion: **16.7%** (M0 + M1 complete)
 
 ---
 
@@ -11,7 +11,7 @@ Overall completion: **16.7%** (M0 complete, M1 release candidate)
 | ID | Milestone | Status | Completion |
 |----|-----------|--------|------------|
 | M0 | Codebase Audit | COMPLETE | 100% |
-| M1 | Player/Game/Session/Score Foundation | RELEASE CANDIDATE / PENDING FINAL QA | 100% |
+| M1 | Player/Game/Session/Score Foundation | COMPLETE | 100% |
 | M2 | XP, Levels & Achievements | NOT STARTED | 0% |
 | M3 | Personal Arcade / Player Dashboard | NOT STARTED | 0% |
 | M4 | Daily Challenge | NOT STARTED | 0% |
@@ -772,4 +772,4 @@ Overall = (1.0 * 0.05) + (0.60 * 0.25) + (0 * 0.15) + ... = **12.5%**
 ---
 
 *This document is the source of truth for Pixel Palace project progress.*
-*Last updated: 2026-08-17 — M1 Task 5 release blocker audit complete, pending final browser verification*
+*Last updated: 2026-08-17 — M1 100% COMPLETE, deployed and live verified*
