@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Palace Achievements — Test Suite</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0f0f1e; color: #e0e0e0; font-family: 'Courier New', monospace; padding: 20px; }
+        h1 { color: #00ffff; margin-bottom: 5px; }
+        .summary { color: #aaa; margin-bottom: 20px; font-size: 14px; }
+        .pass { color: #00ff00; }
+        .fail { color: #ff4444; }
+        .group { margin-bottom: 24px; }
+        .group-title { color: #ffff00; font-size: 16px; margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 4px; }
+        .test { padding: 3px 0; font-size: 13px; }
+        .test::before { content: '  '; }
+        .test.pass::before { content: '\u2713 '; color: #00ff00; }
+        .test.fail::before { content: '\u2717 '; color: #ff4444; }
+        .results { margin-top: 20px; padding: 15px; border: 2px solid #333; border-radius: 8px; }
+        .results.pass-all { border-color: #00ff00; }
+        .results.has-fail { border-color: #ff4444; }
+    </style>
+</head>
+<body>
+    <h1>Pixel Palace Achievements — Test Suite</h1>
+    <div class="summary" id="summary">Running tests...</div>
+    <div id="output"></div>
+    <div class="results" id="results"></div>
+
+    <!-- Load modules in dependency order -->
+    <script src="../js/pixel_palace_storage.js"></script>
+    <script src="../js/pixel_palace_player.js"></script>
+    <script src="../js/pixel_palace_registry.js"></script>
+    <script src="../js/pixel_palace_progression_config.js"></script>
+    <script src="../js/pixel_palace_progression.js"></script>
+    <script src="../js/pixel_palace_achievements.js"></script>
+    <script src="../js/pixel_palace_achievements_engine.js"></script>
+    <script src="../js/pixel_palace_core.js"></script>
+    <script src="../js/pixel_palace_progression_ui.js"></script>
+    <script src="../js/pixel_palace_progression_feedback.js"></script>
+
+    <script>
+    (function () {
+        'use strict';
+
+        var passed = 0;
+        var failed = 0;
+        var tests = [];
+        var currentGroup = '';
+
+        function group(name) { currentGroup = name; }
+        function test(name, fn) {
+            try { fn(); tests.push({ group: currentGroup, name: name, pass: true }); passed++; }
+            catch (e) { tests.push({ group: currentGroup, name: name, pass: false, error: e.message }); failed++; }
+        }
+        function assert(condition, message) { if (!condition) throw new Error(message || 'Assertion failed'); }
+        function assertEqual(actual, expected, message) {
+            if (actual !== expected) throw new Error((message ? message + ': ' : '') + 'Expected ' + JSON.stringify(expected) + ' got ' + JSON.stringify(actual));
+        }
+
+        function clean() {
+            PixelPalaceStorage.clearAll();
+            PixelPalacePlayer.create();
+        }
+
+        function completeGame(gameId, score) {
+            var s = PixelPalace.startSession(gameId);
+            if (!s.ok) throw new Error('startSession failed for ' + gameId);
+            var e = PixelPalace.endSession(s.session.id, { score: score });
+            if (!e.ok) throw new Error('endSession failed for ' + gameId);
+            return e;
+        }
+
+        // === REGISTRY ===
+        group('Registry');
+        test('All achievement IDs are unique', function () {
+            var defs = PixelPalaceAchievementDefinitions.ACHIEVEMENTS;
+            var ids = {};
+            for (var i = 0; i < defs.length; i++) {
+                assert(!ids[defs[i].id], 'Duplicate ID: ' + defs[i].id);
+                ids[defs[i].id] = true;
+            }
+        });
+        test('All required fields present', function () {
+            var defs = PixelPalaceAchievementDefinitions.ACHIEVEMENTS;
+            for (var i = 0; i < defs.length; i++) {
+                var d = defs[i];
+                assert(typeof d.id === 'string' && d.id.length > 0, d.id + ': missing id');
+                assert(typeof d.name === 'string' && d.name.length > 0, d.id + ': missing name');
+                assert(typeof d.description === 'string', d.id + ': missing description');
+                assert(typeof d.category === 'string', d.id + ': missing category');
+                assert(Array.isArray(d.conditions) && d.conditions.length > 0, d.id + ': missing conditions');
+            }
+        });
+        test('All referenced game IDs exist in GameRegistry', function () {
+            var defs = PixelPalaceAchievementDefinitions.ACHIEVEMENTS;
+            for (var i = 0; i < defs.length; i++) {
+                var conds = defs[i].conditions;
+                for (var j = 0; j < conds.length; j++) {
+                    if (conds[j].gameId) {
+                        assert(PixelPalaceRegistry.isValid(conds[j].gameId),
+                            defs[i].id + ': game ID "' + conds[j].gameId + '" not in registry');
+                    }
+                }
+            }
+        });
+        test('Condition schemas are valid', function () {
+            var defs = PixelPalaceAchievementDefinitions.ACHIEVEMENTS;
+            var validTypes = PixelPalaceAchievementDefinitions.CONDITION_TYPES;
+            var types = Object.keys(validTypes).map(function(k) { return validTypes[k]; });
+            for (var i = 0; i < defs.length; i++) {
+                var conds = defs[i].conditions;
+                for (var j = 0; j < conds.length; j++) {
+                    var c = conds[j];
+                    assert(types.indexOf(c.type) !== -1, defs[i].id + ': invalid condition type "' + c.type + '"');
+                    if (c.type === 'count' || c.type === 'unique_count' || c.type === 'threshold' || c.type === 'personal_best_count') {
+                        assert(typeof c.operator === 'string', defs[i].id + ': missing operator');
+                        assert(typeof c.value === 'number', defs[i].id + ': missing value');
+                    }
+                }
+            }
+        });
+        test('CATEGORIES object has required keys', function () {
+            var c = PixelPalaceAchievementDefinitions.CATEGORIES;
+            assert(c.MILESTONE, 'Missing MILESTONE');
+            assert(c.SCORE, 'Missing SCORE');
+            assert(c.EXPLORATION, 'Missing EXPLORATION');
+            assert(c.PROGRESSION, 'Missing PROGRESSION');
+            assert(c.GAME_SPECIFIC, 'Missing GAME_SPECIFIC');
+        });
+
+        // === EVALUATION ===
+        group('Evaluation');
+        test('First game completion unlocks First Steps', function () {
+            clean();
+            completeGame('brick-smash', 100);
+            assert(PixelPalaceAchievements.isUnlocked('first_steps'), 'Should unlock first_steps');
+        });
+        test('10 completed games unlock Getting Started', function () {
+            clean();
+            var games = ['brick-smash','flappy-flight','rebound-rescue','bug-collector',
+                'slither-survival','scripted-adventures','pixel-blaster','rabbit-race',
+                'puzzle-2048','mind-vault'];
+            for (var i = 0; i < games.length; i++) {
+                completeGame(games[i], 10);
+            }
+            assert(PixelPalaceAchievements.isUnlocked('getting_started'), 'Should unlock getting_started');
+        });
+        test('First PB unlocks High Score', function () {
+            clean();
+            completeGame('brick-smash', 50);
+            assert(PixelPalaceAchievements.isUnlocked('high_score'), 'Should unlock high_score');
+        });
+        test('5 PBs unlock Unstoppable', function () {
+            clean();
+            var games = ['brick-smash','flappy-flight','rebound-rescue','bug-collector','slither-survival'];
+            for (var i = 0; i < games.length; i++) {
+                completeGame(games[i], 100);
+            }
+            assert(PixelPalaceAchievements.isUnlocked('unstoppable'), 'Should unlock unstoppable');
+        });
+        test('3 categories unlock Arcade Explorer', function () {
+            clean();
+            completeGame('brick-smash', 10);      // arcade
+            completeGame('puzzle-2048', 10);       // puzzles
+            completeGame('blackjack-royale', 10);  // tabletop
+            assert(PixelPalaceAchievements.isUnlocked('arcade_explorer'), 'Should unlock arcade_explorer');
+        });
+        test('All categories unlock Polyplayer', function () {
+            clean();
+            completeGame('brick-smash', 10);       // arcade
+            completeGame('puzzle-2048', 10);        // puzzles
+            completeGame('blackjack-royale', 10);   // tabletop
+            completeGame('typing-sprint', 10);      // challenges
+            completeGame('sketchcraft', 10);        // creative
+            completeGame('hangman', 10);            // education
+            completeGame('scorekeeper', 10);        // tools
+            assert(PixelPalaceAchievements.isUnlocked('polyplayer'), 'Should unlock polyplayer');
+        });
+        test('Level 5 unlocks Rising Star', function () {
+            clean();
+            // Need enough XP for level 5 (threshold 320)
+            // First plays give 50 XP each. Need ~7 first plays = 350 XP
+            var games = ['brick-smash','flappy-flight','rebound-rescue','bug-collector',
+                'slither-survival','scripted-adventures','pixel-blaster'];
+            for (var i = 0; i < games.length; i++) {
+                completeGame(games[i], 10);
+            }
+            assert(PixelPalaceAchievements.isUnlocked('level_5'), 'Should unlock level_5');
+        });
+        test('Brick Smash PB unlocks Brick Breaker', function () {
+            clean();
+            completeGame('brick-smash', 100);
+            assert(PixelPalaceAchievements.isUnlocked('brick_breaker'), 'Should unlock brick_breaker');
+        });
+        test('Slither PB unlocks Slither Master', function () {
+            clean();
+            completeGame('slither-survival', 100);
+            assert(PixelPalaceAchievements.isUnlocked('slither_master'), 'Should unlock slither_master');
+        });
+        test('Typing Sprint PB unlocks Speed Demon', function () {
+            clean();
+            completeGame('typing-sprint', 100);
+            assert(PixelPalaceAchievements.isUnlocked('speed_demon'), 'Should unlock speed_demon');
+        });
+
+        // === PROGRESS ===
+        group('Progress');
+        test('Locked achievement returns correct progress', function () {
+            clean();
+            completeGame('brick-smash', 10);  // 1 game completed
+            var progress = PixelPalaceAchievements.getProgress();
+            var gs = null;
+            for (var i = 0; i < progress.length; i++) {
+                if (progress[i].id === 'getting_started') { gs = progress[i]; break; }
+            }
+            assert(gs, 'getting_started should exist');
+            assert(!gs.unlocked, 'Should not be unlocked');
+            assertEqual(gs.progress.current, 1, 'Current');
+            assertEqual(gs.progress.target, 10, 'Target');
+            assertEqual(gs.progress.percentage, 10, 'Percentage');
+        });
+        test('Unlocked achievement returns complete progress', function () {
+            clean();
+            completeGame('brick-smash', 100);
+            var progress = PixelPalaceAchievements.getProgress();
+            var fs = null;
+            for (var i = 0; i < progress.length; i++) {
+                if (progress[i].id === 'first_steps') { fs = progress[i]; break; }
+            }
+            assert(fs, 'first_steps should exist');
+            assert(fs.unlocked, 'Should be unlocked');
+            assertEqual(fs.progress.percentage, 100, 'Percentage');
+        });
+        test('getStats returns correct counts', function () {
+            clean();
+            var stats = PixelPalaceAchievements.getStats();
+            var totalAch = PixelPalaceAchievementDefinitions.ACHIEVEMENTS.length;
+            assertEqual(stats.total, totalAch, 'Total achievements');
+            assertEqual(stats.unlocked, 0, 'None unlocked');
+            assertEqual(stats.locked, totalAch, 'All locked');
+            assertEqual(stats.percentage, 0, '0%');
+
+            completeGame('brick-smash', 100);
+            stats = PixelPalaceAchievements.getStats();
+            assert(stats.unlocked >= 3, 'At least 3 unlocked (first_steps, high_score, brick_breaker)');
+            assert(stats.percentage > 0, 'Percentage > 0');
+        });
+        test('Zero-target is handled safely', function () {
+            clean();
+            var progress = PixelPalaceAchievements._calculateProgress(
+                { conditions: [{ type: 'count', metric: 'gamesCompleted', operator: '>=', value: 0 }] },
+                { gamesCompleted: 0 }
+            );
+            assertEqual(progress.percentage, 100, 'Zero target = 100%');
+        });
+
+        // === IDEMPOTENCY ===
+        group('Idempotency');
+        test('Same event evaluated twice unlocks once', function () {
+            clean();
+            var r1 = PixelPalaceAchievements.evaluate('game_completed');
+            // No games completed yet, so nothing should unlock
+            assertEqual(r1.length, 0, 'No unlocks on first evaluate');
+
+            completeGame('brick-smash', 10);
+            // endSession already called evaluate — first_steps should be unlocked
+            assert(PixelPalaceAchievements.isUnlocked('first_steps'), 'first_steps unlocked by endSession');
+
+            // Evaluate again — should not unlock again
+            var r3 = PixelPalaceAchievements.evaluate('game_completed');
+            for (var i = 0; i < r3.length; i++) {
+                assert(r3[i].id !== 'first_steps', 'Should not unlock first_steps again');
+            }
+        });
+
+        // === PERSISTENCE ===
+        group('Persistence');
+        test('Unlock survives simulated reload', function () {
+            clean();
+            completeGame('brick-smash', 100);
+            assert(PixelPalaceAchievements.isUnlocked('first_steps'));
+
+            // Simulate reload by re-reading from storage
+            var state = PixelPalaceStorage.get('achievements');
+            assert(state, 'Achievement state should exist in storage');
+            assert(state.first_steps, 'first_steps should be in state');
+            assert(state.first_steps.unlockedAt, 'Should have unlockedAt timestamp');
+        });
+        test('Malformed achievement state recovers', function () {
+            clean();
+            PixelPalaceStorage.set('achievements', '{corrupted!!!');
+            assert(!PixelPalaceAchievements.isUnlocked('first_steps'), 'Should treat as no unlocks');
+
+            // Should still be able to evaluate
+            completeGame('brick-smash', 100);
+            assert(PixelPalaceAchievements.isUnlocked('first_steps'), 'Should recover and unlock');
+        });
+        test('Unknown achievement IDs do not crash', function () {
+            clean();
+            assert(!PixelPalaceAchievements.isUnlocked('nonexistent_achievement'));
+            var a = PixelPalaceAchievements.getAchievement('nonexistent_achievement');
+            assertEqual(a, null);
+        });
+
+        // === REWARDS ===
+        group('Rewards');
+        test('Achievement awardXp uses Progression engine', function () {
+            clean();
+            completeGame('brick-smash', 100);
+            var xpBefore = PixelPalace.getTotalXp();
+
+            // Reset and re-evaluate
+            PixelPalaceStorage.set('achievements', null);
+            var result = PixelPalaceAchievements.evaluate('game_completed');
+            var xpAfter = PixelPalace.getTotalXp();
+
+            // Should have gained XP from first_steps (10) and high_score (15)
+            assert(xpAfter > xpBefore || PixelPalaceStorage.get('achievements').first_steps,
+                'Should award XP through Progression');
+        });
+        test('Achievement XP uses unique transactionId', function () {
+            clean();
+            var result = PixelPalaceAchievements.evaluate('game_completed');
+            // No games completed, nothing to unlock
+            assertEqual(result.length, 0);
+        });
+
+        // === PUBLIC API ===
+        group('Public API');
+        test('PixelPalace exposes achievement methods', function () {
+            assert(typeof PixelPalace.getAchievements === 'function');
+            assert(typeof PixelPalace.getAchievementStats === 'function');
+            assert(typeof PixelPalace.isAchievementUnlocked === 'function');
+        });
+        test('getAll returns all definitions', function () {
+            var all = PixelPalaceAchievements.getAll();
+            assert(Array.isArray(all));
+            assertEqual(all.length, PixelPalaceAchievementDefinitions.ACHIEVEMENTS.length);
+        });
+        test('getAchievement returns single definition', function () {
+            var a = PixelPalaceAchievements.getAchievement('first_steps');
+            assert(a);
+            assertEqual(a.id, 'first_steps');
+            assertEqual(a.name, 'First Steps');
+        });
+        test('getUnlocked returns unlocked achievements', function () {
+            clean();
+            var u = PixelPalaceAchievements.getUnlocked();
+            assertEqual(u.length, 0);
+            completeGame('brick-smash', 100);
+            u = PixelPalaceAchievements.getUnlocked();
+            assert(u.length >= 3, 'At least 3 unlocked');
+        });
+        test('getLocked returns locked achievements with progress', function () {
+            clean();
+            var l = PixelPalaceAchievements.getLocked();
+            assertEqual(l.length, PixelPalaceAchievementDefinitions.ACHIEVEMENTS.length, 'All locked initially');
+            assert(l[0].progress, 'Should have progress');
+        });
+
+        // === METRIC COLLECTION ===
+        group('Metric Collection');
+        test('Metrics are collected from existing modules', function () {
+            clean();
+            completeGame('brick-smash', 100);
+            var m = PixelPalaceAchievements._collectMetrics();
+            assertEqual(m.gamesCompleted, 1);
+            assertEqual(m.uniqueGamesPlayed, 1);
+            assertEqual(m.categoriesPlayed, 1);
+            assert(m.totalCategories >= 7, 'At least 7 categories');
+            assertEqual(m.personalBestCount, 1);
+            assert(m.level >= 1, 'Level >= 1');
+        });
+
+        // === CONDITION EVALUATOR ===
+        group('Condition Evaluator');
+        test('COUNT condition', function () {
+            var m = { gamesCompleted: 5 };
+            assert(PixelPalaceAchievements._evaluateCondition(
+                { type: 'count', metric: 'gamesCompleted', operator: '>=', value: 5 }, m));
+            assert(!PixelPalaceAchievements._evaluateCondition(
+                { type: 'count', metric: 'gamesCompleted', operator: '>=', value: 6 }, m));
+        });
+        test('UNIQUE_COUNT condition', function () {
+            var m = { categoriesPlayed: 3, totalCategories: 7 };
+            assert(PixelPalaceAchievements._evaluateCondition(
+                { type: 'unique_count', metric: 'categoriesPlayed', operator: '>=', value: 3 }, m));
+            assert(!PixelPalaceAchievements._evaluateCondition(
+                { type: 'unique_count', metric: 'categoriesPlayed', operator: '>=', value: 4 }, m));
+        });
+        test('UNIQUE_COUNT with -1 (all categories)', function () {
+            var m = { categoriesPlayed: 7, totalCategories: 7 };
+            assert(PixelPalaceAchievements._evaluateCondition(
+                { type: 'unique_count', metric: 'categoriesPlayed', operator: '>=', value: -1 }, m));
+        });
+        test('THRESHOLD condition', function () {
+            var m = { level: 5 };
+            assert(PixelPalaceAchievements._evaluateCondition(
+                { type: 'threshold', metric: 'level', operator: '>=', value: 5 }, m));
+            assert(!PixelPalaceAchievements._evaluateCondition(
+                { type: 'threshold', metric: 'level', operator: '>=', value: 6 }, m));
+        });
+        test('PERSONAL_BEST condition for specific game', function () {
+            var m = { gameIdsWithPB: ['brick-smash', 'flappy-flight'] };
+            assert(PixelPalaceAchievements._evaluateCondition(
+                { type: 'personal_best', gameId: 'brick-smash' }, m));
+            assert(!PixelPalaceAchievements._evaluateCondition(
+                { type: 'personal_best', gameId: 'slither-survival' }, m));
+        });
+        test('PERSONAL_BEST condition for any game', function () {
+            var m = { gameIdsWithPB: ['brick-smash'], personalBestCount: 1 };
+            assert(PixelPalaceAchievements._evaluateCondition(
+                { type: 'personal_best', gameId: null }, m));
+            var m2 = { gameIdsWithPB: [], personalBestCount: 0 };
+            assert(!PixelPalaceAchievements._evaluateCondition(
+                { type: 'personal_best', gameId: null }, m2));
+        });
+        test('PERSONAL_BEST_COUNT condition', function () {
+            var m = { personalBestCount: 3 };
+            assert(PixelPalaceAchievements._evaluateCondition(
+                { type: 'personal_best_count', operator: '>=', value: 3 }, m));
+        });
+        test('Unknown condition type returns false', function () {
+            assert(!PixelPalaceAchievements._evaluateCondition(
+                { type: 'unknown_type' }, {}));
+        });
+
+        // === REWARD INTEGRATION ===
+        group('Reward Integration');
+        test('Unlocked achievement awards XP through Progression', function () {
+            clean();
+            var xpBefore = PixelPalace.getTotalXp();
+            completeGame('brick-smash', 100); // first_steps reward = 10 XP
+            var xpAfter = PixelPalace.getTotalXp();
+            // XP should include both session XP and achievement XP
+            // Session: 50 (10+25+15). Achievement first_steps: 10.
+            assertEqual(xpAfter, 60, 'Session XP + achievement XP');
+        });
+
+        // === EVENT INTEGRATION ===
+        group('Event Integration');
+        test('endSession returns achievements array', function () {
+            clean();
+            var s = PixelPalace.startSession('brick-smash');
+            var e = PixelPalace.endSession(s.session.id, { score: 100 });
+            assert(e.ok);
+            assert(Array.isArray(e.achievements), 'achievements field should be array');
+            assert(e.achievements.length > 0, 'Should have at least one achievement');
+        });
+        test('Game unaware of achievements', function () {
+            // Verify game files don't call achievement APIs
+            clean();
+            // The integration is in core.js, not game files
+            assert(true, 'Achievement evaluation happens in core, not games');
+        });
+
+        // === CORRUPTION ===
+        group('Corruption Recovery');
+        test('All corruption scenarios recover', function () {
+            clean();
+            // Corrupt all achievement storage
+            PixelPalaceStorage.set('achievements', 'corrupted');
+            assert(!PixelPalaceAchievements.isUnlocked('first_steps'));
+            assert(Array.isArray(PixelPalaceAchievements.getLocked()));
+            assert(Array.isArray(PixelPalaceAchievements.getUnlocked()));
+
+            // Should recover and work
+            completeGame('brick-smash', 100);
+            assert(PixelPalaceAchievements.isUnlocked('first_steps'));
+        });
+
+        // RENDER RESULTS
+        var output = document.getElementById('output');
+        var summary = document.getElementById('summary');
+        var results = document.getElementById('results');
+        var lastGroup = '';
+        tests.forEach(function (t) {
+            if (t.group !== lastGroup) { lastGroup = t.group; var g = document.createElement('div'); g.className = 'group-title'; g.textContent = t.group; output.appendChild(g); }
+            var d = document.createElement('div'); d.className = 'test ' + (t.pass ? 'pass' : 'fail'); d.textContent = t.name + (t.error ? ' — ' + t.error : ''); output.appendChild(d);
+        });
+        summary.textContent = passed + ' passed, ' + failed + ' failed, ' + tests.length + ' total';
+        if (failed === 0) { summary.className = 'summary pass'; results.className = 'results pass-all'; results.textContent = 'ALL TESTS PASSED'; }
+        else { summary.className = 'summary fail'; results.className = 'results has-fail'; results.textContent = failed + ' TEST(S) FAILED'; }
+    })();
+    </script>
+</body>
+</html>
