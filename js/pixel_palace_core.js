@@ -9,7 +9,11 @@
  *   1. pixel_palace_storage.js
  *   2. pixel_palace_player.js
  *   3. pixel_palace_registry.js
- *   4. pixel_palace_core.js  (this file)
+ *   4. pixel_palace_progression_config.js
+ *   5. pixel_palace_progression.js
+ *   6. pixel_palace_achievements.js  (definitions)
+ *   7. pixel_palace_achievements_engine.js  (engine)
+ *   8. pixel_palace_core.js  (this file)
  *
  * @namespace PixelPalace
  */
@@ -144,10 +148,28 @@ var PixelPalace = (function () {
         // Evaluate personal best
         var pbResult = evaluatePersonalBest(session.gameId, score);
 
+        // Process progression (XP awards, level calculation)
+        var progressionResult = { xpAwarded: 0, levelUp: null, transactions: [] };
+        if (typeof PixelPalaceProgression !== 'undefined') {
+            progressionResult = PixelPalaceProgression.processSessionEnd({
+                gameId: session.gameId,
+                sessionId: session.id,
+                isNewPersonalBest: pbResult.isNewBest
+            });
+        }
+
+        // Evaluate achievements
+        var achievementResult = [];
+        if (typeof PixelPalaceAchievements !== 'undefined') {
+            achievementResult = PixelPalaceAchievements.evaluate('game_completed');
+        }
+
         return {
             ok: true,
             session: session,
-            personalBest: pbResult
+            personalBest: pbResult,
+            progression: progressionResult,
+            achievements: achievementResult
         };
     }
 
@@ -294,6 +316,20 @@ var PixelPalace = (function () {
         getPlayerId: PixelPalacePlayer.getId,
         getPlayerName: PixelPalacePlayer.getDisplayName,
         setNickname: PixelPalacePlayer.setNickname,
+
+        // Progression
+        getProgress: typeof PixelPalaceProgression !== 'undefined' ? PixelPalaceProgression.getProgress : null,
+        getTotalXp: typeof PixelPalaceProgression !== 'undefined' ? PixelPalaceProgression.getTotalXp : null,
+        getLevel: typeof PixelPalaceProgression !== 'undefined' ? PixelPalaceProgression.getLevel : null,
+        getXpToNextLevel: typeof PixelPalaceProgression !== 'undefined' ? PixelPalaceProgression.getXpToNextLevel : null,
+        getLevelProgress: typeof PixelPalaceProgression !== 'undefined' ? PixelPalaceProgression.getLevelProgress : null,
+        getXpHistory: typeof PixelPalaceProgression !== 'undefined' ? PixelPalaceProgression.getXpHistory : null,
+        getGamesPlayed: typeof PixelPalaceProgression !== 'undefined' ? PixelPalaceProgression.getGamesPlayed : null,
+
+        // Achievements
+        getAchievements: typeof PixelPalaceAchievements !== 'undefined' ? PixelPalaceAchievements.getProgress : null,
+        getAchievementStats: typeof PixelPalaceAchievements !== 'undefined' ? PixelPalaceAchievements.getStats : null,
+        isAchievementUnlocked: typeof PixelPalaceAchievements !== 'undefined' ? PixelPalaceAchievements.isUnlocked : null,
 
         getGame: PixelPalaceRegistry.getById,
         getGameRoute: PixelPalaceRegistry.getRoute,

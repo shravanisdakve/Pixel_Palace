@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pixel Palace Progression — Test Suite</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #0f0f1e; color: #e0e0e0; font-family: 'Courier New', monospace; padding: 20px; }
+        h1 { color: #00ffff; margin-bottom: 5px; }
+        .summary { color: #aaa; margin-bottom: 20px; font-size: 14px; }
+        .pass { color: #00ff00; }
+        .fail { color: #ff4444; }
+        .skip { color: #ffaa00; }
+        .group { margin-bottom: 24px; }
+        .group-title { color: #ffff00; font-size: 16px; margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 4px; }
+        .test { padding: 3px 0; font-size: 13px; }
+        .test::before { content: '  '; }
+        .test.pass::before { content: '\u2713 '; color: #00ff00; }
+        .test.fail::before { content: '\u2717 '; color: #ff4444; }
+        .results { margin-top: 20px; padding: 15px; border: 2px solid #333; border-radius: 8px; }
+        .results.pass-all { border-color: #00ff00; }
+        .results.has-fail { border-color: #ff4444; }
+    </style>
+</head>
+<body>
+    <h1>Pixel Palace Progression — Test Suite</h1>
+    <div class="summary" id="summary">Running tests...</div>
+    <div id="output"></div>
+    <div class="results" id="results"></div>
+
+    <!-- Load core modules in dependency order -->
+    <script src="../js/pixel_palace_storage.js"></script>
+    <script src="../js/pixel_palace_player.js"></script>
+    <script src="../js/pixel_palace_registry.js"></script>
+    <script src="../js/pixel_palace_progression_config.js"></script>
+    <script src="../js/pixel_palace_progression.js"></script>
+    <script src="../js/pixel_palace_achievements.js"></script>
+    <script src="../js/pixel_palace_achievements_engine.js"></script>
+    <script src="../js/pixel_palace_core.js"></script>
+    <script src="../js/pixel_palace_progression_ui.js"></script>
+    <script src="../js/pixel_palace_progression_feedback.js"></script>
+
+    <script>
+    (function () {
+        'use strict';
+
+        var passed = 0;
+        var failed = 0;
+        var tests = [];
+        var currentGroup = '';
+
+        function group(name) {
+            currentGroup = name;
+        }
+
+        function test(name, fn) {
+            try {
+                fn();
+                tests.push({ group: currentGroup, name: name, pass: true });
+                passed++;
+            } catch (e) {
+                tests.push({ group: currentGroup, name: name, pass: false, error: e.message });
+                failed++;
+            }
+        }
+
+        function assert(condition, message) {
+            if (!condition) throw new Error(message || 'Assertion failed');
+        }
+
+        function assertEqual(actual, expected, message) {
+            if (actual !== expected) {
+                throw new Error(
+                    (message ? message + ': ' : '') +
+                    'Expected ' + JSON.stringify(expected) + ' but got ' + JSON.stringify(actual)
+                );
+            }
+        }
+
+        function assertApprox(actual, expected, tolerance, message) {
+            if (Math.abs(actual - expected) > tolerance) {
+                throw new Error(
+                    (message ? message + ': ' : '') +
+                    'Expected ~' + expected + ' (+/- ' + tolerance + ') but got ' + actual
+                );
+            }
+        }
+
+        function setup() {
+            PixelPalaceStorage.clearAll();
+        }
+
+        function teardown() {
+            PixelPalaceStorage.clearAll();
+        }
+
+        // ========================================================
+        // TEST GROUPS
+        // ========================================================
+
+        group('Config: XP Awards');
+        test('XP_PER_COMPLETION is 10', function () {
+            assertEqual(PixelPalaceProgressionConfig.XP_PER_COMPLETION, 10);
+        });
+        test('XP_FIRST_PLAY_BONUS is 25', function () {
+            assertEqual(PixelPalaceProgressionConfig.XP_FIRST_PLAY_BONUS, 25);
+        });
+        test('XP_PERSONAL_BEST_BONUS is 15', function () {
+            assertEqual(PixelPalaceProgressionConfig.XP_PERSONAL_BEST_BONUS, 15);
+        });
+        test('SOURCES object has required keys', function () {
+            var s = PixelPalaceProgressionConfig.SOURCES;
+            assert(s.GAME_COMPLETION, 'Missing GAME_COMPLETION');
+            assert(s.FIRST_PLAY, 'Missing FIRST_PLAY');
+            assert(s.PERSONAL_BEST, 'Missing PERSONAL_BEST');
+        });
+
+        group('Config: Level Thresholds');
+        test('LEVEL_THRESHOLDS starts at 0', function () {
+            assertEqual(PixelPalaceProgressionConfig.LEVEL_THRESHOLDS[0], 0);
+        });
+        test('MAX_LEVEL matches thresholds length', function () {
+            assertEqual(
+                PixelPalaceProgressionConfig.MAX_LEVEL,
+                PixelPalaceProgressionConfig.LEVEL_THRESHOLDS.length
+            );
+        });
+        test('Thresholds are monotonically non-decreasing', function () {
+            var t = PixelPalaceProgressionConfig.LEVEL_THRESHOLDS;
+            for (var i = 1; i < t.length; i++) {
+                assert(t[i] > t[i - 1], 'Threshold ' + i + ' not greater than ' + (i - 1));
+            }
+        });
+        test('Level 10 threshold is 1360', function () {
+            assertEqual(PixelPalaceProgressionConfig.LEVEL_THRESHOLDS[9], 1360);
+        });
+        test('Level 30 threshold is 33000', function () {
+            assertEqual(PixelPalaceProgressionConfig.LEVEL_THRESHOLDS[29], 33000);
+        });
+
+        group('Config: Storage Keys');
+        test('STORAGE_KEYS has required keys', function () {
+            var k = PixelPalaceProgressionConfig.STORAGE_KEYS;
+            assert(k.PROGRESS, 'Missing PROGRESS');
+            assert(k.XP_HISTORY, 'Missing XP_HISTORY');
+            assert(k.FIRST_PLAYS, 'Missing FIRST_PLAYS');
+        });
+        test('MAX_XP_HISTORY is 500', function () {
+            assertEqual(PixelPalaceProgressionConfig.MAX_XP_HISTORY, 500);
+        });
+
+        group('Level Calculation');
+        test('Level 1 at 0 XP', function () {
+            var info = PixelPalaceProgression.calculateLevel(0);
+            assertEqual(info.level, 1);
+            assertEqual(info.xpForCurrentLevel, 0);
+        });
+        test('Level 2 at exactly 50 XP', function () {
+            var info = PixelPalaceProgression.calculateLevel(50);
+            assertEqual(info.level, 2);
+            assertEqual(info.xpForCurrentLevel, 50);
+        });
+        test('Level 1 at 49 XP', function () {
+            var info = PixelPalaceProgression.calculateLevel(49);
+            assertEqual(info.level, 1);
+        });
+        test('Level 10 at 1360 XP', function () {
+            var info = PixelPalaceProgression.calculateLevel(1360);
+            assertEqual(info.level, 10);
+        });
+        test('Level 30 at 33000 XP', function () {
+            var info = PixelPalaceProgression.calculateLevel(33000);
+            assertEqual(info.level, 30);
+        });
+        test('Level 40 (max) at 100500 XP', function () {
+            var info = PixelPalaceProgression.calculateLevel(100500);
+            assertEqual(info.level, PixelPalaceProgressionConfig.MAX_LEVEL);
+        });
+        test('Exceeding max level stays at max', function () {
+            var info = PixelPalaceProgression.calculateLevel(999999);
+            assertEqual(info.level, PixelPalaceProgressionConfig.MAX_LEVEL);
+        });
+        test('Negative XP treated as 0', function () {
+            var info = PixelPalaceProgression.calculateLevel(-100);
+            assertEqual(info.level, 1);
+        });
+        test('NaN XP treated as 0', function () {
+            var info = PixelPalaceProgression.calculateLevel(NaN);
+            assertEqual(info.level, 1);
+        });
+        test('Infinity XP treated as 0', function () {
+            var info = PixelPalaceProgression.calculateLevel(Infinity);
+            assertEqual(info.level, 1);
+        });
+        test('Progress is 0 at level start', function () {
+            var info = PixelPalaceProgression.calculateLevel(0);
+            assertApprox(info.progress, 0, 0.01);
+        });
+        test('Progress is 1 at next level threshold', function () {
+            var info = PixelPalaceProgression.calculateLevel(50);
+            assertApprox(info.progress, 1, 0.01);
+        });
+        test('Progress is ~0.5 halfway to next level', function () {
+            var info = PixelPalaceProgression.calculateLevel(25);
+            assertApprox(info.progress, 0.5, 0.05);
+        });
+        test('xpRemaining is 0 at max level', function () {
+            var info = PixelPalaceProgression.calculateLevel(100500);
+            assertEqual(info.xpRemaining, 0);
+        });
+        test('xpForNextLevel is correct for level 1', function () {
+            var info = PixelPalaceProgression.calculateLevel(0);
+            assertEqual(info.xpForNextLevel, 50);
+        });
+
+        group('XP Transactions: awardXp');
+        test('Award valid XP', function () {
+            setup();
+            var result = PixelPalaceProgression.awardXp(10, 'game_completion');
+            assert(result.ok, 'Should succeed');
+            assertEqual(result.transaction.amount, 10);
+            assertEqual(result.progress.totalXp, 10);
+            assertEqual(result.progress.level, 1);
+            teardown();
+        });
+        test('Reject zero XP', function () {
+            var result = PixelPalaceProgression.awardXp(0, 'game_completion');
+            assert(!result.ok, 'Should fail');
+        });
+        test('Reject negative XP', function () {
+            var result = PixelPalaceProgression.awardXp(-5, 'game_completion');
+            assert(!result.ok, 'Should fail');
+        });
+        test('Reject NaN XP', function () {
+            var result = PixelPalaceProgression.awardXp(NaN, 'game_completion');
+            assert(!result.ok, 'Should fail');
+        });
+        test('Reject Infinity XP', function () {
+            var result = PixelPalaceProgression.awardXp(Infinity, 'game_completion');
+            assert(!result.ok, 'Should fail');
+        });
+        test('Reject missing source', function () {
+            var result = PixelPalaceProgression.awardXp(10, '');
+            assert(!result.ok, 'Should fail');
+        });
+        test('Non-integer XP is rounded', function () {
+            setup();
+            var result = PixelPalaceProgression.awardXp(7.6, 'game_completion');
+            assert(result.ok, 'Should succeed');
+            assertEqual(result.transaction.amount, 8);
+            teardown();
+        });
+        test('0.4 rounds down to 0 (rejected)', function () {
+            var result = PixelPalaceProgression.awardXp(0.4, 'game_completion');
+            assert(!result.ok, 'Should fail when rounded to 0');
+        });
+        test('XP accumulates across transactions', function () {
+            setup();
+            PixelPalaceProgression.awardXp(30, 'game_completion');
+            PixelPalaceProgression.awardXp(20, 'game_completion');
+            var progress = PixelPalaceProgression.getProgress();
+            assertEqual(progress.totalXp, 50);
+            assertEqual(progress.level, 2);
+            teardown();
+        });
+        test('Level up detected', function () {
+            setup();
+            PixelPalaceProgression.awardXp(45, 'game_completion');
+            var result = PixelPalaceProgression.awardXp(10, 'game_completion');
+            assert(result.ok);
+            assert(result.levelUp !== null, 'Should detect level up');
+            assertEqual(result.levelUp.oldLevel, 1);
+            assertEqual(result.levelUp.newLevel, 2);
+            teardown();
+        });
+        test('No level up when XP insufficient', function () {
+            setup();
+            PixelPalaceProgression.awardXp(30, 'game_completion');
+            var result = PixelPalaceProgression.awardXp(5, 'game_completion');
+            assert(result.ok);
+            assertEqual(result.levelUp, null);
+            teardown();
+        });
+        test('Transaction recorded in history', function () {
+            setup();
+            PixelPalaceProgression.awardXp(10, 'game_completion', { gameId: 'test' });
+            var history = PixelPalaceProgression.getXpHistory();
+            assertEqual(history.length, 1);
+            assertEqual(history[0].amount, 10);
+            assertEqual(history[0].gameId, 'test');
+            teardown();
+        });
+        test('Transaction has timestamp', function () {
+            setup();
+            var result = PixelPalaceProgression.awardXp(10, 'game_completion');
+            assert(result.transaction.createdAt, 'Should have createdAt');
+            teardown();
+        });
+
+        group('XP Transactions: Duplicate Protection');
+        test('Duplicate transaction ID rejected', function () {
+            setup();
+            PixelPalaceProgression.awardXp(10, 'game_completion', { transactionId: 'txn_001' });
+            var result = PixelPalaceProgression.awardXp(10, 'game_completion', { transactionId: 'txn_001' });
+            assert(!result.ok, 'Should reject duplicate');
+            assertEqual(PixelPalaceProgression.getTotalXp(), 10);
+            teardown();
+        });
+        test('Different transaction IDs allowed', function () {
+            setup();
+            PixelPalaceProgression.awardXp(10, 'game_completion', { transactionId: 'txn_001' });
+            var result = PixelPalaceProgression.awardXp(10, 'game_completion', { transactionId: 'txn_002' });
+            assert(result.ok, 'Should succeed');
+            assertEqual(PixelPalaceProgression.getTotalXp(), 20);
+            teardown();
+        });
+        test('No transaction ID allows duplicates', function () {
+            setup();
+            PixelPalaceProgression.awardXp(10, 'game_completion');
+            var result = PixelPalaceProgression.awardXp(10, 'game_completion');
+            assert(result.ok, 'Should succeed without transactionId');
+            teardown();
+        });
+
+        group('First Play Tracking');
+        test('New game is first play', function () {
+            setup();
+            assert(PixelPalaceProgression.isFirstPlay('brick-smash'), 'Should be first play');
+            teardown();
+        });
+        test('After marking, not first play', function () {
+            setup();
+            PixelPalaceProgression.markAsPlayed('brick-smash');
+            assert(!PixelPalaceProgression.isFirstPlay('brick-smash'), 'Should not be first play');
+            teardown();
+        });
+        test('Mark as played is idempotent', function () {
+            setup();
+            PixelPalaceProgression.markAsPlayed('brick-smash');
+            PixelPalaceProgression.markAsPlayed('brick-smash');
+            assert(!PixelPalaceProgression.isFirstPlay('brick-smash'));
+            teardown();
+        });
+        test('Different games tracked separately', function () {
+            setup();
+            PixelPalaceProgression.markAsPlayed('brick-smash');
+            assert(!PixelPalaceProgression.isFirstPlay('brick-smash'));
+            assert(PixelPalaceProgression.isFirstPlay('flappy-flight'));
+            teardown();
+        });
+        test('Empty gameId returns false', function () {
+            assert(!PixelPalaceProgression.isFirstPlay(''));
+            assert(!PixelPalaceProgression.isFirstPlay(null));
+        });
+
+        group('First Play XP Award');
+        test('First play awards bonus XP', function () {
+            setup();
+            var result = PixelPalaceProgression.awardXp(
+                PixelPalaceProgressionConfig.XP_FIRST_PLAY_BONUS,
+                PixelPalaceProgressionConfig.SOURCES.FIRST_PLAY,
+                { gameId: 'brick-smash' }
+            );
+            assert(result.ok);
+            assertEqual(result.transaction.amount, 25);
+            teardown();
+        });
+
+        group('Session Integration: processSessionEnd');
+        test('Basic completion awards 10 XP', function () {
+            setup();
+            var result = PixelPalaceProgression.processSessionEnd({
+                gameId: 'brick-smash',
+                sessionId: 'ses_001',
+                isNewPersonalBest: false
+            });
+            assertEqual(result.xpAwarded, 10);
+            assertEqual(result.transactions.length, 1);
+            assertEqual(result.transactions[0].source, 'game_completion');
+            teardown();
+        });
+        test('First play awards 10 + 25 = 35 XP', function () {
+            setup();
+            var result = PixelPalaceProgression.processSessionEnd({
+                gameId: 'brick-smash',
+                sessionId: 'ses_002',
+                isNewPersonalBest: false
+            });
+            assertEqual(result.xpAwarded, 35);
+            assertEqual(result.transactions.length, 2);
+            assertEqual(result.transactions[0].source, 'game_completion');
+            assertEqual(result.transactions[1].source, 'first_play');
+            teardown();
+        });
+        test('Second play of same game awards only 10 XP', function () {
+            setup();
+            PixelPalaceProgression.processSessionEnd({
+                gameId: 'brick-smash',
+                sessionId: 'ses_001',
+                isNewPersonalBest: false
+            });
+            var result = PixelPalaceProgression.processSessionEnd({
+                gameId: 'brick-smash',
+                sessionId: 'ses_002',
+                isNewPersonalBest: false
+            });
+            assertEqual(result.xpAwarded, 10);
+            assertEqual(result.transactions.length, 1);
+            teardown();
+        });
+        test('New PB awards 10 + 15 = 25 XP', function () {
+            setup();
+            var result = PixelPalaceProgression.processSessionEnd({
+                gameId: 'brick-smash',
+                sessionId: 'ses_001',
+                isNewPersonalBest: true
+            });
+            assertEqual(result.xpAwarded, 25);
+            assertEqual(result.transactions.length, 2);
+            assertEqual(result.transactions[0].source, 'game_completion');
+            assertEqual(result.transactions[1].source, 'personal_best');
+            teardown();
+        });
+        test('First play + PB awards 10 + 25 + 15 = 50 XP', function () {
+            setup();
+            var result = PixelPalaceProgression.processSessionEnd({
+                gameId: 'brick-smash',
+                sessionId: 'ses_001',
+                isNewPersonalBest: true
+            });
+            assertEqual(result.xpAwarded, 50);
+            assertEqual(result.transactions.length, 3);
+            teardown();
+        });
+        test('Duplicate session ID prevents re-awarding', function () {
+            setup();
+            PixelPalaceProgression.processSessionEnd({
+                gameId: 'brick-smash',
+                sessionId: 'ses_001',
+                isNewPersonalBest: false
+            });
+            var result = PixelPalaceProgression.processSessionEnd({
+                gameId: 'brick-smash',
+                sessionId: 'ses_001',
+                isNewPersonalBest: false
+            });
+            assertEqual(result.xpAwarded, 0);
+            assertEqual(result.transactions.length, 0);
+            teardown();
+        });
+        test('Missing params returns 0 XP', function () {
+            var result = PixelPalaceProgression.processSessionEnd({});
+            assertEqual(result.xpAwarded, 0);
+        });
+        test('Null params returns 0 XP', function () {
+            var result = PixelPalaceProgression.processSessionEnd(null);
+            assertEqual(result.xpAwarded, 0);
+        });
+        test('Level up reported in processSessionEnd', function () {
+            setup();
+            // Need 40 more XP to level up from level 1 (0 XP) to level 2 (50 XP)
+            // First play = 35 XP, need 15 more
+            PixelPalaceProgression.processSessionEnd({
+                gameId: 'brick-smash',
+                sessionId: 'ses_001',
+                isNewPersonalBest: false
+            });
+            // 35 XP so far, need 15 more to reach 50
+            var result = PixelPalaceProgression.processSessionEnd({
+                gameId: 'flappy-flight',
+                sessionId: 'ses_002',
+                isNewPersonalBest: false
+            });
+            // flappy-flight first play: 10 + 25 = 35, total = 35 + 35 = 70
+            assert(result.levelUp !== null, 'Should have level up');
+            assertEqual(result.levelUp.newLevel, 2);
+            teardown();
+        });
+
+        group('Read API');
+        test('getProgress returns correct structure', function () {
+            setup();
+            var p = PixelPalaceProgression.getProgress();
+            assertEqual(p.totalXp, 0);
+            assertEqual(p.level, 1);
+            assert(p.levelInfo, 'Should have levelInfo');
+            assert(p.createdAt, 'Should have createdAt');
+            assert(p.updatedAt, 'Should have updatedAt');
+            teardown();
+        });
+        test('getTotalXp returns 0 initially', function () {
+            setup();
+            assertEqual(PixelPalaceProgression.getTotalXp(), 0);
+            teardown();
+        });
+        test('getLevel returns 1 initially', function () {
+            setup();
+            assertEqual(PixelPalaceProgression.getLevel(), 1);
+            teardown();
+        });
+        test('getXpToNextLevel returns 50 initially', function () {
+            setup();
+            assertEqual(PixelPalaceProgression.getXpToNextLevel(), 50);
+            teardown();
+        });
+        test('getLevelProgress returns 0 initially', function () {
+            setup();
+            assertApprox(PixelPalaceProgression.getLevelProgress(), 0, 0.01);
+            teardown();
+        });
+        test('getXpHistory returns array', function () {
+            setup();
+            var h = PixelPalaceProgression.getXpHistory();
+            assert(Array.isArray(h), 'Should be array');
+            assertEqual(h.length, 0);
+            teardown();
+        });
+        test('getGamesPlayed returns 0 initially', function () {
+            setup();
+            assertEqual(PixelPalaceProgression.getGamesPlayed(), 0);
+            teardown();
+        });
+        test('getGamesPlayed counts distinct games', function () {
+            setup();
+            PixelPalaceProgression.markAsPlayed('a');
+            PixelPalaceProgression.markAsPlayed('b');
+            PixelPalaceProgression.markAsPlayed('a');
+            assertEqual(PixelPalaceProgression.getGamesPlayed(), 2);
+            teardown();
+        });
+
+        group('Persistence');
+        test('Progress survives storage round-trip', function () {
+            setup();
+            PixelPalaceProgression.awardXp(100, 'game_completion');
+            // Simulate page reload by re-reading from storage
+            var p = PixelPalaceProgression.getProgress();
+            assertEqual(p.totalXp, 100);
+            assert(p.level > 1, 'Should be above level 1');
+            teardown();
+        });
+        test('History persists across reads', function () {
+            setup();
+            PixelPalaceProgression.awardXp(10, 'game_completion');
+            PixelPalaceProgression.awardXp(20, 'game_completion');
+            var h = PixelPalaceProgression.getXpHistory();
+            assertEqual(h.length, 2);
+            teardown();
+        });
+        test('First plays persist', function () {
+            setup();
+            PixelPalaceProgression.markAsPlayed('brick-smash');
+            assert(!PixelPalaceProgression.isFirstPlay('brick-smash'));
+            teardown();
+        });
+
+        group('Edge Cases');
+        test('processSessionEnd with invalid gameId', function () {
+            setup();
+            var result = PixelPalaceProgression.processSessionEnd({
+                gameId: 'nonexistent-game',
+                sessionId: 'ses_001',
+                isNewPersonalBest: false
+            });
+            // Should still award XP (engine doesn't validate game existence)
+            assertEqual(result.xpAwarded, 10);
+            teardown();
+        });
+        test('processSessionEnd with empty sessionId', function () {
+            setup();
+            var result = PixelPalaceProgression.processSessionEnd({
+                gameId: 'brick-smash',
+                sessionId: '',
+                isNewPersonalBest: false
+            });
+            assertEqual(result.xpAwarded, 0);
+            teardown();
+        });
+        test('Level calculation with exactly 50 XP', function () {
+            var info = PixelPalaceProgression.calculateLevel(50);
+            assertEqual(info.level, 2);
+            assertEqual(info.xpIntoLevel, 0);
+            assertEqual(info.xpRemaining, 70);
+        });
+        test('Level calculation with 100 XP', function () {
+            var info = PixelPalaceProgression.calculateLevel(100);
+            assertEqual(info.level, 2);
+            assertEqual(info.xpIntoLevel, 50);
+        });
+        test('Progress at 50 XP is 1 (max progress for level 1)', function () {
+            var info = PixelPalaceProgression.calculateLevel(50);
+            assertApprox(info.progress, 1, 0.01);
+        });
+
+        group('Integration with PixelPalace Core');
+        test('PixelPalace exposes progression API', function () {
+            assert(typeof PixelPalace.getProgress === 'function', 'getProgress should exist');
+            assert(typeof PixelPalace.getTotalXp === 'function', 'getTotalXp should exist');
+            assert(typeof PixelPalace.getLevel === 'function', 'getLevel should exist');
+            assert(typeof PixelPalace.getXpToNextLevel === 'function', 'getXpToNextLevel should exist');
+            assert(typeof PixelPalace.getLevelProgress === 'function', 'getLevelProgress should exist');
+            assert(typeof PixelPalace.getXpHistory === 'function', 'getXpHistory should exist');
+            assert(typeof PixelPalace.getGamesPlayed === 'function', 'getGamesPlayed should exist');
+        });
+        test('endSession returns progression result', function () {
+            setup();
+            // Register a player first
+            PixelPalacePlayer.create();
+            var start = PixelPalace.startSession('brick-smash');
+            assert(start.ok, 'startSession should succeed');
+            var end = PixelPalace.endSession(start.session.id, { score: 100 });
+            assert(end.ok, 'endSession should succeed');
+            assert(end.progression, 'Should have progression result');
+            assert(typeof end.progression.xpAwarded === 'number', 'Should have xpAwarded');
+            assert(Array.isArray(end.progression.transactions), 'Should have transactions array');
+            teardown();
+        });
+        test('endSession progression matches direct API', function () {
+            setup();
+            PixelPalacePlayer.create();
+            var before = PixelPalace.getTotalXp();
+            var start = PixelPalace.startSession('brick-smash');
+            var end = PixelPalace.endSession(start.session.id, { score: 50 });
+            var after = PixelPalace.getTotalXp();
+            assertEqual(after - before, end.progression.xpAwarded);
+            teardown();
+        });
+
+        // ========================================================
+        // RENDER RESULTS
+        // ========================================================
+
+        var output = document.getElementById('output');
+        var summary = document.getElementById('summary');
+        var results = document.getElementById('results');
+
+        var lastGroup = '';
+        tests.forEach(function (t) {
+            if (t.group !== lastGroup) {
+                lastGroup = t.group;
+                var g = document.createElement('div');
+                g.className = 'group-title';
+                g.textContent = t.group;
+                output.appendChild(g);
+            }
+            var d = document.createElement('div');
+            d.className = 'test ' + (t.pass ? 'pass' : 'fail');
+            d.textContent = t.name + (t.error ? ' — ' + t.error : '');
+            output.appendChild(d);
+        });
+
+        summary.textContent = passed + ' passed, ' + failed + ' failed, ' + tests.length + ' total';
+        if (failed === 0) {
+            summary.className = 'summary pass';
+            results.className = 'results pass-all';
+            results.textContent = 'ALL TESTS PASSED';
+        } else {
+            summary.className = 'summary fail';
+            results.className = 'results has-fail';
+            results.textContent = failed + ' TEST(S) FAILED';
+        }
+
+    })();
+    </script>
+</body>
+</html>
