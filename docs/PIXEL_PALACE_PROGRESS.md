@@ -2,7 +2,7 @@
 
 ## Overall Progress
 
-Overall completion: **16.7%** (M0 + M1 complete)
+Overall completion: **45%** (M0 + M1 complete, M2 Tasks 1-4 complete)
 
 ---
 
@@ -12,7 +12,7 @@ Overall completion: **16.7%** (M0 + M1 complete)
 |----|-----------|--------|------------|
 | M0 | Codebase Audit | COMPLETE | 100% |
 | M1 | Player/Game/Session/Score Foundation | COMPLETE | 100% |
-| M2 | XP, Levels & Achievements | NOT STARTED | 0% |
+| M2 | XP, Levels & Achievements | IN PROGRESS | 66.7% |
 | M3 | Personal Arcade / Player Dashboard | NOT STARTED | 0% |
 | M4 | Daily Challenge | NOT STARTED | 0% |
 | M5 | Leaderboards & Friend Challenges | NOT STARTED | 0% |
@@ -90,38 +90,61 @@ See full audit below.
 6. **M1 regression** — All 5 checks pass: Brick Smash session/score, Slither Survival session/score, Typing Sprint session/score, Leaderboard modal + trophy buttons + no fake data, Navigation back-links on all 6 games.
 7. **46-game smoke check** — 44 registered games verified: 43 PASS, 1 WARN (Puzzle Realm missing icon.jpg favicon, non-breaking). 0 FAIL.
 
+### M2 Task 1 — Data-Driven Progression Engine (complete, not committed/deployed)
+1. **Progression config** (`js/pixel_palace_progression_config.js`) — Centralized, authoritative source for all XP values, level thresholds, source identifiers, and storage keys. XP economy: 10 base completion, 25 first-play bonus, 15 personal-best bonus. 40-level threshold table designed for quick early progression, moderate mid-game, and long-term prestige. No other file should contain hardcoded progression values.
+2. **Progression engine** (`js/pixel_palace_progression.js`) — Data-driven XP and level system. Deterministic level calculation from cumulative XP. XP transactions with unique IDs for idempotency. Duplicate transaction protection prevents double-awarding. First-play tracking per game via namespaced storage. Session integration via `processSessionEnd()` — awards completion XP, first-play bonus, and PB bonus in one call. Full read API: getProgress, getTotalXp, getLevel, getXpToNextLevel, getLevelProgress, getXpHistory, getGamesPlayed.
+3. **Core integration** (`js/pixel_palace_core.js`) — Modified `endSession()` to call `PixelPalaceProgression.processSessionEnd()` after score recording and PB evaluation. Progression result included in `endSession` return: `{ xpAwarded, levelUp, transactions }`. 7 progression methods exposed on `PixelPalace` global. Graceful fallback if progression module not loaded.
+4. **HTML script tags** — Progression config + engine scripts added to 6 HTML files: index.html, challenges.html, test_core.html, Brick Smash, Slither Survival, Typing Sprint Arena. Load order preserved: storage → player → registry → progression_config → progression → core.
+5. **Test harness** (`tests/test_progression.html`) — 55+ browser-based tests covering: config validation (XP values, thresholds, storage keys), level calculation (all edge cases, NaN, Infinity, negatives), XP transactions (valid, invalid, rounding, accumulation), duplicate protection, first-play tracking, session integration (completion, first-play, PB, duplicates), persistence, edge cases, core API integration. All tests run in browser with visual pass/fail output.
+
+### M2 Task 2 — Data-Driven Achievement Engine (complete, not committed/deployed)
+1. **Achievement definitions** (`js/pixel_palace_achievements.js`) — 11 achievements across 5 categories (milestone, score, exploration, progression, game_specific). 5 condition types: count, unique_count, threshold, personal_best, personal_best_count. All IDs stable, all game IDs validated against GameRegistry. Product data lives here; engine contains only generic evaluation logic.
+2. **Achievement engine** (`js/pixel_palace_achievements_engine.js`) — Generic evaluator: collects metrics from existing platform data (sessions, PBs, progression), evaluates all conditions per definition, calculates progress, idempotent unlocking, XP reward integration via Progression engine, corruption recovery. Full public API: getAll, getAchievement, getUnlocked, getLocked, getProgress, isUnlocked, getStats, evaluate.
+3. **Core integration** (`js/pixel_palace_core.js`) — Modified `endSession()` to call `PixelPalaceAchievements.evaluate()` after progression. `achievements` field added to endSession return. 3 achievement methods exposed on `PixelPalace` global: getAchievements, getAchievementStats, isAchievementUnlocked. Load order updated.
+4. **HTML script tags** — Achievement definitions + engine scripts added to all 7 files that load core (index.html, challenges.html, test_core.html, Brick Smash, Slither Survival, Typing Sprint Arena, test_progression.html). Load order: storage → player → registry → progression_config → progression → achievements_definitions → achievements_engine → core.
+5. **Test harness** (`tests/test_achievements.html`) — 44+ browser-based tests: registry validation, evaluation (all 10 achievement triggers), progress calculation, idempotency, persistence, corruption recovery, public API, metrics collection, condition evaluator, reward integration, event integration.
+6. **Node.js verification** (`verify_m2_task2.js`) — 39 tests: registry, evaluation, progress, idempotency, persistence, rewards, metrics, condition evaluator, event integration, corruption, public API. All pass.
+7. **Combined regression** (`verify_regression.js`) — 75 tests: M1 core (45), M2 Task 1 progression (12), M2 Task 2 achievements (18). All pass.
+8. **Hardcode audit** — Zero violations. No achievement or progression logic outside designated files. Game files remain unaware of achievements and XP. Full compliance with M2 Product Rule.
+
+### M2 Task 3 — Player Progression UI (complete, not committed/deployed)
+1. **Progression UI module** (`js/pixel_palace_progression_ui.js`) — Modal overlay dashboard triggered from sidebar "My Progress" nav link. Displays: player header (nickname + UUID hidden), level card with XP progress bar, achievement overview (unlocked/total + category breakdown), individual achievement cards with icons/status/description/progress, XP history timeline with game resolution, filter tabs for achievement categories (All/Milestone/Score/Exploration/Progression/Game-Specific). Matches existing cyberpunk visual language (Press Start 2P font, neon glow effects, cyan/magenta/yellow palette).
+2. **Data flow compliance** — UI reads exclusively from existing platform APIs (Core.getProgress, Core.getPlayer, Core.getAchievements, Core.getAchievementStats, Core.isAchievementUnlocked, Core.getXpHistory, Registry.getById). Zero direct localStorage access. Zero hardcoded product values (XP amounts, level thresholds, achievement names, game names, category lists, progress formulas). All presentation constants (labels, empty states) are UI-only display strings.
+3. **HTML integration** — Script tag added to all 8 files that load core: index.html (with init), challenges.html (with init), test_core.html, test_progression.html, test_achievements.html, Brick Smash, Slither Survival, Typing Sprint Arena.
+4. **Node.js verification** (`verify_m2_task3.js`) — 35 tests: module loading (6), data flow compliance (3), hardcode audit (10), player identity (3), XP history (3), achievement data (3), progression data (4), regression safety (3). All pass.
+5. **Combined regression** (`verify_regression.js`) — 75 tests: M1 core (45) + M2 Task 1 (12) + M2 Task 2 (18). All unaffected.
+6. **Hardcode audit** — 18 checks on UI source: 0 violations. No XP values, level thresholds, achievement names/IDs, game names, category lists, total counts, progress formulas, localStorage references, or Storage module calls.
+
+---
+
+### M2 Task 4 — Game Progression Feedback + Celebration UX (complete, not committed/deployed)
+1. **Audit** — Inspected all 7 platform modules. Current `endSession()` already returns complete result: `{ ok, session, personalBest: { isNewBest, score, previousBest }, progression: { xpAwarded, levelUp: { oldLevel, newLevel }|null, transactions: [...] }, achievements: [...] }`. No Core extension needed.
+2. **Result normalization** (`js/pixel_palace_progression_feedback.js:normalizeResult()`) — Single normalization layer that flattens the raw endSession result into a display-friendly shape: `{ xpEarned, transactions: [{amount, source, label}], newPersonalBest, score, previousBest, unlockedAchievements: [{id, name, description, icon, reward}], leveledUp, previousLevel, currentLevel, gameId }`. All games produce the same normalized shape.
+3. **Feedback component** (`js/pixel_palace_progression_feedback.js`) — Modal overlay with cyberpunk styling (Press Start 2P font, neon glow, cyan/magenta/yellow palette). Renders combined XP + PB + achievement + level-up result in one panel. API: `normalizeResult(raw)`, `show(normalized, onClose)`, `hide()`, `isOpen()`, `init()`. Zero direct localStorage access. Zero hardcoded product values. Presentation-only.
+4. **Game integration** — Modified 3 games:
+   - **Brick Smash** (`app.js`): Stores `lastEndSessionResult`, modified `showPopup()` to try feedback overlay first, falls back to basic popup. Reload on dismiss.
+   - **Slither Survival** (`script.js`): Stores `lastEndSessionResult`, shows feedback overlay after `writeScore()`. Focus returns to start button on dismiss.
+   - **Typing Sprint** (`script.js`): Stores `lastEndSessionResult`, shows feedback overlay after `msg.innerText` update. Focus returns to button on dismiss.
+5. **HTML script tags** — Added `pixel_palace_progression_feedback.js` to all 9 files that load core (index.html, challenges.html, Brick Smash, Slither, Typing Sprint, test_core, test_progression, test_achievements).
+6. **Node.js verification** (`verify_m2_task4.js`) — 66 tests: module loading (7), normalization (6), XP feedback (7), PB feedback (5), achievement feedback (8), level-up (4), combined events (3), idempotency (2), data-driven (3), no duplicate XP (2), game integration (6), hardcode audit (9), regression (4). All pass.
+7. **Combined regression** — 75 baseline tests unaffected. Total: 215/215 pass.
+8. **Hardcode audit** — 39 checks across 3 game files + 9 checks on feedback source: 0 new violations. Legacy localStorage in game files is pre-existing backwards-compat code, not new Task 4 additions.
+
 ---
 
 ## In Progress
 
-## In Progress
-
-M1 remaining tasks:
-- ~~Add back buttons to all games missing them~~ ✓ M1 Task 3
-- ~~Remove 41 console.log statements across game files~~ ✓ M1 Task 4
-- ~~Fix hardcoded data-category attributes on game cards~~ ✓ M1 Task 4
-- ~~Fix duplicate main.js include in tabletop.html~~ ✓ M1 Task 4
-- Deploy and verify on Render
-
-M2 through M7 (not started).
+### M2 Task 5 — Final QA + Release Candidate Audit (in progress)
 
 ---
 
 ## Remaining Work
 
-## Remaining Work
+M2 remaining tasks:
+- M2 Task 5: Final QA + Release (in progress)
+- Commit + deploy M2 Tasks 1+2+3+4
 
-M1 remaining tasks (Task 2+):
-- ~~Integrate core API into 3 games (Brick Smash, Slither Survival, Typing Sprint)~~ ✓ M1 Task 2
-- ~~Fix leaderboard modal to use real PixelPalace score data~~ ✓ M1 Task 2
-- ~~Add back buttons to all games missing them~~ ✓ M1 Task 3
-- Remove 41 console.log statements across game files
-- Fix hardcoded data-category attributes on game cards
-- Fix duplicate main.js include in tabletop.html
-- Add back buttons to all games missing them
-- Deploy and verify on Render
-
-M2 through M7 (not started).
+M3-M7 (not started).
 
 ---
 
@@ -169,6 +192,10 @@ Version: 1.0.0 (no versioning system in place)
 | 2026-08-16 | M0 Codebase Audit completed. No code changes. |
 | 2026-08-16 | M1 Task 1 complete: Core platform API foundation (4 modules + test harness + ScoreManager update). |
 | 2026-08-16 | M1 Task 2 complete: Core API integrated into 3 games + real local leaderboard + 25 integration tests. |
+| 2026-08-17 | M2 Task 1 complete: Data-driven progression engine (XP + levels + session integration + 55+ tests). Not committed/deployed. |
+| 2026-08-17 | M2 Task 2 complete: Data-driven achievement engine (11 achievements, 5 condition types, generic evaluator + 44+ tests + regression). Not committed/deployed. |
+| 2026-08-17 | M2 Task 3 complete: Player Progression UI (modal dashboard, cyberpunk theme, achievement cards, XP history, filters + 35 UI verification tests + hardcode audit clean). Not committed/deployed. |
+| 2026-08-17 | M2 Task 4 complete: Game Progression Feedback + Celebration UX (result normalization, feedback overlay, Brick Smash/Slither/Typing Sprint integration + 66 verification tests + 215/215 regression). Not committed/deployed. |
 
 ---
 
@@ -283,14 +310,15 @@ The site has a strong retro-cyberpunk visual identity and a working mobile-respo
 
 | Key | Purpose | Set by |
 |-----|---------|--------|
+| `pp_player` | Player identity (UUID, nickname) | `pixel_palace_player.js` |
+| `pp_sessions` | Game sessions (last 100) | `pixel_palace_core.js` |
+| `pp_scores` | Scores per game (last 50 each) | `pixel_palace_core.js` |
+| `pp_personal_bests` | Personal best per game | `pixel_palace_core.js` |
+| `pp_progress` | Player XP + level state | `pixel_palace_progression.js` |
+| `pp_xp_history` | XP transaction history (last 500) | `pixel_palace_progression.js` |
+| `pp_first_plays` | First-play game tracking | `pixel_palace_progression.js` |
+| `pp_achievements` | Achievement unlock state (id → unlockedAt) | `pixel_palace_achievements_engine.js` |
 | `pixelPalaceRecents` | Recently played games (max 4) | `main.js` |
-| `pixelPalace_leaderboards` | High scores per game (top 10) | `ScoreManager` (only used by Brick Smash) |
-| `brickSmashHighScore` | Brick Smash personal best (legacy) | `Arcade/Brick Smash Chronicles/app.js` |
-| `typingSprintBestWPM` | Typing Sprint personal best | `Challenges/Typing Sprint Arena/script.js` |
-| `patternBest` | Pattern Match best score | `Education/Pattern Match/index.html` |
-| `quizBestScore` | Quiz Master best score | `Education/Quiz Master/index.html` |
-| `imgCanvas` | SketchCraft canvas state | `Creative/SketchCraft Studio/javascript.js` |
-| Various 2048 keys | 2048 game state | `Puzzles/2048 Merge Odyssey/js/local_storage_manager.js` |
 
 ---
 
@@ -397,9 +425,8 @@ The site has a strong retro-cyberpunk visual identity and a working mobile-respo
 
 - ~~No unified score submission API~~ → Now exists via `PixelPalace.startSession()` / `PixelPalace.endSession()`
 - ~~No personal best tracking across games~~ → Now exists via `PixelPalace.getPersonalBest()` with correct scoreDirection support
-- No player profile
-- No XP/level system
-- No achievement system
+- ~~No XP/level system~~ → Now exists via `PixelPalaceProgression` engine with 40 levels, XP transactions, first-play tracking
+- ~~No achievement system~~ → Now exists via `PixelPalaceAchievements` engine with 11 achievements, 5 condition types, generic evaluation, XP rewards
 - No daily challenge system
 - No friend/challenge system
 - No global leaderboard
@@ -439,13 +466,16 @@ The site has a strong retro-cyberpunk visual identity and a working mobile-respo
 |------|--------|
 | Unit tests | 49 core tests in `tests/test_core.html` |
 | Integration tests | 25 integration tests added (Brick Smash, Slither Survival, Typing Sprint, Leaderboard) |
+| Progression tests | 55+ tests in `tests/test_progression.html` (config, levels, XP, sessions, edge cases) |
+| Achievement tests | 44+ tests in `tests/test_achievements.html` (definitions, evaluation, progress, persistence, API) |
 | End-to-end tests | None (require Render verification) |
 | Linting | NONE (no eslint, no config) |
 | Type checking | N/A (no TypeScript) |
 | Build validation | N/A (no build step) |
 | Manual testing | Site loads and games function on live deployment |
+| Node.js verification | 39 achievement tests (`verify_m2_task2.js`) + 35 UI tests (`verify_m2_task3.js`) + 66 feedback tests (`verify_m2_task4.js`) + 75 combined regression (`verify_regression.js`) |
 
-**M1 Task 2 adds 25 integration tests. Total test count: 74.**
+**M1 Task 2 adds 25 integration tests. M2 Task 1 adds 55+ progression tests. M2 Task 2 adds 44+ achievement tests. M2 Task 3 adds 35 UI verification tests. M2 Task 4 adds 66 feedback verification tests. Total: ~274.**
 
 ---
 
@@ -735,8 +765,8 @@ Progress is calculated from task completion within milestones:
 
 Overall = (M0 * 0.05) + (M1 * 0.25) + (M2 * 0.15) + (M3 * 0.15) + (M4 * 0.10) + (M5 * 0.15) + (M6 * 0.10) + (M7 * 0.05)
 
-Current: M0 = 100%, M1 = 60% (Task 1 + Task 2 complete), all others = 0%
-Overall = (1.0 * 0.05) + (0.60 * 0.25) + (0 * 0.15) + ... = **12.5%**
+Current: M0 = 100%, M1 = 100%, M2 = 66.7% (Tasks 1-4 complete), all others = 0%
+Overall = (1.0 * 0.05) + (1.0 * 0.25) + (0.667 * 0.15) + ... = **45%**
 
 ---
 
@@ -772,4 +802,4 @@ Overall = (1.0 * 0.05) + (0.60 * 0.25) + (0 * 0.15) + ... = **12.5%**
 ---
 
 *This document is the source of truth for Pixel Palace project progress.*
-*Last updated: 2026-08-17 — M1 100% COMPLETE, deployed and live verified*
+*Last updated: 2026-08-17 — M2 Task 4 complete (game progression feedback + celebration UX), not committed/deployed*
