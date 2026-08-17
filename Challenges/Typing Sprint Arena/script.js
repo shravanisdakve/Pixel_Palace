@@ -16,9 +16,33 @@ const btn = document.getElementById('btn');
 
 let startTime, endTime;
 
-// --- NEW: High Score Logic ---
-let bestWPM = localStorage.getItem('typingSprintBestWPM') || 0;
-// --- END NEW ---
+// --- Pixel Palace session tracking ---
+let currentSessionId = null;
+
+// --- Personal best from PixelPalace (with legacy migration) ---
+let bestWPM = 0;
+
+function loadPersonalBest() {
+	// Check PixelPalace first
+	if (typeof window.PixelPalace !== 'undefined') {
+		var pb = window.PixelPalace.getPersonalBest('typing-sprint');
+		if (pb && typeof pb.score === 'number') {
+			bestWPM = pb.score;
+			return;
+		}
+	}
+	// Fall back to legacy key
+	try {
+		var legacy = localStorage.getItem('typingSprintBestWPM');
+		if (legacy !== null) {
+			bestWPM = Number(legacy) || 0;
+			// Migrate to PixelPalace
+			if (bestWPM > 0 && typeof window.PixelPalace !== 'undefined') {
+				window.PixelPalace.evaluatePersonalBest('typing-sprint', bestWPM);
+			}
+		}
+	} catch (e) {}
+}
 
 const playGame = () => {
 	let randomNumber = Math.floor(Math.random() * sentences.length);
@@ -26,6 +50,14 @@ const playGame = () => {
 	let date = new Date();
 	startTime = date.getTime();
 	btn.innerText = "Done";
+
+	// Start Pixel Palace session
+	if (typeof window.PixelPalace !== 'undefined') {
+		var result = window.PixelPalace.startSession('typing-sprint');
+		if (result.ok) {
+			currentSessionId = result.session.id;
+		}
+	}
 }
 
 const endGame = () => {
@@ -33,46 +65,58 @@ const endGame = () => {
 	endTime = date.getTime();
 	let totalTime = 0,
 		wordCount = 0;
-	totalTime = Math.round((endTime - startTime) / 1000) // milliseconds -> 10.23 means  10 seconds 23 milliseconds
-	console.log(totalTime);
+	totalTime = Math.round((endTime - startTime) / 1000)
 
 	let totalStr = typedWords.value;
 	wordCount = wordCounter(totalStr);
 
 	// Calculate WPM (Words Per Minute)
-	// Formula: (wordCount / totalTime) * 60
 	let wpm = Math.round((wordCount / totalTime) * 60);
-	// Handle division by zero or very fast times
 	if (!Number.isFinite(wpm) || isNaN(wpm)) wpm = 0;
 
-	// Update Best WPM
+	// End Pixel Palace session with WPM as score
 	let newRecord = false;
+	if (typeof window.PixelPalace !== 'undefined' && currentSessionId) {
+		var result = window.PixelPalace.endSession(currentSessionId, { score: wpm });
+		if (result.ok && result.personalBest) {
+			newRecord = result.personalBest.isNewBest;
+			if (newRecord) {
+				bestWPM = wpm;
+			}
+		}
+		currentSessionId = null;
+	}
+
+	// Also update legacy key for backwards compatibility
 	if (wpm > bestWPM) {
 		bestWPM = wpm;
-		localStorage.setItem('typingSprintBestWPM', bestWPM);
+		try {
+			localStorage.setItem('typingSprintBestWPM', bestWPM);
+		} catch (e) {}
 		newRecord = true;
 	}
 
 	let finalMsg = `You Typed Total ${wordCount} words in ${totalTime} seconds. Speed: ${wpm} WPM. `;
 	if (newRecord) {
-		finalMsg += `🏆 NEW HIGH SCORE!`;
+		finalMsg += `\u{1F3C6} NEW HIGH SCORE!`;
 	} else {
 		finalMsg += `(Best: ${bestWPM} WPM)`;
 	}
 
 	msg.innerText = finalMsg;
+	// Clear the textarea for the next round
+	typedWords.value = '';
 }
-
-
 
 const wordCounter = (str) => {
 	let response = str.split(" ").length;
-	console.log(response);
 	return response;
 }
 
+// Load personal best on page load
+loadPersonalBest();
+
 btn.addEventListener('click', function () {
-	console.log(this); // current btn 
 	if (this.innerText == 'Start') {
 		typedWords.disabled = false;
 		playGame();
@@ -82,4 +126,3 @@ btn.addEventListener('click', function () {
 		endGame();
 	}
 })
-
