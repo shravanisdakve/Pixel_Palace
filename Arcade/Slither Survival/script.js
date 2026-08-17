@@ -17,7 +17,46 @@ randomFruit = null,
 fruitEaten = false,
 imageIndex = Math.floor(Math.random() * 1000) % 3;
 
+// --- Pixel Palace session tracking ---
+var currentSessionId = null;
+var gameEnded = false;
+var personalBest = 0;
 
+// Load personal best from PixelPalace
+function loadPersonalBest() {
+    if (typeof window.PixelPalace !== 'undefined') {
+        var pb = window.PixelPalace.getPersonalBest('slither-survival');
+        if (pb && typeof pb.score === 'number') {
+            personalBest = pb.score;
+        }
+    }
+}
+
+// Start a Pixel Palace session
+function startGameSession() {
+    if (typeof window.PixelPalace !== 'undefined') {
+        var result = window.PixelPalace.startSession('slither-survival');
+        if (result.ok) {
+            currentSessionId = result.session.id;
+        }
+    }
+    gameEnded = false;
+}
+
+// End session with final score
+function endGameSession(finalScore) {
+    if (gameEnded) return;
+    gameEnded = true;
+
+    if (typeof window.PixelPalace !== 'undefined' && currentSessionId) {
+        var result = window.PixelPalace.endSession(currentSessionId, { score: finalScore });
+        if (result.ok && result.personalBest) {
+            if (result.personalBest.isNewBest) {
+                personalBest = finalScore;
+            }
+        }
+    }
+}
 
 /*
   In this method we have initialized variables
@@ -26,12 +65,15 @@ function initialize() {
 gameStart = document.querySelector('#gameStart');
 gameSpeed = document.querySelector('#gameSpeed');
 gameArea = document.querySelector('#gameArea');
-gameAreaContext = gameArea.getContext('2d'); // made a 2-D canvas
+gameAreaContext = gameArea.getContext('2d');
 gameAreaWidth = 800;
 gameAreaHeight = 600;
 cellWidth = 20;
 gameArea.width = gameAreaWidth;
 gameArea.height = gameAreaHeight;
+
+// Load personal best on init
+loadPersonalBest();
 
 gameStart.onclick = function () {
     this.disabled = true;
@@ -56,6 +98,10 @@ gameAreaContext.strokeRect(0, 0, gameAreaWidth, gameAreaHeight)
 createFood()
 createFruit(snakeFood.x, snakeFood.y)
 clearInterval(timer)
+
+// Start Pixel Palace session
+startGameSession();
+
 timer = setInterval(createGameArea, 500 / speedSize)
 }
 
@@ -86,6 +132,8 @@ if (
     snakeY == gameAreaHeight / cellWidth ||
     Control(snakeX, snakeY, snake)
 ) {
+    // End Pixel Palace session before drawing score
+    endGameSession(playerScore);
     writeScore()
     clearInterval(timer)
     gameStart.disabled = false;
@@ -134,9 +182,18 @@ gameAreaContext.fillStyle = '#333333';
 gameAreaContext.fillText(
     "Score " + playerScore,
     gameAreaWidth / 2 - 100,
-    gameAreaHeight / 2
+    gameAreaHeight / 2 - 30
 )
 
+// Show personal best below the score
+gameAreaContext.font = "20px 'Press Start 2P', cursive";
+gameAreaContext.fillStyle = '#666666';
+var pbText = personalBest > 0 ? "Best: " + personalBest : "No record yet";
+gameAreaContext.fillText(
+    pbText,
+    gameAreaWidth / 2 - 100,
+    gameAreaHeight / 2 + 30
+)
 }
 
 // we are creating a square box with cellWidth at coordinates (x,y)
@@ -177,6 +234,3 @@ function changeDirectionMobile(dir) {
 window.changeDirectionMobile = changeDirectionMobile;
 window.onkeydown = changeDirection;
 window.onload = initialize
-
-
-
