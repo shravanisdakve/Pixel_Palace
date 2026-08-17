@@ -80,7 +80,7 @@ function check_slots(){
         for(var x=0;x<=p.grid[0];x++){
             if(m[y][x]==0||check==m[y][x]){check++}else{break;}
         }
-    }if(check==o){setTimeout(()=>{ console.log('You won!') },((p.time)?p.time*1000:0));} // <-- alert('win') script that runs at the end of the game
+    }if(check==o){setTimeout(()=>{ alert('You won!') },((p.time)?p.time*1000:0));} // <-- alert('win') script that runs at the end of the game
 }
 function fifteen_resize(){
     var rect=f.parentNode.getBoundingClientRect();

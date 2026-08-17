@@ -1,5 +1,3 @@
-console.log("Score_keeper.js script loaded.");
-
 // Existing element selectors
 const p1Button = document.querySelector('.p1button');
 const p2Button = document.querySelector('.p2button');

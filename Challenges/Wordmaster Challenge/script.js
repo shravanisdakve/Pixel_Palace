@@ -80,12 +80,9 @@ document.addEventListener('keydown',function(e){
     let inputKeyCode=e.keyCode;
     if(inputKeyCode>=65 && inputKeyCode<=90 && !letterArray.includes(inputKey) && !wrongLettersArray.includes(inputKey)){
         wrongLettersArray.push(inputKey);
-        console.log("running");
         
-        console.log(wrongLettersArray.length+' Before')
         figureParts.forEach(function(part,index){
             let errors=wrongLettersArray.length;
-            console.log('errors='+errors +' and index='+index)
             if(index<errors){
                 part.style.display="block";
             }

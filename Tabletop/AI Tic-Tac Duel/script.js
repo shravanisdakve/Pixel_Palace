@@ -174,7 +174,6 @@ let gameBoard = (()=>{
         for(let i = 0; i < _state.length; i++){
             if(_state[i][0] == _state[i][1] && _state[i][1] == _state[i][2] && _state[i][0] != 0){
                 _winner = _state[i][0]==1?PLAYER_X:PLAYER_Y
-                console.log(_winner);
                 _gameOver = true
             }
         }
@@ -182,19 +181,16 @@ let gameBoard = (()=>{
         for(let i = 0; i < _state.length; i++){
             if(_state[0][i] == _state[1][i] && _state[1][i] == _state[2][i] && _state[0][i] != 0){
                 _winner = _state[0][i]==1?PLAYER_X:PLAYER_Y
-                console.log(_winner);
                 _gameOver = true
             }
         }
         //check diagonals
         if(_state[0][0] == _state[1][1] && _state[1][1] == _state[2][2] && _state[0][0] != 0){
             _winner = _state[0][0]==1?PLAYER_X:PLAYER_Y
-            console.log(_winner);
             _gameOver = true
         }
         if(_state[0][2] == _state[1][1] && _state[1][1] == _state[2][0] && _state[0][2] != 0){
             _winner = _state[0][2]==1?PLAYER_X:PLAYER_Y
-            console.log(_winner);
             _gameOver = true
         }
         //check draw
@@ -288,7 +284,6 @@ resetButton.onclick = ()=>{
 };
 
 if(!X_human){
-    console.log("object");
     player_controller.notify(PLAYER_X,[[0,0,0],[0,0,0],[0,0,0]])
 }
 if(!X_human && !O_human){

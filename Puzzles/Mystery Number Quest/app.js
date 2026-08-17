@@ -5,8 +5,6 @@ while(!maximum){
 }
 const targetNum = Math.floor(Math.random()*maximum)+1;
 
-console.log(targetNum);
-
 let guess = parseInt(prompt("Enter your first guess!"));
 let attempts = 1;
 

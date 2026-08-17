@@ -213,5 +213,4 @@ rollBtn.addEventListener('click', () => {
     
     dice.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
     
-    console.log(`Rolled ${result}. Target: X=${targetX}, Y=${targetY}. New: X=${rotateX}, Y=${rotateY}`);
 });

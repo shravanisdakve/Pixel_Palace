@@ -1451,14 +1451,11 @@ let main = {
             }).filter(val => { // algorithm to determine line-of-sight movement options for bishop/rook/queen;
                 if (flag == false) {
                     if ($('#' + val).attr('chess') == 'null') {
-                        console.log(val)
                         return val;
                     } else if (($('#' + val).attr('chess')).slice(0, 1) == 'b') {
                         flag = true;
-                        console.log(val)
                         return val;
                     } else if (($('#' + val).attr('chess')).slice(0, 1) == 'w') {
-                        console.log(val + '-3')
                         flag = true;
                     }
                 }

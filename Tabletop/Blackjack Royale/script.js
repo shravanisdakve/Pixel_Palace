@@ -118,7 +118,6 @@ function updateScore(card, activePlayer) {
     activePlayer["score"] += blackjackGame["cardsMap"][card];
   }
 
-  console.log(activePlayer["score"]);
 }
 
 function showScore(activePlayer) {

@@ -1,15 +1,11 @@
 
         function rpsGame(yourChoice) {
-            console.log(yourChoice);
-
             var humanChoice, botChoice;
             humanChoice = yourChoice.id;
             var imgs = [document.getElementById("rock"), document.getElementById("paper"), document.getElementById("scissors")]
             botChoice = imgs[Math.floor(Math.random() * 3)];
             botChoice = botChoice.id;
-            console.log('Computer choice:', botChoice);
             results = decideWinner(humanChoice, botChoice);
-            console.log(results);
             message = finalMessage(results);
             
             

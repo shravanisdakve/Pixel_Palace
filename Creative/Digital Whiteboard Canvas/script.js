@@ -16,7 +16,6 @@ canvas.addEventListener("mousedown", function(e) {
 	if (redoLinesDB.length) {
 		redoLinesDB = [];
 	}
-	console.log("Inside mouse down");
 	isPenDown = true;
 	let x = e.clientX;
 	let y = e.clientY - 100;
@@ -35,7 +34,6 @@ canvas.addEventListener("mousedown", function(e) {
 
 canvas.addEventListener("mousemove", function(e) {
 	if (isPenDown) {
-		console.log("Inside mousemove");
 		let x = e.clientX;
 		let y = e.clientY - 100;
 		ctx.lineTo(x, y);
@@ -51,13 +49,11 @@ canvas.addEventListener("mousemove", function(e) {
 });
 
 canvas.addEventListener("mouseup", function() {
-	console.log("mouseup");
 	isPenDown = false;
 
 	linesDB.push(line);
 	line = [];
 
-	console.log(linesDB);
 });
 
 // Drawing
@@ -314,9 +310,7 @@ photoDiv.addEventListener("click", function() {
 });
 
 photoUploadInput.addEventListener("change", function(event) {
-	console.log(event);
 	let fileObj = event.target.files[0];
-	console.log(fileObj);
 	let filePath = URL.createObjectURL(fileObj, {
 		type: "image/jpg"
 	});
@@ -329,7 +323,6 @@ photoUploadInput.addEventListener("change", function(event) {
 
 downloadDiv.addEventListener("click", function() {
 	let imagePath = canvas.toDataURL("image/jpg");
-	console.log(imagePath);
 	// <a href="" download="canvas.jpg"></a> 
 	let aTag = document.createElement("a");
 	aTag.download = "canvas.jpg";
